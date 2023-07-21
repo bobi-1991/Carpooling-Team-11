@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33502.453
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carpooling", "Carpooling\Carpooling.csproj", "{000C73B8-37F9-410F-907E-F1214D81EF8C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarPooling.Data", "CarPooling.Data\CarPooling.Data.csproj", "{1447D59C-7EB2-4210-AC87-CBD85795E53B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{000C73B8-37F9-410F-907E-F1214D81EF8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{000C73B8-37F9-410F-907E-F1214D81EF8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{000C73B8-37F9-410F-907E-F1214D81EF8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{000C73B8-37F9-410F-907E-F1214D81EF8C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1447D59C-7EB2-4210-AC87-CBD85795E53B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1447D59C-7EB2-4210-AC87-CBD85795E53B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1447D59C-7EB2-4210-AC87-CBD85795E53B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1447D59C-7EB2-4210-AC87-CBD85795E53B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7C2A9806-D889-4927-A3D1-071606BFFE30}
+	EndGlobalSection
+EndGlobal
