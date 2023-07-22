@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CarPooling.Data.Models.Abstract;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,10 +7,12 @@ using System.Threading.Tasks;
 
 namespace CarPooling.Data.Models
 {
-    public class Address
+    public class Address:LocationEntity
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
+        public Address()
+        {
+        }
+
         public int AddressNumber { get; set; }
         public int CityId { get; set; }
         public City City { get; set; }

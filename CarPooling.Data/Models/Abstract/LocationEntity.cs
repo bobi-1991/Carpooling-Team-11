@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace CarPooling.Data.Models.Abstract
 {
-    internal class LocationEntity
+    public abstract class LocationEntity
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

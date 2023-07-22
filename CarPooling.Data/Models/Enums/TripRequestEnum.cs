@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace CarPooling.Data.Models.Enums
 {
-    internal class TripRequestEnum
+    public enum TripRequestEnum
     {
+        Pending,
+        Approved,
+        Declined
     }
 }

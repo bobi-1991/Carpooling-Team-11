@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace CarPooling.Data.Models.Abstract
 {
-    internal class Entity
+    public abstract class Entity
     {
+        public int Id { get; set; }
+        public bool IsDelete { get; set; }
+        public DateTime CreateOn { get; set; }
+        public DateTime DeleteOn { get; set; }
     }
 }

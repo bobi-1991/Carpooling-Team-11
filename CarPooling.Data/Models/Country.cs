@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CarPooling.Data.Models.Abstract;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,12 @@ using System.Threading.Tasks;
 
 namespace CarPooling.Data.Models
 {
-    public class Country
+    public class Country : LocationEntity
     {
+        public Country()
+        {
+        }
+
+        public virtual ICollection<City> Cities { get; set; } = new List<City>();
     }
 }
