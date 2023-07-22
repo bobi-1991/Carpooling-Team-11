@@ -16,9 +16,9 @@ namespace CarPooling.Data.Configurations
             builder.Property(city => city.Name).HasMaxLength(20);
 
             //Relations
-            //builder.HasOne(c => c.Country)
-            //    .WithMany(c => c.Cities)
-            //    .HasForeignKey(c => c.CountryId);
+            builder.HasOne(c => c.Country)
+                .WithMany(c => c.Cities)
+                .HasForeignKey(c => c.CountryId);
 
             builder.HasMany(c => c.Addresses)
                 .WithOne(c => c.City)

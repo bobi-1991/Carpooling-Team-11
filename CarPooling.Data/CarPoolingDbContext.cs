@@ -13,12 +13,16 @@ namespace CarPooling.Data
           : base(options) { }
 
         public DbSet<User> Users { get; set; }
-
+        public DbSet<City> Cities { get; set; }
+        public DbSet<Feedback> Feedbacks { get; set; }
+        public DbSet<Address> Addresses { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);
-           
             builder.ApplyConfiguration(new UserConfiguration());
+            builder.ApplyConfiguration(new CityConfiguration());
+            builder.ApplyConfiguration(new FeedbackConfiguration());
+            builder.ApplyConfiguration(new AddressConfiguration());
+            base.OnModelCreating(builder); 
         }
 
 

@@ -12,17 +12,13 @@ namespace CarPooling.Data.Configurations
             builder.HasKey(key => key.Id);
 
             //Required Fields
-            builder.Property(f=>f.Body).IsRequired();
-            builder.Property(f => f.Body).HasMaxLength(200);
+            builder.Property(f=>f.Comment).IsRequired();
+            builder.Property(f => f.Comment).HasMaxLength(200);
 
             //Relations
-            builder.HasOne(f => f.User)
+            builder.HasOne(f => f.Author)
                 .WithMany(f => f.AuthorFeedbacks)
-                .HasForeignKey(f => f.UserId);
-
-            //builder.HasOne(f => f.Travel)
-            //    .WithMany(f=>f.Feedbacks)
-            //    .HasForeignKey(f=>f.TravelId);
+                .HasForeignKey(f => f.AuthorId);
         }
     }
 }

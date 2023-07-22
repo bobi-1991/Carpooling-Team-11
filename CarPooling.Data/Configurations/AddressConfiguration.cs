@@ -23,10 +23,6 @@ namespace CarPooling.Data.Configurations
                 .WithMany(City => City.Addresses)
                 .HasForeignKey(address => address.CityId);
 
-            builder.HasOne(address=>address.Country)
-                .WithMany(country=>country.Addresses)
-                .HasForeignKey(address=>address.CountryId);
-
             builder.HasMany(a => a.Users)
                 .WithOne(a => a.Address)
                 .HasForeignKey(a => a.AddressId);

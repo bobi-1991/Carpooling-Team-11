@@ -25,25 +25,12 @@ namespace CarPooling.Data.Models
         public int Rating { get; set; }
         public string Comment { get; set; }
 
-
         // Foreign keys with navigation properties
         public int AuthorId { get; set; }
         public User Author { get; set; }
 
         public int RecipientId { get; set; }
         public User Recipient { get; set; }
-
-
-        //public Feedback()
-        //{
-        //    DateTime = DateTime.Now;
-        //}
-        //public string Body { get; set; }
-        //public DateTime DateTime { get; set; }
-        ////public int RatingId { get; set; }
-        ////public Rating Rating { get; set; }
-        //public int UserId { get; set; }
-        //public User User { get; set; }
 
     }
 }
