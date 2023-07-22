@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CarPooling.Data.Models
 {
-    internal class Country
+    public class Country
     {
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CarPooling.Data.Models
 {
-    internal class Car
+    public class Car
     {
     }
 }

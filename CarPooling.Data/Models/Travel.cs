@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CarPooling.Data.Models
 {
-    internal class Travel
+    public class Travel
     {
     }
 }
