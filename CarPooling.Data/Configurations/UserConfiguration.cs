@@ -1,6 +1,7 @@
 ﻿using CarPooling.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System.Data;
 
 namespace CarPooling.Data.Configurations
 {
@@ -14,5 +15,6 @@ namespace CarPooling.Data.Configurations
             builder.Property(u => u.LastName).IsRequired();
             builder.Property(u => u.LastName).HasMaxLength(20);
         }
+     
     }
 }
