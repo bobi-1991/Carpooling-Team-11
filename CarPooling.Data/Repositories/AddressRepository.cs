@@ -1,12 +1,8 @@
-﻿using CarPooling.Data.Exceptions;
+﻿using CarPooling.Data.Data;
+using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CarPooling.Data.Repositories
 {
@@ -30,6 +26,27 @@ namespace CarPooling.Data.Repositories
             addressToRemove.IsDeleted=true;
             _context.SaveChanges();
             return addressToRemove;
+        }
+
+        public List<Address> FilterByAddressAndSort(string addressName, string sortBy)
+        {
+            IQueryable<Address> addresses = _context.Addresses
+                .Where(a => a.Name == addressName)
+                .Include(a => a.AddressNumber)
+                .Include(a => a.City);
+            switch (sortBy)
+            {
+                case "city":
+                    addresses = addresses.OrderBy(a=>a.City); 
+                    break;
+                case "number":
+                    addresses = addresses.OrderBy(a => a.AddressNumber);
+                        break;
+                default:
+                    addresses=addresses.OrderBy(a=>a.AddressNumber);
+                    break;
+            }
+            return addresses.ToList();
         }
 
         public List<Address> GetAll()

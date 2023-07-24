@@ -19,6 +19,10 @@ namespace CarPooling.Data.Configurations
             builder.HasOne(f => f.Author)
                 .WithMany(f => f.AuthorFeedbacks)
                 .HasForeignKey(f => f.AuthorId);
+
+            builder.HasOne(f => f.Recipient)
+                .WithMany(f => f.RecipientFeedbacks)
+                .HasForeignKey(f => f.RecipientId);
         }
     }
 }

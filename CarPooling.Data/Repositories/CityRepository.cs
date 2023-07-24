@@ -1,4 +1,5 @@
-﻿using CarPooling.Data.Exceptions;
+﻿using CarPooling.Data.Data;
+using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;

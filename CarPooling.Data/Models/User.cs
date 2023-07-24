@@ -28,6 +28,6 @@ namespace CarPooling.Data.Models
         public ICollection<TripRequest> RecipientTripRequests { get; set; } = new List<TripRequest>();
         public ICollection<Travel> TravelHistory { get; set; } = new List<Travel>();
         public ICollection<Car> Cars { get; set; } = new List<Car>();
-        public ICollection<Feedback> Feedbacks { get; set; } =  new List<Feedback>(); 
+         
     }
 }

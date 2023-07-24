@@ -3,7 +3,7 @@ using CarPooling.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace CarPooling.Data
+namespace CarPooling.Data.Data
 {
     public class CarPoolingDbContext : IdentityDbContext<User>
     {
@@ -22,7 +22,7 @@ namespace CarPooling.Data
             builder.ApplyConfiguration(new CityConfiguration());
             builder.ApplyConfiguration(new FeedbackConfiguration());
             builder.ApplyConfiguration(new AddressConfiguration());
-            base.OnModelCreating(builder); 
+            base.OnModelCreating(builder);
         }
 
 

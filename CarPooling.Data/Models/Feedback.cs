@@ -25,11 +25,16 @@ namespace CarPooling.Data.Models
         public int Rating { get; set; }
         public string Comment { get; set; }
 
-        // Foreign keys with navigation properties
+        // Foreign key for Author
         public int AuthorId { get; set; }
+
+        // Navigation property for Author
         public User Author { get; set; }
 
+        // Foreign key for Recipient
         public int RecipientId { get; set; }
+
+        // Navigation property for Recipient
         public User Recipient { get; set; }
 
     }
