@@ -36,7 +36,6 @@ namespace CarPooling.Data.Models
         public int CarId { get; set; }
         public Car Car { get; set; }
 
-
         public ICollection<User> Passengers { get; set; } = new List<User>();
     }
 }

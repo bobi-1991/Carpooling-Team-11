@@ -1,11 +1,7 @@
-﻿using Carpooling.BusinessLayer.Services.Contracts;
+﻿using Carpooling.BusinessLayer.Exceptions;
+using Carpooling.BusinessLayer.Services.Contracts;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Carpooling.BusinessLayer.Services
 {
@@ -21,7 +17,7 @@ namespace Carpooling.BusinessLayer.Services
             //ToDo when we have user roles.
             if(user.IsBlocked == true)
             {
-                throw new UnauthorizedOperationException("Only non-banned users can creat addresses!");
+                throw new UnauthorizedOperationException("Only non-banned users can create addresses!");
             }
             throw new NotImplementedException();
         }
@@ -35,7 +31,7 @@ namespace Carpooling.BusinessLayer.Services
 
         public List<Address> FilterByAddressAndSort(string addressName, string sortBy)
         {
-            return _addressRepository.FilterByAddressAndSort(addressName,sortBy);
+            return _addressRepository.FilterByAddressAndSort(addressName, sortBy);
         }
 
         public List<Address> GetAll()
