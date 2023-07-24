@@ -14,6 +14,7 @@ namespace CarPooling.Data.Configurations
             builder.Property(u => u.FirstName).HasMaxLength(20);
             builder.Property(u => u.LastName).IsRequired();
             builder.Property(u => u.LastName).HasMaxLength(20);
+            builder.Property(u => u.AverageRating).HasPrecision(1, 10);
         }
      
     }

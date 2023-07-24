@@ -18,20 +18,26 @@ namespace CarPooling.Data.Configurations
             builder.HasKey(t => t.Id);
 
             //Required Fields
-            builder.Property(t => t.StartLocation).IsRequired();
-            builder.Property(t => t.Destination).IsRequired();
-            builder.Property(t => t.Car).IsRequired();
+            //builder.Property(t => t.StartLocation).IsRequired();
+            //builder.Property(t => t.Destination).IsRequired();
+            //builder.Property(t => t.Car).IsRequired();
 
             //Relations
             builder.HasOne(t => t.StartLocation)
-                       .WithMany(t => t.Travels)
+                       .WithMany(t => t.TravelsFrom)
                        .HasForeignKey(t => t.StartLocationId);
 
             builder.HasOne(t => t.Destination)
-                   .WithMany(t => t.Travels)
+                   .WithMany(t => t.TravelsTo)
                    .HasForeignKey(t => t.DestinationId);
 
+            builder.HasOne(t => t.Car)
+                .WithMany(t => t.Travels)
+                .HasForeignKey(t => t.CarId);
 
+            builder.HasMany(t => t.Passengers)
+                .WithOne(t => t.Travel);
+               
 
         }
     }

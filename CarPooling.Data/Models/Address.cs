@@ -20,6 +20,8 @@ namespace CarPooling.Data.Models
         public int CountryId { get; set; }
         public Country Country { get; set; }
         public ICollection<User> Users { get; set; }
-        public ICollection<Travel> Travels { get; set; }
+        public ICollection<Travel> TravelsTo { get; set; }
+        public ICollection<Travel> TravelsFrom { get; set; }
     }
+    
 }

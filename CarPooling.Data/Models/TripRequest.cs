@@ -12,7 +12,7 @@ namespace CarPooling.Data.Models
     {
         public TripRequest()
         { }
-        public TripRequest(int authorId, int driverId, int travelId)
+        public TripRequest(string authorId, string driverId, int travelId)
             : base()
         {
             this.AuthorId = authorId;
@@ -26,10 +26,10 @@ namespace CarPooling.Data.Models
 
         // Foreign keys with navigation properties
         public User Author { get; set; }
-        public int AuthorId { get; set; }
+        public string AuthorId { get; set; }
 
         public User Driver { get; set; }
-        public int DriverId { get; set; }
+        public string DriverId { get; set; }
 
         public Travel Travel { get; set; }
         public int TravelId { get; set; }

@@ -14,7 +14,7 @@ namespace CarPooling.Data.Models
         {
         }
 
-        public Feedback(int authorId, int recipientId, string comment, int rating)
+        public Feedback(string authorId, string recipientId, string comment, int rating)
             : base()
         {
             this.AuthorId = authorId;
@@ -26,13 +26,13 @@ namespace CarPooling.Data.Models
         public string Comment { get; set; }
 
         // Foreign key for Author
-        public int AuthorId { get; set; }
+        public string AuthorId { get; set; }
 
         // Navigation property for Author
         public User Author { get; set; }
 
         // Foreign key for Recipient
-        public int RecipientId { get; set; }
+        public string RecipientId { get; set; }
 
         // Navigation property for Recipient
         public User Recipient { get; set; }
