@@ -14,7 +14,7 @@ namespace CarPooling.Data.Data
 
     public static class CountrySeeder
     {
-        private const string countriesDirectory = @"..\CarPooling.Data\JsonRaw\Countries.json";
+        private const string countriesDirectory = @"..\CarPooling.Data\JsonRaw\Countries2.json";
 
         public static void SeedDatabaseCountries(this IApplicationBuilder app)
         {
@@ -23,7 +23,7 @@ namespace CarPooling.Data.Data
                 var _context = serviceScope.ServiceProvider.GetService<CarPoolingDbContext>();
                 var _jsonManager = serviceScope.ServiceProvider.GetService<IJsonManager>();
                 var countCountries = _context.Countries.Count();
-                var count = _context.Addresses.Count();
+                //var count = _context.Addresses.Count();
                 if (countCountries == 0)
                 {
                     _context.Database.Migrate();
