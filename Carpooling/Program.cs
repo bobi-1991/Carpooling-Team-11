@@ -6,6 +6,7 @@ using CarPooling.Data.Data;
 using Carpooling;
 using CarPooling.Data.JsonManager;
 using CarPooling.Data.Models;
+using Carpooling.Infrastructure;
 
 public class Program
 {
@@ -50,7 +51,11 @@ public class Program
             options.RoutePrefix = "api/swagger";
         });
 
+        //Seed DB
         app.SeedDatabaseCountries();
+
+        //Infrastructure
+        app.UpdateDatabase();
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();

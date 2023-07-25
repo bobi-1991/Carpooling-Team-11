@@ -9,7 +9,7 @@ namespace CarPooling.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(u => u.Id);
+            //builder.HasKey(u => u.Id);
             builder.Property(u => u.FirstName).IsRequired(false);
             builder.Property(u => u.LastName).IsRequired(false);
 
