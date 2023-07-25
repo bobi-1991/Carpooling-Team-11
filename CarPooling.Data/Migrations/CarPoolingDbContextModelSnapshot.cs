@@ -296,8 +296,7 @@ namespace CarPooling.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("AverageRating")
-                        .HasPrecision(1, 10)
-                        .HasColumnType("decimal(1,10)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("CityId")
                         .HasColumnType("int");
@@ -530,13 +529,13 @@ namespace CarPooling.Data.Migrations
                     b.HasOne("CarPooling.Data.Models.City", "City")
                         .WithMany("Addresses")
                         .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("CarPooling.Data.Models.Country", "Country")
-                        .WithMany()
+                        .WithMany("Addresses")
                         .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("City");
@@ -549,7 +548,7 @@ namespace CarPooling.Data.Migrations
                     b.HasOne("CarPooling.Data.Models.User", "User")
                         .WithMany("Cars")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -560,7 +559,7 @@ namespace CarPooling.Data.Migrations
                     b.HasOne("CarPooling.Data.Models.Country", "Country")
                         .WithMany("Cities")
                         .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Country");
@@ -571,13 +570,13 @@ namespace CarPooling.Data.Migrations
                     b.HasOne("CarPooling.Data.Models.User", "Author")
                         .WithMany("AuthorFeedbacks")
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("CarPooling.Data.Models.User", "Recipient")
                         .WithMany("RecipientFeedbacks")
                         .HasForeignKey("RecipientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Author");
@@ -590,19 +589,19 @@ namespace CarPooling.Data.Migrations
                     b.HasOne("CarPooling.Data.Models.Car", "Car")
                         .WithMany("Travels")
                         .HasForeignKey("CarId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("CarPooling.Data.Models.Address", "Destination")
                         .WithMany("TravelsTo")
                         .HasForeignKey("DestinationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("CarPooling.Data.Models.Address", "StartLocation")
                         .WithMany("TravelsFrom")
                         .HasForeignKey("StartLocationId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("CarPooling.Data.Models.User", null)
@@ -621,7 +620,7 @@ namespace CarPooling.Data.Migrations
                     b.HasOne("CarPooling.Data.Models.User", "Author")
                         .WithMany("AuthorTripRequests")
                         .HasForeignKey("AuthorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("CarPooling.Data.Models.User", "Driver")
@@ -648,19 +647,19 @@ namespace CarPooling.Data.Migrations
                     b.HasOne("CarPooling.Data.Models.Address", "Address")
                         .WithMany("Users")
                         .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("CarPooling.Data.Models.City", "City")
                         .WithMany("Users")
                         .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("CarPooling.Data.Models.Travel", "Travel")
                         .WithMany("Passengers")
                         .HasForeignKey("TravelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Address");
@@ -744,6 +743,8 @@ namespace CarPooling.Data.Migrations
 
             modelBuilder.Entity("CarPooling.Data.Models.Country", b =>
                 {
+                    b.Navigation("Addresses");
+
                     b.Navigation("Cities");
                 });
 

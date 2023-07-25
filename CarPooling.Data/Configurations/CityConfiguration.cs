@@ -18,15 +18,19 @@ namespace CarPooling.Data.Configurations
             //Relations
             builder.HasOne(c => c.Country)
                 .WithMany(c => c.Cities)
-                .HasForeignKey(c => c.CountryId);
+                .HasForeignKey(c => c.CountryId)
+                .OnDelete(DeleteBehavior.NoAction);
+
 
             builder.HasMany(c => c.Addresses)
                 .WithOne(c => c.City)
-                .HasForeignKey(c => c.CityId);
+                .HasForeignKey(c => c.CityId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(c => c.Users)
                 .WithOne(c => c.City)
-                .HasForeignKey(c => c.CityId);
+                .HasForeignKey(c => c.CityId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

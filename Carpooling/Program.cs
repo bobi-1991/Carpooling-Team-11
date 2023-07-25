@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using CarPooling.Data.Data;
+using Carpooling;
 
 public class Program
 {
@@ -17,6 +18,8 @@ public class Program
         builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<CarPoolingDbContext>();
+
+        builder.Services.AddAutoMapper(typeof(Mapper));
 
         // Add services to the container.
         builder.Services.AddRazorPages();

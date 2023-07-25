@@ -24,7 +24,8 @@ namespace CarPooling.Data.Configurations
             //Relations
             builder.HasMany(country => country.Cities)
                 .WithOne(city => city.Country)
-                .HasForeignKey(city => city.CountryId);
+                .HasForeignKey(city => city.CountryId)
+                .OnDelete(DeleteBehavior.NoAction); 
 
         }
     }

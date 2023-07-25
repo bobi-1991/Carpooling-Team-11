@@ -18,7 +18,8 @@ namespace CarPooling.Data.Configurations
 
             builder.HasOne(t => t.Author)
                       .WithMany(t => t.AuthorTripRequests)
-                      .HasForeignKey(t => t.AuthorId);
+                      .HasForeignKey(t => t.AuthorId)
+                      .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

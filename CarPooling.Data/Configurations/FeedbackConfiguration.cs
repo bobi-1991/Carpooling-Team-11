@@ -18,11 +18,13 @@ namespace CarPooling.Data.Configurations
             //Relations
             builder.HasOne(f => f.Author)
                 .WithMany(f => f.AuthorFeedbacks)
-                .HasForeignKey(f => f.AuthorId);
+                .HasForeignKey(f => f.AuthorId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(f => f.Recipient)
                 .WithMany(f => f.RecipientFeedbacks)
-                .HasForeignKey(f => f.RecipientId);
+                .HasForeignKey(f => f.RecipientId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

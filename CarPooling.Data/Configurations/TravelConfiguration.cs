@@ -25,19 +25,23 @@ namespace CarPooling.Data.Configurations
             //Relations
             builder.HasOne(t => t.StartLocation)
                        .WithMany(t => t.TravelsFrom)
-                       .HasForeignKey(t => t.StartLocationId);
+                       .HasForeignKey(t => t.StartLocationId)
+                       .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(t => t.Destination)
                    .WithMany(t => t.TravelsTo)
-                   .HasForeignKey(t => t.DestinationId);
+                   .HasForeignKey(t => t.DestinationId)
+                   .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(t => t.Car)
                 .WithMany(t => t.Travels)
-                .HasForeignKey(t => t.CarId);
+                .HasForeignKey(t => t.CarId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(t => t.Passengers)
-                .WithOne(t => t.Travel);
-               
+                .WithOne(t => t.Travel)
+                .OnDelete(DeleteBehavior.NoAction);
+
 
         }
     }

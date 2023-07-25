@@ -27,11 +27,13 @@ namespace CarPooling.Data.Configurations
             //Relations
             builder.HasOne(car => car.User)
                   .WithMany(user => user.Cars)
-                  .HasForeignKey(car => car.UserId);
+                  .HasForeignKey(car => car.UserId)
+                  .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(car => car.Travels)
                    .WithOne(travel => travel.Car)
-                   .HasForeignKey(travel => travel.CarId);
+                   .HasForeignKey(travel => travel.CarId)
+                   .OnDelete(DeleteBehavior.NoAction);
 
         }
     }
