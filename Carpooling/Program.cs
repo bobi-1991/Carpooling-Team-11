@@ -19,7 +19,7 @@ public class Program
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<CarPoolingDbContext>();
 
-        builder.Services.AddAutoMapper(typeof(Mapper));
+        builder.Services.AddAutoMapper(typeof(Carpooling.BusinessLayer.Helpers.Mapper));
 
         // Add services to the container.
         builder.Services.AddRazorPages();

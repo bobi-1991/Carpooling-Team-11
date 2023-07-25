@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 
-namespace Carpooling
+namespace Carpooling.BusinessLayer.Helpers
 {
     public class Mapper : Profile
     {
