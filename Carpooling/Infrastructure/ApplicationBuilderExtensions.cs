@@ -66,15 +66,15 @@ namespace Carpooling.Infrastructure
                         };
 
                         var result = await userManager.CreateAsync(adminUser, "Admin12@");
-                        if (result.Succeeded)
-                        {
+                        //if (result.Succeeded)
+                        //{
 
                             await userManager.AddToRoleAsync(adminUser, adminName);
-                        }
-                        else
-                        {
-                            throw new ArgumentException($"{result.Errors.FirstOrDefault().Description}");
-                        }
+                        //}
+                        //else
+                        //{
+                        //    throw new ArgumentException($"{result.Errors.FirstOrDefault().Description}");
+                        //}
                     }
                 })
                 .GetAwaiter()
