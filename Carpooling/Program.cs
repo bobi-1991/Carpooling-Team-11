@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using CarPooling.Data.Data;
 using Carpooling;
+using CarPooling.Data.JsonManager;
 
 public class Program
 {
@@ -20,6 +21,10 @@ public class Program
             .AddEntityFrameworkStores<CarPoolingDbContext>();
 
         builder.Services.AddAutoMapper(typeof(Carpooling.BusinessLayer.Helpers.Mapper));
+
+
+        //Helpers
+        builder.Services.AddScoped<IJsonManager, JsonManager>();
 
         // Add services to the container.
         builder.Services.AddRazorPages();
@@ -45,6 +50,8 @@ public class Program
             options.RoutePrefix = "api/swagger";
         });
 
+        app.SeedDatabaseCountries();
+
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
@@ -56,5 +63,6 @@ public class Program
         app.MapRazorPages();
         
         app.Run();
+
     }
 }
