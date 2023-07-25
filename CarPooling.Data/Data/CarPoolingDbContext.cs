@@ -5,14 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarPooling.Data.Data
 {
-    public class CarPoolingDbContext : IdentityDbContext<User>
+    public class CarPoolingDbContext : IdentityDbContext<User, UserRole, string>
     {
         public CarPoolingDbContext() { }
 
         public CarPoolingDbContext(DbContextOptions<CarPoolingDbContext> options)
           : base(options) { }
 
-        public DbSet<User> Users { get; set; }
         public DbSet<City> Cities { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<Address> Addresses { get; set; }

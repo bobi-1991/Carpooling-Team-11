@@ -5,6 +5,7 @@ using Microsoft.OpenApi.Models;
 using CarPooling.Data.Data;
 using Carpooling;
 using CarPooling.Data.JsonManager;
+using CarPooling.Data.Models;
 
 public class Program
 {
@@ -16,15 +17,14 @@ public class Program
         builder.Services.AddDbContext<CarPoolingDbContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-        builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            .AddRoles<IdentityRole>()
+        builder.Services.AddDefaultIdentity<User>()
+            .AddRoles<UserRole>()
             .AddEntityFrameworkStores<CarPoolingDbContext>();
 
-        builder.Services.AddAutoMapper(typeof(Carpooling.BusinessLayer.Helpers.Mapper));
-
-
         //Helpers
+
         builder.Services.AddScoped<IJsonManager, JsonManager>();
+        builder.Services.AddAutoMapper(typeof(Carpooling.BusinessLayer.Helpers.Mapper));
 
         // Add services to the container.
         builder.Services.AddRazorPages();

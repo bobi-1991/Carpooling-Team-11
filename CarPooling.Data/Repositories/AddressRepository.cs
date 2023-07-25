@@ -53,7 +53,7 @@ namespace CarPooling.Data.Repositories
         {
             return _context.Addresses
                 .Include(p => p.City)
-                .Include(p => p.Users)
+                //.Include(p => p.Users)
                 .ToList();
         }
 
@@ -61,7 +61,7 @@ namespace CarPooling.Data.Repositories
         {
             Address address = _context.Addresses.Where(a=>a.Id == id)
                 .Include(p => p.City)
-                .Include(p => p.Users)
+                //.Include(p => p.Users)
                 .FirstOrDefault();
             return address ?? throw new EntityNotFoundException($"Could not find an address with id: {id}!");
         }
@@ -70,7 +70,7 @@ namespace CarPooling.Data.Repositories
         {
             Address address = _context.Addresses.Where(a => a.Name == name)
                 .Include(p => p.City)
-                .Include(p => p.Users)
+                //.Include(p => p.Users)
                 .FirstOrDefault();
             return address ?? throw new EntityNotFoundException($"Could not find an address with name: {name}!");
         }

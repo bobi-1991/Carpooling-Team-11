@@ -14,6 +14,6 @@ namespace CarPooling.Data.Models
         public Country Country { get; set; }
         public bool IsDelete { get; set; } = false;
         public ICollection<Address> Addresses { get; set; } = new List<Address>();
-        public ICollection<User> Users { get; set; } = new List<User>();
+        //public ICollection<User> Users { get; set; } = new List<User>();
     }
 }

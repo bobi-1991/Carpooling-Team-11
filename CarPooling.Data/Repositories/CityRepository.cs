@@ -38,7 +38,7 @@ namespace CarPooling.Data.Repositories
             return _context.Cities
                 .Include(c=>c.Country)
                 .Include(c=>c.Addresses)
-                .Include(c=>c.Users)
+                //.Include(c=>c.Users)
                 .ToList();
         }
 
@@ -47,7 +47,7 @@ namespace CarPooling.Data.Repositories
             City city = _context.Cities.Where(c=>c.Id == id)
                 .Include(c => c.Country)
                 .Include(c => c.Addresses)
-                .Include(c => c.Users)
+                //.Include(c => c.Users)
                 .FirstOrDefault();
             return city ?? throw new EntityNotFoundException($"No city found with this id: {id}!");
         }
@@ -57,7 +57,7 @@ namespace CarPooling.Data.Repositories
             City city = _context.Cities.Where(c => c.Name == name)
                 .Include(c => c.Country)
                 .Include(c => c.Addresses)
-                .Include(c => c.Users)
+                //.Include(c => c.Users)
                 .FirstOrDefault();
             return city ?? throw new EntityNotFoundException($"No city found with this name: {name}!");
         }

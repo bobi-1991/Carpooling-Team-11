@@ -30,10 +30,10 @@ namespace CarPooling.Data.Configurations
                 .OnDelete(DeleteBehavior.NoAction);
 
 
-            builder.HasMany(a => a.Users)
-                .WithOne(a => a.Address)
-                .HasForeignKey(a => a.AddressId)
-                .OnDelete(DeleteBehavior.NoAction);
+            //builder.HasMany(a => a.Users)
+            //    .WithOne(a => a.Address)
+            //    .HasForeignKey(a => a.AddressId)
+            //    .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
