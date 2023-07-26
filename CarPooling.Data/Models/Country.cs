@@ -12,6 +12,8 @@ namespace CarPooling.Data.Models
         public Country()
         {
         }
+
+        public virtual ICollection<City> Cities { get; set; } = new List<City>();
         public ICollection<Address> Addresses { get; set;} = new List<Address>();
     }
 }
