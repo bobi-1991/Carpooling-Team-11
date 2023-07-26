@@ -27,9 +27,6 @@ namespace CarPooling.Data.Configurations
                 .HasForeignKey(c => c.CityId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(c => c.User)
-                .WithOne(c => c.City)
-                .OnDelete(DeleteBehavior.NoAction);
             //builder.HasMany(c => c.Users)
             //    .WithOne(c => c.City)
             //    .HasForeignKey(c => c.CityId)

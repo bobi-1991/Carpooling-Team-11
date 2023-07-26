@@ -12,9 +12,10 @@ namespace CarPooling.Data.Models
     {
         public TripRequest()
         { }
-        public TripRequest( string driverId, int travelId)
+        public TripRequest(string authorId, string driverId, int travelId)
             : base()
         {
+            this.AuthorId = authorId;
             this.DriverId = driverId;
             this.TravelId = travelId;
             this.Status = TripRequestEnum.Pending;
@@ -24,6 +25,9 @@ namespace CarPooling.Data.Models
 
 
         // Foreign keys with navigation properties
+        public User Author { get; set; }
+        public string AuthorId { get; set; }
+
         public User Driver { get; set; }
         public string DriverId { get; set; }
 
