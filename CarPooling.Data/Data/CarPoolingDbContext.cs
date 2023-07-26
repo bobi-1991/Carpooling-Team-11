@@ -12,7 +12,6 @@ namespace CarPooling.Data.Data
         public CarPoolingDbContext(DbContextOptions<CarPoolingDbContext> options)
           : base(options) { }
 
-        public DbSet<City> Cities { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<Address> Addresses { get; set; }
         public DbSet<Country> Countries { get; set; }
@@ -21,7 +20,6 @@ namespace CarPooling.Data.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new UserConfiguration());
-            builder.ApplyConfiguration(new CityConfiguration());
             builder.ApplyConfiguration(new FeedbackConfiguration());
             builder.ApplyConfiguration(new AddressConfiguration());
             builder.ApplyConfiguration(new CarConfiguration());

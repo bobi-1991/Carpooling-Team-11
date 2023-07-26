@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.ComponentModel.DataAnnotations;
 
 namespace CarPooling.Data.Models
 {
@@ -20,19 +19,14 @@ namespace CarPooling.Data.Models
 
 
         // Foreign keys with navigation properties
-        //public int TravelId { get; set; }
-        public Travel? Travel { get; set; }
-        //public int AddressId { get; set; }
-        public Address? Address { get; set;}
-        //public int CityId { get; set; }
-        public City? City { get; set; }
+        public int? AddressId { get; set; }
+        public Address? Address { get; set; }
 
-        public ICollection<Feedback> AuthorFeedbacks { get; set; } = new List<Feedback>();
-        public ICollection<Feedback> RecipientFeedbacks { get; set; } = new List<Feedback>();
-        public ICollection<TripRequest> AuthorTripRequests { get; set; } = new List<TripRequest>();
-        public ICollection<TripRequest> RecipientTripRequests { get; set; } = new List<TripRequest>();
-        public ICollection<Travel> TravelHistory { get; set; } = new List<Travel>();
-        public ICollection<Car> Cars { get; set; } = new List<Car>();
-         
+        public ICollection<Feedback>? PassengerFeedbacks { get; set; } = new List<Feedback>();
+        public ICollection<Feedback>? DriverFeedbacks { get; set; } = new List<Feedback>();
+        public ICollection<TripRequest>? PassengerTripRequests { get; set; } = new List<TripRequest>();
+        public ICollection<TripRequest>? DriverTripRequests { get; set; } = new List<TripRequest>();
+        public ICollection<Travel>? TravelHistory { get; set; } = new List<Travel>();
+        public ICollection<Car>? Cars { get; set; } = new List<Car>();
     }
 }

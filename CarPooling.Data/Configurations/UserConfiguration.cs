@@ -12,6 +12,7 @@ namespace CarPooling.Data.Configurations
             //builder.HasKey(u => u.Id);
             builder.Property(u => u.FirstName).IsRequired(false);
             builder.Property(u => u.LastName).IsRequired(false);
+            builder.Property(u => u.AddressId).IsRequired(false);
 
 
             //builder.HasOne(u => u.Travel)

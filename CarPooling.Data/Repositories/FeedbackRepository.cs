@@ -28,7 +28,7 @@ namespace CarPooling.Data.Repositories
         public Feedback Delete(int id)
         {
             Feedback feedbackToDelete = GetById(id);
-            feedbackToDelete.IsDelete = true;
+            feedbackToDelete.IsDeleted = true;
             _context.SaveChanges();
             return feedbackToDelete;
         }
@@ -36,21 +36,21 @@ namespace CarPooling.Data.Repositories
         public List<Feedback> GetAll()
         {
             return _context.Feedbacks
-                .Include(f => f.Author)
+                .Include(f => f.Passenger)
                 .Include(f => f.Comment)
                 .Include(f => f.Rating)
-                .Include(f=>f.Recipient)
+                .Include(f=>f.Driver)
                 .ToList();
         }
 
         public Feedback GetById(int id)
         {
             Feedback feedback = _context.Feedbacks
-                .Where(f=>f.Id == id)
-                .Include(f => f.Author)
-                .Include(f=>f.Rating)
+                .Where(f => f.Id == id)
+                .Include(f => f.Passenger)
+                .Include(f => f.Rating)
                 .Include(f => f.Comment)
-                .Include(f => f.Recipient)
+                .Include(f => f.Driver)
                 .FirstOrDefault();
 
             return feedback ?? throw new EntityNotFoundException($"Feedback not found with id: {id}!");

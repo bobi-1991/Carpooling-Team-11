@@ -29,11 +29,6 @@ namespace Carpooling.BusinessLayer.Services
             
         }
 
-        public List<Address> FilterByAddressAndSort(string addressName, string sortBy)
-        {
-            return _addressRepository.FilterByAddressAndSort(addressName, sortBy);
-        }
-
         public List<Address> GetAll()
         {
             return _addressRepository.GetAll();
@@ -44,10 +39,6 @@ namespace Carpooling.BusinessLayer.Services
             return _addressRepository.GetById(id);
         }
 
-        public Address GetByName (string name)
-        {
-            return _addressRepository.GetByName(name);
-        }
 
         public Address Update(int id, User user, Address address)
         {

@@ -31,27 +31,27 @@ namespace Carpooling.Infrastructure
                         });
                     }
 
-                    var managerName = "Manager";
+                    var pasangerName = "Passenger";
 
-                    var existsManager = await roleManager.RoleExistsAsync(managerName);
+                    var existsManager = await roleManager.RoleExistsAsync(pasangerName);
 
                     if (!existsManager)
                     {
                         await roleManager.CreateAsync(new UserRole
                         {
-                            Name = managerName
+                            Name = pasangerName
                         });
                     }
 
-                    var memberName = "Member";
+                    var driverName = "Driver";
 
-                    var existsMember = await roleManager.RoleExistsAsync(memberName);
+                    var existsMember = await roleManager.RoleExistsAsync(driverName);
 
                     if (!existsMember)
                     {
                         await roleManager.CreateAsync(new UserRole
                         {
-                            Name = memberName
+                            Name = driverName
                         });
                     }
 

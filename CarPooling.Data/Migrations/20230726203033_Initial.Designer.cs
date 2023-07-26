@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarPooling.Data.Migrations
 {
     [DbContext(typeof(CarPoolingDbContext))]
-    [Migration("20230725143812_Initial")]
+    [Migration("20230726203033_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,27 +32,28 @@ namespace CarPooling.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AddressNumber")
-                        .HasPrecision(1, 300)
-                        .HasColumnType("int");
-
-                    b.Property<int>("CityId")
-                        .HasColumnType("int");
+                    b.Property<string>("City")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CountryId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreateOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DeleteOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Details")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CityId");
 
                     b.HasIndex("CountryId");
 
@@ -66,6 +67,9 @@ namespace CarPooling.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("AvailableSeats")
+                        .HasColumnType("int");
 
                     b.Property<string>("Brand")
                         .IsRequired()
@@ -84,7 +88,11 @@ namespace CarPooling.Data.Migrations
                     b.Property<DateTime>("DeleteOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsDelete")
+                    b.Property<string>("DriverId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Model")
@@ -93,47 +101,19 @@ namespace CarPooling.Data.Migrations
 
                     b.Property<string>("Registration")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("TotalSeats")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("DriverId");
 
                     b.ToTable("Cars");
-                });
-
-            modelBuilder.Entity("CarPooling.Data.Models.City", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<int>("CountryId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CountryId");
-
-                    b.ToTable("Cities");
                 });
 
             modelBuilder.Entity("CarPooling.Data.Models.Country", b =>
@@ -144,10 +124,21 @@ namespace CarPooling.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<DateTime>("CreateOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DeleteOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -162,14 +153,8 @@ namespace CarPooling.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreateOn")
                         .HasColumnType("datetime2");
@@ -177,21 +162,33 @@ namespace CarPooling.Data.Migrations
                     b.Property<DateTime>("DeleteOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.Property<string>("RecipientId")
+                    b.Property<string>("DriverId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PassengerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TravelId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("DriverId");
 
-                    b.HasIndex("RecipientId");
+                    b.HasIndex("PassengerId");
+
+                    b.HasIndex("TravelId");
 
                     b.ToTable("Feedbacks");
                 });
@@ -204,10 +201,7 @@ namespace CarPooling.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("AvailableSeat")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CarId")
+                    b.Property<int?>("CarId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("CreateOn")
@@ -219,27 +213,33 @@ namespace CarPooling.Data.Migrations
                     b.Property<DateTime>("DepartureTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("DestinationId")
+                    b.Property<string>("DriverId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("EndLocationId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsDelete")
+                    b.Property<bool?>("IsCompleted")
                         .HasColumnType("bit");
 
-                    b.Property<int>("StartLocationId")
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("StartLocationId")
                         .HasColumnType("int");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CarId");
 
-                    b.HasIndex("DestinationId");
+                    b.HasIndex("DriverId");
+
+                    b.HasIndex("EndLocationId");
 
                     b.HasIndex("StartLocationId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Travels");
                 });
@@ -252,22 +252,18 @@ namespace CarPooling.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("AuthorId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("CreateOn")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DeleteOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DriverId")
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("PassengerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsDelete")
-                        .HasColumnType("bit");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -275,13 +271,19 @@ namespace CarPooling.Data.Migrations
                     b.Property<int>("TravelId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("UpdatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("AuthorId");
-
-                    b.HasIndex("DriverId");
+                    b.HasIndex("PassengerId");
 
                     b.HasIndex("TravelId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("TripRequest");
                 });
@@ -299,9 +301,6 @@ namespace CarPooling.Data.Migrations
 
                     b.Property<decimal>("AverageRating")
                         .HasColumnType("decimal(18,2)");
-
-                    b.Property<int?>("CityId")
-                        .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -368,8 +367,6 @@ namespace CarPooling.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
-
-                    b.HasIndex("CityId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -523,107 +520,87 @@ namespace CarPooling.Data.Migrations
 
             modelBuilder.Entity("CarPooling.Data.Models.Address", b =>
                 {
-                    b.HasOne("CarPooling.Data.Models.City", "City")
-                        .WithMany("Addresses")
-                        .HasForeignKey("CityId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("CarPooling.Data.Models.Country", "Country")
                         .WithMany("Addresses")
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.Navigation("City");
 
                     b.Navigation("Country");
                 });
 
             modelBuilder.Entity("CarPooling.Data.Models.Car", b =>
                 {
-                    b.HasOne("CarPooling.Data.Models.User", "User")
+                    b.HasOne("CarPooling.Data.Models.User", "Driver")
                         .WithMany("Cars")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("DriverId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CarPooling.Data.Models.City", b =>
-                {
-                    b.HasOne("CarPooling.Data.Models.Country", "Country")
-                        .WithMany("Cities")
-                        .HasForeignKey("CountryId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.Navigation("Country");
+                    b.Navigation("Driver");
                 });
 
             modelBuilder.Entity("CarPooling.Data.Models.Feedback", b =>
                 {
-                    b.HasOne("CarPooling.Data.Models.User", "Author")
-                        .WithMany("AuthorFeedbacks")
-                        .HasForeignKey("AuthorId")
+                    b.HasOne("CarPooling.Data.Models.User", "Driver")
+                        .WithMany("DriverFeedbacks")
+                        .HasForeignKey("DriverId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("CarPooling.Data.Models.User", "Recipient")
-                        .WithMany("RecipientFeedbacks")
-                        .HasForeignKey("RecipientId")
+                    b.HasOne("CarPooling.Data.Models.User", "Passenger")
+                        .WithMany("PassengerFeedbacks")
+                        .HasForeignKey("PassengerId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.Navigation("Author");
+                    b.HasOne("CarPooling.Data.Models.Travel", "Travel")
+                        .WithMany("Feedbacks")
+                        .HasForeignKey("TravelId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
-                    b.Navigation("Recipient");
+                    b.Navigation("Driver");
+
+                    b.Navigation("Passenger");
+
+                    b.Navigation("Travel");
                 });
 
             modelBuilder.Entity("CarPooling.Data.Models.Travel", b =>
                 {
                     b.HasOne("CarPooling.Data.Models.Car", "Car")
-                        .WithMany("Travels")
-                        .HasForeignKey("CarId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("CarId");
 
-                    b.HasOne("CarPooling.Data.Models.Address", "Destination")
-                        .WithMany("TravelsTo")
-                        .HasForeignKey("DestinationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                    b.HasOne("CarPooling.Data.Models.User", "Driver")
+                        .WithMany("TravelHistory")
+                        .HasForeignKey("DriverId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("CarPooling.Data.Models.Address", "EndLocation")
+                        .WithMany()
+                        .HasForeignKey("EndLocationId");
 
                     b.HasOne("CarPooling.Data.Models.Address", "StartLocation")
-                        .WithMany("TravelsFrom")
-                        .HasForeignKey("StartLocationId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("CarPooling.Data.Models.User", null)
-                        .WithMany("TravelHistory")
-                        .HasForeignKey("UserId");
+                        .WithMany()
+                        .HasForeignKey("StartLocationId");
 
                     b.Navigation("Car");
 
-                    b.Navigation("Destination");
+                    b.Navigation("Driver");
+
+                    b.Navigation("EndLocation");
 
                     b.Navigation("StartLocation");
                 });
 
             modelBuilder.Entity("CarPooling.Data.Models.TripRequest", b =>
                 {
-                    b.HasOne("CarPooling.Data.Models.User", "Author")
-                        .WithMany("AuthorTripRequests")
-                        .HasForeignKey("AuthorId")
+                    b.HasOne("CarPooling.Data.Models.User", "Passenger")
+                        .WithMany("PassengerTripRequests")
+                        .HasForeignKey("PassengerId")
                         .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("CarPooling.Data.Models.User", "Driver")
-                        .WithMany("RecipientTripRequests")
-                        .HasForeignKey("DriverId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("CarPooling.Data.Models.Travel", "Travel")
@@ -632,9 +609,11 @@ namespace CarPooling.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Author");
+                    b.HasOne("CarPooling.Data.Models.User", null)
+                        .WithMany("DriverTripRequests")
+                        .HasForeignKey("UserId");
 
-                    b.Navigation("Driver");
+                    b.Navigation("Passenger");
 
                     b.Navigation("Travel");
                 });
@@ -645,20 +624,11 @@ namespace CarPooling.Data.Migrations
                         .WithMany()
                         .HasForeignKey("AddressId");
 
-                    b.HasOne("CarPooling.Data.Models.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId");
-
-                    b.HasOne("CarPooling.Data.Models.Travel", "Travel")
+                    b.HasOne("CarPooling.Data.Models.Travel", null)
                         .WithMany("Passengers")
-                        .HasForeignKey("TravelId")
-                        .OnDelete(DeleteBehavior.NoAction);
+                        .HasForeignKey("TravelId");
 
                     b.Navigation("Address");
-
-                    b.Navigation("City");
-
-                    b.Navigation("Travel");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -712,46 +682,29 @@ namespace CarPooling.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CarPooling.Data.Models.Address", b =>
-                {
-                    b.Navigation("TravelsFrom");
-
-                    b.Navigation("TravelsTo");
-                });
-
-            modelBuilder.Entity("CarPooling.Data.Models.Car", b =>
-                {
-                    b.Navigation("Travels");
-                });
-
-            modelBuilder.Entity("CarPooling.Data.Models.City", b =>
-                {
-                    b.Navigation("Addresses");
-                });
-
             modelBuilder.Entity("CarPooling.Data.Models.Country", b =>
                 {
                     b.Navigation("Addresses");
-
-                    b.Navigation("Cities");
                 });
 
             modelBuilder.Entity("CarPooling.Data.Models.Travel", b =>
                 {
+                    b.Navigation("Feedbacks");
+
                     b.Navigation("Passengers");
                 });
 
             modelBuilder.Entity("CarPooling.Data.Models.User", b =>
                 {
-                    b.Navigation("AuthorFeedbacks");
-
-                    b.Navigation("AuthorTripRequests");
-
                     b.Navigation("Cars");
 
-                    b.Navigation("RecipientFeedbacks");
+                    b.Navigation("DriverFeedbacks");
 
-                    b.Navigation("RecipientTripRequests");
+                    b.Navigation("DriverTripRequests");
+
+                    b.Navigation("PassengerFeedbacks");
+
+                    b.Navigation("PassengerTripRequests");
 
                     b.Navigation("TravelHistory");
                 });

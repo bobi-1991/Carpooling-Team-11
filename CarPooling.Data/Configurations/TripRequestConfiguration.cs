@@ -1,11 +1,6 @@
 ﻿using CarPooling.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CarPooling.Data.Configurations
 {
@@ -16,10 +11,12 @@ namespace CarPooling.Data.Configurations
             //Primary Key
             builder.HasKey(t => t.Id);
 
-            builder.HasOne(t => t.Author)
-                      .WithMany(t => t.AuthorTripRequests)
-                      .HasForeignKey(t => t.AuthorId)
+            builder.HasOne(t => t.Passenger)
+                      .WithMany(t => t.PassengerTripRequests)
+                      .HasForeignKey(t => t.PassengerId)
                       .OnDelete(DeleteBehavior.NoAction);
+
+            builder.HasOne(t => t.Travel);
         }
     }
 }

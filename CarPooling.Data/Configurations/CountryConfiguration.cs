@@ -15,17 +15,11 @@ namespace CarPooling.Data.Configurations
         {
             //Primary Key
             builder.HasKey(key => key.Id);
-
+            //builder.Property(c => c.Addresses).IsRequired(false);
             //Required Fields
-            builder.Property(address => address.Name).IsRequired();
-            builder.Property(address => address.Name).HasMaxLength(50);
+            //builder.Property(address => address.Name).IsRequired();
+            //builder.Property(address => address.Name).HasMaxLength(50);
 
-
-            //Relations
-            builder.HasMany(country => country.Cities)
-                .WithOne(city => city.Country)
-                .HasForeignKey(city => city.CountryId)
-                .OnDelete(DeleteBehavior.NoAction); 
 
         }
     }
