@@ -13,23 +13,26 @@ namespace CarPooling.Data.Models
         {
         }
 
-        public Travel(DateTime departureTime, int availableSeats, int carId)
+        public Travel(int startLocationId, int destinationLocationId, DateTime departureTime, int availableSeats, int carId)
             : base()
         {
             this.DepartureTime = departureTime;
-            this.AvailableSeats = availableSeats;
+            this.AvailableSeat = availableSeats;
+            this.StartLocationId = startLocationId;
+            this.DestinationId = destinationLocationId;
             this.CarId = carId;
         }
         public DateTime DepartureTime { get; set; }
-        public int AvailableSeats { get; set; }
+        public int AvailableSeat { get; set; }
+
 
         // Foreign keys with navigation properties
-        public string UserId { get; set; }
-        public User User { get; set; }
-        public int CountryId { get; set; }
-        public Country Country { get; set; }
-        public string AddressStartLocation { get;set; } 
-        public string AddressEndLocation { get; set; } 
+        public int StartLocationId { get; set; }
+        public Address StartLocation { get; set; }
+
+        public int DestinationId { get; set; }
+        public Address Destination { get; set; }
+
         public int CarId { get; set; }
         public Car Car { get; set; }
 

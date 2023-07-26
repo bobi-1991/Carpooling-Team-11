@@ -25,9 +25,9 @@ namespace CarPooling.Data.Configurations
             builder.Property(c => c.Color).IsRequired();
 
             //Relations
-            builder.HasOne(car => car.Driver)
+            builder.HasOne(car => car.User)
                   .WithMany(user => user.Cars)
-                  .HasForeignKey(car => car.DriverId)
+                  .HasForeignKey(car => car.UserId)
                   .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(car => car.Travels)

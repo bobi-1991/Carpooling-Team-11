@@ -36,7 +36,6 @@ namespace CarPooling.Data.Models
 
         // Navigation property for Recipient
         public User Recipient { get; set; }
-        public int TravelId { get; set; }
 
     }
 }
