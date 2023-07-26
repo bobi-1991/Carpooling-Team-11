@@ -32,7 +32,7 @@ namespace Carpooling.BusinessLayer.Services
         public Feedback Delete(int id, User user)
         {
             Feedback feedbackToDelete = GetById(id);
-            if(feedbackToDelete.AuthorId != user.Id && user.IsAdmin == false && user.IsBlocked == true)
+            if(feedbackToDelete.AuthorId != user.Id && user.IsBlocked == true)
             {
                 throw new UnauthorizedOperationException("Only owner of the feedback or admin can delete!");
             }
@@ -53,7 +53,7 @@ namespace Carpooling.BusinessLayer.Services
         public Feedback Update(int id, User user, Feedback feedback)
         {
             Feedback feedbackToUpdate= GetById(id);
-            if (feedbackToUpdate.AuthorId != user.Id && user.IsBlocked == true && user.IsAdmin == false)
+            if (feedbackToUpdate.AuthorId != user.Id && user.IsBlocked == true)
             {
                 throw new UnauthorizedOperationException("Only owner of the feedback or admin can update!");
             }

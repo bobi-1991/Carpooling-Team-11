@@ -22,7 +22,6 @@ namespace CarPooling.Data.Models
 
         public TripRequestEnum Status { get; set; } // Pending, Approved, Declined
 
-
         // Foreign keys with navigation properties
         public User Driver { get; set; }
         public string DriverId { get; set; }

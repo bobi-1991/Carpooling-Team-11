@@ -17,7 +17,7 @@ namespace CarPooling.Data.Models
         public Car(string userId, string registration, string brand, string model, string color, bool canSmoke, int totalSeats)
             : base()
         {
-            this.UserId = userId;
+            this.DriverId = userId;
             this.Registration = registration;
             this.TotalSeats = totalSeats;
             this.Brand = brand;
@@ -36,9 +36,10 @@ namespace CarPooling.Data.Models
 
 
         // Foreign keys with navigation properties
-        public string UserId { get; set; }
-        public User User { get; set; }
+        public string DriverId { get; set; }
+        public User Driver { get; set; }
 
         public ICollection<Travel> Travels { get; set; } = new List<Travel>();
     }
 }
+

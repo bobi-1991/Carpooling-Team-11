@@ -15,9 +15,6 @@ namespace CarPooling.Data.Models
         public string? ProfileImage { get; set; }
         public bool IsBlocked { get; set; }
 
-        // IdentityUser ??
-        public bool IsAdmin { get; set; }
-
 
         // Foreign keys with navigation properties
         //public int TravelId { get; set; }

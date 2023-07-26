@@ -27,7 +27,7 @@ namespace Carpooling.BusinessLayer.Services
         {
             //ToDo when we have user roles.
             Address addressToDelete = _addressRepository.GetById(id);
-            if(!addressToDelete.User.UserName.Equals(user.UserName) && user.IsBlocked==true && user.IsAdmin==false)
+            if(!addressToDelete.User.UserName.Equals(user.UserName) && user.IsBlocked==true)
             {
                 throw new UnauthorizedOperationException("Only owner of the address or admin can delete!");
             }
@@ -59,7 +59,7 @@ namespace Carpooling.BusinessLayer.Services
         {
             //ToDo when we have user roles.
             Address addressToUpdate = GetById(id);
-            if (!address.User.UserName.Equals(user.UserName) && user.IsBlocked == true && user.IsAdmin == false)
+            if (!address.User.UserName.Equals(user.UserName) && user.IsBlocked == true)
             {
                 throw new UnauthorizedOperationException("Only owner or admin can update addresses!");
             }
