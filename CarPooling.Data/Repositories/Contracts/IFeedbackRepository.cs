@@ -11,8 +11,8 @@ namespace CarPooling.Data.Repositories.Contracts
     {
         List<Feedback> GetAll();
         Feedback GetById(int id);
-        Feedback Create(Feedback city);
-        Feedback Update(int id, Feedback city);
+        Feedback Create(Feedback feedback);
+        Feedback Update(int id, Feedback feedback);
         Feedback Delete(int id);
     }
 }

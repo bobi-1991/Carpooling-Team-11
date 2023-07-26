@@ -292,13 +292,13 @@ namespace CarPooling.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AddressId")
+                    b.Property<int>("AddressId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("AverageRating")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int?>("CityId")
+                    b.Property<int>("CityId")
                         .HasColumnType("int");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -365,9 +365,11 @@ namespace CarPooling.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AddressId");
+                    b.HasIndex("AddressId")
+                        .IsUnique();
 
-                    b.HasIndex("CityId");
+                    b.HasIndex("CityId")
+                        .IsUnique();
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -640,12 +642,16 @@ namespace CarPooling.Data.Migrations
             modelBuilder.Entity("CarPooling.Data.Models.User", b =>
                 {
                     b.HasOne("CarPooling.Data.Models.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressId");
+                        .WithOne("User")
+                        .HasForeignKey("CarPooling.Data.Models.User", "AddressId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("CarPooling.Data.Models.City", "City")
-                        .WithMany()
-                        .HasForeignKey("CityId");
+                        .WithOne("User")
+                        .HasForeignKey("CarPooling.Data.Models.User", "CityId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.HasOne("CarPooling.Data.Models.Travel", "Travel")
                         .WithMany("Passengers")
@@ -715,6 +721,9 @@ namespace CarPooling.Data.Migrations
                     b.Navigation("TravelsFrom");
 
                     b.Navigation("TravelsTo");
+
+                    b.Navigation("User")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CarPooling.Data.Models.Car", b =>
@@ -725,6 +734,9 @@ namespace CarPooling.Data.Migrations
             modelBuilder.Entity("CarPooling.Data.Models.City", b =>
                 {
                     b.Navigation("Addresses");
+
+                    b.Navigation("User")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("CarPooling.Data.Models.Country", b =>

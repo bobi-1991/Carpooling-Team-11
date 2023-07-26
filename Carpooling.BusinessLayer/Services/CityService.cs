@@ -1,4 +1,5 @@
-﻿using Carpooling.BusinessLayer.Services.Contracts;
+﻿using Carpooling.BusinessLayer.Exceptions;
+using Carpooling.BusinessLayer.Services.Contracts;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
 using System;
@@ -18,14 +19,24 @@ namespace Carpooling.BusinessLayer.Services
         }
         public City Create(City city, User user)
         {
-            //ToDo when we have user roles.
-            throw new NotImplementedException();
+            if (user.IsBlocked == true)
+            {
+                throw new UnauthorizedOperationException("Only non-blocked users can create city location!");
+            }
+            city.User = user;
+            return _cityRepository.Create(city);
         }
 
         public City Delete(int id, User user)
         {
             //ToDo when we have user roles.
-            throw new NotImplementedException();
+            City cityToDelete = GetById(id);
+            if(!cityToDelete.User.UserName.Equals(user.UserName) && user.IsBlocked==true && user.IsAdmin==false)
+            {
+                throw new UnauthorizedOperationException("Only owner or admin can remove cities!");
+            }
+            _cityRepository.Delete(id);
+            return cityToDelete;
         }
 
         public List<City> GetAll()
@@ -46,7 +57,13 @@ namespace Carpooling.BusinessLayer.Services
         public City Update(int id, User user, City city)
         {
             //ToDo when we have user roles.
-            throw new NotImplementedException();
+            City cityToUpdate = GetById(id);
+            if (!city.User.UserName.Equals(user.UserName) && user.IsBlocked == true && user.IsAdmin == false)
+            {
+                throw new UnauthorizedOperationException("Only owner or admin can update cities!");
+            }
+            cityToUpdate = _cityRepository.Update(id, city);
+            return cityToUpdate;
         }
     }
 }

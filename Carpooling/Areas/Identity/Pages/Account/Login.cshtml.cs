@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using CarPooling.Data.Models;
+using System.Linq;
 
 namespace Carpooling.Areas.Identity.Pages.Account
 {
@@ -22,11 +23,12 @@ namespace Carpooling.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger<LoginModel> _logger;
-
-        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger)
+        private UserManager<User> _userManager;
+        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger, UserManager<User> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager;
         }
 
         /// <summary>
