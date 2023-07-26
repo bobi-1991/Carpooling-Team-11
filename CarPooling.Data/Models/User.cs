@@ -22,11 +22,9 @@ namespace CarPooling.Data.Models
         // Foreign keys with navigation properties
         //public int TravelId { get; set; }
         public Travel? Travel { get; set; }
-        
-        public int AddressId { get; set; }
+        //public int AddressId { get; set; }
         public Address? Address { get; set;}
-        
-        public int CityId { get; set; }
+        //public int CityId { get; set; }
         public City? City { get; set; }
 
         public ICollection<Feedback> AuthorFeedbacks { get; set; } = new List<Feedback>();

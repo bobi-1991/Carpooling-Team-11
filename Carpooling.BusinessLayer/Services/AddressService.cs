@@ -19,20 +19,14 @@ namespace Carpooling.BusinessLayer.Services
             {
                 throw new UnauthorizedOperationException("Only non-banned users can create addresses!");
             }
-            address.User = user;
-            return _addressRepository.Create(address);
+            throw new NotImplementedException();
         }
 
         public Address Delete(int id, User user)
         {
             //ToDo when we have user roles.
-            Address addressToDelete = _addressRepository.GetById(id);
-            if(!addressToDelete.User.UserName.Equals(user.UserName) && user.IsBlocked==true && user.IsAdmin==false)
-            {
-                throw new UnauthorizedOperationException("Only owner of the address or admin can delete!");
-            }
-            _addressRepository.Delete(id);
-            return addressToDelete;
+            throw new NotImplementedException();
+            
         }
 
         public List<Address> FilterByAddressAndSort(string addressName, string sortBy)
@@ -58,13 +52,7 @@ namespace Carpooling.BusinessLayer.Services
         public Address Update(int id, User user, Address address)
         {
             //ToDo when we have user roles.
-            Address addressToUpdate = GetById(id);
-            if (!address.User.UserName.Equals(user.UserName) && user.IsBlocked == true && user.IsAdmin == false)
-            {
-                throw new UnauthorizedOperationException("Only owner or admin can update addresses!");
-            }
-            addressToUpdate = _addressRepository.Update(id, address);
-            return addressToUpdate;
+            throw new NotImplementedException();
         }
     }
 }
