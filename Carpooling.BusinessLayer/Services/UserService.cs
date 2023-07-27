@@ -40,7 +40,7 @@ namespace Carpooling.BusinessLayer.Services
             return this.userRepository.GetByUsernameAsync(username);
         }
 
-        public async Task<UserResponse> CreateAsync(UserRequest userRequest)
+        public async Task<UserResponse> RegisterAsync(UserRequest userRequest)
         {
             var user = mapper.Map<User>(userRequest);
 
@@ -49,19 +49,20 @@ namespace Carpooling.BusinessLayer.Services
             //var result = await _userManager.CreateAsync(user, user.Password);
             //await _userManager.AddToRolesAsync(user, new List<string> { "Passenger" });
 
-            var result = await _userManager.CreateAsync(user, userRequest.Password);
+            var result = await this._userManager.CreateAsync(user, userRequest.Password);
             await _userManager.AddToRoleAsync(user, "Passenger");
-
 
             return mapper.Map<UserResponse>(result);
         }
 
-        public Task<string> DeleteAsync(string id)
+        public async Task<string> DeleteAsync(User loggedUser, string id)
         {
-            //TODO
-           // this.userValidator.
+            await userValidator.ValidateUserLoggedAndAdmin(loggedUser, id);
+            var userToDelete = await this.userRepository.GetByIdAsync(id);
 
-            return this.userRepository.DeleteAsync(id);
+            await this._userManager.DeleteAsync(userToDelete);
+
+            return "User successfully deleted.";
         }
 
         public async Task<IEnumerable<UserResponse>> GetAllAsync()
@@ -98,5 +99,6 @@ namespace Carpooling.BusinessLayer.Services
 
             return this.mapper.Map<UserResponse>(user);
         }
+
     }
 }

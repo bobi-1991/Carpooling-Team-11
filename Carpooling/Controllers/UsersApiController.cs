@@ -1,8 +1,12 @@
 ﻿using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
+using Carpooling.Service.Dto_s.Requests;
 using Carpooling.Service.Dto_s.Responses;
+using CarPooling.Data.Exceptions;
+using CarPooling.Data.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 
 namespace Carpooling.Controllers
 {
@@ -25,7 +29,7 @@ namespace Carpooling.Controllers
         {
             try
             {
-                var loggedUser = this.authValidator.ValidateCredentialAsync(credentials);
+                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
                 var users = await userService.GetAllAsync();
 
                 return StatusCode(StatusCodes.Status200OK, users);
@@ -34,6 +38,42 @@ namespace Carpooling.Controllers
             {
                 return Unauthorized(e.Message);
             }
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterAsync([FromBody] UserRequest userRequest)
+        {
+            try
+            {
+                var userResponse = await this.userService.RegisterAsync(userRequest);
+
+                return Ok(userResponse);
+            }
+            catch (ArgumentNullException e)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, e.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAsync([FromHeader] string credentials, string id)
+        {
+            try
+            {
+                User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                var result = await userService.DeleteAsync(loggedUser, id);
+
+                return StatusCode(StatusCodes.Status200OK, result);
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (ArgumentNullException e)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, e.Message);
+            }
+
         }
     }
 }
