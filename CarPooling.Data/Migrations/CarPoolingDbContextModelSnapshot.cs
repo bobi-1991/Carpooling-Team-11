@@ -283,7 +283,7 @@ namespace CarPooling.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TripRequest");
+                    b.ToTable("TripRequests");
                 });
 
             modelBuilder.Entity("CarPooling.Data.Models.User", b =>
@@ -318,6 +318,9 @@ namespace CarPooling.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsBlocked")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")

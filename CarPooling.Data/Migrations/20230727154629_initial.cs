@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CarPooling.Data.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -137,6 +137,7 @@ namespace CarPooling.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AverageRating = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
@@ -298,7 +299,7 @@ namespace CarPooling.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TripRequest",
+                name: "TripRequests",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -314,19 +315,19 @@ namespace CarPooling.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TripRequest", x => x.Id);
+                    table.PrimaryKey("PK_TripRequests", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_TripRequest_AspNetUsers_PassengerId",
+                        name: "FK_TripRequests_AspNetUsers_PassengerId",
                         column: x => x.PassengerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_TripRequest_AspNetUsers_UserId",
+                        name: "FK_TripRequests_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_TripRequest_Travels_TravelId",
+                        name: "FK_TripRequests_Travels_TravelId",
                         column: x => x.TravelId,
                         principalTable: "Travels",
                         principalColumn: "Id",
@@ -428,18 +429,18 @@ namespace CarPooling.Data.Migrations
                 column: "StartLocationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TripRequest_PassengerId",
-                table: "TripRequest",
+                name: "IX_TripRequests_PassengerId",
+                table: "TripRequests",
                 column: "PassengerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TripRequest_TravelId",
-                table: "TripRequest",
+                name: "IX_TripRequests_TravelId",
+                table: "TripRequests",
                 column: "TravelId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TripRequest_UserId",
-                table: "TripRequest",
+                name: "IX_TripRequests_UserId",
+                table: "TripRequests",
                 column: "UserId");
 
             migrationBuilder.AddForeignKey(
@@ -507,7 +508,7 @@ namespace CarPooling.Data.Migrations
                 name: "Feedbacks");
 
             migrationBuilder.DropTable(
-                name: "TripRequest");
+                name: "TripRequests");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

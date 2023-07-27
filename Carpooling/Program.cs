@@ -7,6 +7,13 @@ using Carpooling;
 using CarPooling.Data.JsonManager;
 using CarPooling.Data.Models;
 using Carpooling.Infrastructure;
+using Carpooling.BusinessLayer.Validation.Contracts;
+using Carpooling.BusinessLayer.Validation;
+using CarPooling.Data.Repositories.Contracts;
+using CarPooling.Data.Repositories;
+using Carpooling.BusinessLayer.Services.Contracts;
+using Carpooling.BusinessLayer.Services;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 public class Program
 {
@@ -23,12 +30,29 @@ public class Program
             .AddEntityFrameworkStores<CarPoolingDbContext>();
 
         //Helpers
-
         builder.Services.AddScoped<IJsonManager, JsonManager>();
         builder.Services.AddAutoMapper(typeof(Carpooling.BusinessLayer.Helpers.Mapper));
 
-        // Add services to the container.
+        // Add services to the container
         builder.Services.AddRazorPages();
+        builder.Services.AddScoped<IUserService, UserService>();
+
+        //Add identity services
+        builder.Services.AddScoped<UserManager<User>>();
+
+
+
+        //Validators
+        builder.Services.AddScoped<IUserValidation, UserValidation>();
+
+        //Add repositories to the container
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<ITravelRepository, TravelRepository>();
+        builder.Services.AddScoped<ITripRequestRepository, TripRequestRepository>();
+       
+
+        
+
 
         builder.Services.AddSwaggerGen(options =>
         {
@@ -66,7 +90,7 @@ public class Program
         app.UseAuthorization();
 
         app.MapRazorPages();
-        
+
         app.Run();
 
     }

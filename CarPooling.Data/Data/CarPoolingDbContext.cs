@@ -17,6 +17,7 @@ namespace CarPooling.Data.Data
         public DbSet<Country> Countries { get; set; }
         public DbSet<Travel> Travels { get; set; }
         public DbSet<Car> Cars { get; set; }
+        public DbSet<TripRequest> TripRequests  { get; set; }
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.ApplyConfiguration(new UserConfiguration());

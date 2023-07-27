@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarPooling.Data.Migrations
 {
     [DbContext(typeof(CarPoolingDbContext))]
-    [Migration("20230726203033_Initial")]
-    partial class Initial
+    [Migration("20230727154629_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -285,7 +285,7 @@ namespace CarPooling.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("TripRequest");
+                    b.ToTable("TripRequests");
                 });
 
             modelBuilder.Entity("CarPooling.Data.Models.User", b =>
@@ -320,6 +320,9 @@ namespace CarPooling.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsBlocked")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
