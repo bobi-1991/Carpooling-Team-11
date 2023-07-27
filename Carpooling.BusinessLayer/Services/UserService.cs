@@ -82,8 +82,9 @@ namespace Carpooling.BusinessLayer.Services
             return this.mapper.Map<UserResponse>(await this.userRepository.GetByUsernameAsync(username));
         }
 
-        public async Task<IEnumerable<TravelResponse>> TravelHistoryAsync(string userId)
+        public async Task<IEnumerable<TravelResponse>> TravelHistoryAsync(User loggeduser, string userId)
         {
+            await this.userValidator.ValidateUserLoggedAndAdmin(loggeduser,userId);
             var travels = await this.userRepository.TravelHistoryAsync(userId);
 
             return travels.Select(x => mapper.Map<TravelResponse>(x));

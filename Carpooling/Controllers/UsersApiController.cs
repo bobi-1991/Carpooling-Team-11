@@ -40,6 +40,27 @@ namespace Carpooling.Controllers
             }
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById([FromHeader] string credentials, string id)
+        {
+            try
+            {
+                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                var user = await this.userService.GetByIdAsync(id);
+
+                return StatusCode(StatusCodes.Status200OK, user);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+
+        }
+
         [HttpPost("register")]
         public async Task<IActionResult> RegisterAsync([FromBody] UserRequest userRequest)
         {
@@ -73,7 +94,42 @@ namespace Carpooling.Controllers
             {
                 return StatusCode(StatusCodes.Status403Forbidden, e.Message);
             }
+        }
 
+        [HttpGet("{username}")]
+        public async Task<IActionResult> GetByUsernameAsync([FromHeader] string credentials, string username)
+        {
+            try
+            {
+                User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                var user = await userService.GetByUsernameAsync(username);
+
+                return Ok(user);
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> TravelHistoryAsync([FromHeader] string credentials, string id)
+        {
+            try
+            {
+                User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                var travels = await userService.TravelHistoryAsync(loggedUser, id);
+
+                return Ok(travels);
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
         }
     }
 }
