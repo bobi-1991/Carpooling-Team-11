@@ -93,12 +93,9 @@ namespace Carpooling.BusinessLayer.Services
         public async Task<UserResponse> UpdateAsync(User loggedUser, string id, UserUpdateDto userUpdateDto)
         {
             await userValidator.ValidateUserLoggedAndAdmin(loggedUser, id);
+            await this._userManager.UpdateAsync(this.mapper.Map<User>(userUpdateDto));
 
-            var userData = this.mapper.Map<User>(userUpdateDto);
-
-            var user = userRepository.UpdateAsync(id, userData);
-
-            return this.mapper.Map<UserResponse>(user);
+            return this.mapper.Map<UserResponse>(this.userRepository.GetByIdAsync(id));
         }
 
     }

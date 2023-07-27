@@ -1,4 +1,5 @@
-﻿using Carpooling.BusinessLayer.Exceptions;
+﻿using Carpooling.BusinessLayer.Dto_s.UpdateModels;
+using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
 using Carpooling.Service.Dto_s.Requests;
@@ -131,5 +132,22 @@ namespace Carpooling.Controllers
                 return Unauthorized(e.Message);
             }
         }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateAsync([FromHeader] string credentials, string id, [FromBody] UserUpdateDto userUpdateDto)
+        {
+            try
+            {
+                User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                UserResponse updatedUser = await this.userService.UpdateAsync(loggedUser, id, userUpdateDto);
+
+                return StatusCode(StatusCodes.Status200OK, updatedUser);
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+        }
+
     }
 }
