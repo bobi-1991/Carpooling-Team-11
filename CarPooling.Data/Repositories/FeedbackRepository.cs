@@ -20,16 +20,23 @@ namespace CarPooling.Data.Repositories
         }
         public Feedback Create(Feedback feedback)
         {
+            feedback.CreatedOn=DateTime.Now;
+
             _context.Feedbacks.Add(feedback);
             _context.SaveChanges();
+
             return feedback;
         }
 
         public Feedback Delete(int id)
         {
             Feedback feedbackToDelete = GetById(id);
+
             feedbackToDelete.IsDeleted = true;
+            feedbackToDelete.DeletedOn = DateTime.Now;
+
             _context.SaveChanges();
+
             return feedbackToDelete;
         }
 
@@ -40,6 +47,9 @@ namespace CarPooling.Data.Repositories
                 .Include(f => f.Comment)
                 .Include(f => f.Rating)
                 .Include(f=>f.Driver)
+                .Include(f=>f.CreatedOn)
+                .Include(f=>f.DeletedOn)
+                .Include(f=>f.UpdatedOn)
                 .ToList();
         }
 
@@ -51,6 +61,9 @@ namespace CarPooling.Data.Repositories
                 .Include(f => f.Rating)
                 .Include(f => f.Comment)
                 .Include(f => f.Driver)
+                .Include(f => f.CreatedOn)
+                .Include(f => f.DeletedOn)
+                .Include(f => f.UpdatedOn)
                 .FirstOrDefault();
 
             return feedback ?? throw new EntityNotFoundException($"Feedback not found with id: {id}!");
@@ -60,8 +73,11 @@ namespace CarPooling.Data.Repositories
             Feedback feedbackToUpdate = GetById(id);
             feedbackToUpdate.Comment = feedback.Comment;
             feedbackToUpdate.Rating = feedback.Rating;
+            feedbackToUpdate.UpdatedOn = DateTime.Now;
+
             _context.Update(feedbackToUpdate);
             _context.SaveChanges();
+            
             return feedbackToUpdate;
         }
     }

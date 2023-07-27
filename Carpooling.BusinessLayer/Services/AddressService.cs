@@ -14,19 +14,23 @@ namespace Carpooling.BusinessLayer.Services
         }
         public Address Create(Address address, User user)
         {
-            //ToDo when we have user roles.
             if(user.IsBlocked == true)
             {
                 throw new UnauthorizedOperationException("Only non-banned users can create addresses!");
             }
-            throw new NotImplementedException();
+            
+            return _addressRepository.Create(address);
         }
 
         public Address Delete(int id, User user)
         {
-            //ToDo when we have user roles.
-            throw new NotImplementedException();
-            
+            Address addressToDelete = GetById(id); 
+            if(user.IsBlocked == true)
+            {
+                throw new UnauthorizedOperationException("You do not have permission to delete this address!");
+            }
+            addressToDelete = _addressRepository.Delete(id);
+            return addressToDelete;
         }
 
         public List<Address> GetAll()
@@ -42,8 +46,15 @@ namespace Carpooling.BusinessLayer.Services
 
         public Address Update(int id, User user, Address address)
         {
-            //ToDo when we have user roles.
-            throw new NotImplementedException();
+            Address addressToUpdate = GetById(id);
+            if(user.IsBlocked == true) 
+            {
+                throw new UnauthorizedOperationException("You do not have permission to update the address!");
+            }
+
+            addressToUpdate = _addressRepository.Update(id, address);
+
+            return addressToUpdate;
         }
     }
 }
