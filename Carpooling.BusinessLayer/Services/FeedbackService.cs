@@ -1,4 +1,5 @@
-﻿using Carpooling.BusinessLayer.Services.Contracts;
+﻿using Carpooling.BusinessLayer.Exceptions;
+using Carpooling.BusinessLayer.Services.Contracts;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
 using System;
@@ -19,13 +20,26 @@ namespace Carpooling.BusinessLayer.Services
         public Feedback Create(Feedback feedback, User user)
         {
             //ToDo when we have user roles.
-            throw new NotImplementedException();
+            if (user.IsBlocked == true)
+            {
+                throw new UnauthorizedOperationException("Only non-blocked user can make feedbacks!");
+            }
+
+            feedback.Passenger = user;
+            feedback.PassengerId = user.Id;
+
+            return _feedbackRepository.Create(feedback);
         }
 
         public Feedback Delete(int id, User user)
         {
-            //ToDo when we have user roles.
-            throw new NotImplementedException();
+            Feedback feedbackToDelete = GetById(id);
+            if(user.IsBlocked == true && feedbackToDelete.PassengerId != user.Id)
+            {
+                throw new UnauthorizedOperationException("You do not have permission to delete this feedback!");
+            }
+            feedbackToDelete = _feedbackRepository.Delete(id);
+            return feedbackToDelete;
         }
 
         public List<Feedback> GetAll()
@@ -40,8 +54,13 @@ namespace Carpooling.BusinessLayer.Services
 
         public Feedback Update(int id, User user, Feedback feedback)
         {
-            //ToDo when we have user roles.
-            throw new NotImplementedException();
+            Feedback feedbackToUpdate = GetById(id);
+            if(user.IsBlocked==true && feedbackToUpdate.PassengerId != user.Id)
+            {
+                throw new UnauthorizedOperationException("You do not have permission to update this feedback!");
+            }
+            feedbackToUpdate = _feedbackRepository.Update(id, feedback);
+            return feedbackToUpdate;
         }
     }
 }

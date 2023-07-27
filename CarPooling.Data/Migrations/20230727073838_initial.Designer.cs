@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarPooling.Data.Migrations
 {
     [DbContext(typeof(CarPoolingDbContext))]
-    [Migration("20230726203033_Initial")]
-    partial class Initial
+    [Migration("20230727073838_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
