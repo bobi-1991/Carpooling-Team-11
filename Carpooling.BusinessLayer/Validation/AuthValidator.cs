@@ -1,30 +1,29 @@
 ﻿using AutoMapper;
 using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services.Contracts;
-using Carpooling.Service.Dto_s.Requests;
-using CarPooling.Data.Data;
-using CarPooling.Data.Exceptions;
+using Carpooling.BusinessLayer.Validation.Contracts;
 using CarPooling.Data.Models;
-using CarPooling.Data.Repositories.Contracts;
+using Carpooling.Service.Dto_s.Requests;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using System.Net;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Carpooling.Authorization
+
+namespace Carpooling.BusinessLayer.Validation
 {
-    public class Authorization : IAuthorization
+    public class AuthValidator:IAuthValidator
     {
         private readonly IUserService userService;
-        private readonly IMapper mapper;
 
-        public Authorization(IUserService userService, IMapper mapper)
+        public AuthValidator(IUserService userService)
         {
             this.userService = userService;
-            this.mapper = mapper;
         }
 
-        public async Task<UserRequest> ValidateCredentialAsync(string credentials)
+        public async Task<User> ValidateCredentialAsync(string credentials)
         {
             string[] credentialsArray = credentials.Split(':');
             string username = credentialsArray[0];
@@ -41,9 +40,9 @@ namespace Carpooling.Authorization
 
             var result = hasher.VerifyHashedPassword(user, user.PasswordHash, password);
 
-            if (result == Microsoft.AspNetCore.Identity.PasswordVerificationResult.Success)
+            if (result == PasswordVerificationResult.Success)
             {
-                return mapper.Map<UserRequest>(user);
+                return user;
             }
             else
             {
@@ -52,29 +51,26 @@ namespace Carpooling.Authorization
 
         }
 
-
         //public async Task<bool> ValidateCredentialAsync(string credentials)
         //{
         //    string[] credentialsArray = credentials.Split(':');
         //    string username = credentialsArray[0];
         //    string password = credentialsArray[1];
 
-        //    string encodedPassword = Convert.ToBase64String(Encoding.UTF8.GetBytes(password));
+        //    var user = await this.userService.GetByUsernameAuthAsync(username);
 
-        //    try
-        //    {
-        //        User user = await this.userService.GetByUsernameAuthAsync(username);
-        //        if (user.Password == encodedPassword)
-        //        {
-        //            return user;
-        //        }
-        //        throw new EntityUnauthorizatedException("Invalid credentials");
-        //    }
-        //    catch (EntityNotFoundException)
-        //    {
-        //        throw new EntityUnauthorizatedException("Invalid username!");
-        //    }
+        //    if (user == null) return false;
+
+        //    var hasher = new PasswordHasher<User>();
+
+        //    var result = hasher.VerifyHashedPassword(user, user.PasswordHash, password);
+
+        //    if (result == PasswordVerificationResult.Success) return true;
+
+        //    return false;
         //}
+
+
 
     }
 }

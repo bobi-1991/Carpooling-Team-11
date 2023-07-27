@@ -58,10 +58,13 @@ namespace Carpooling.BusinessLayer.Services
 
         public Task<string> DeleteAsync(string id)
         {
+            //TODO
+           // this.userValidator.
+
             return this.userRepository.DeleteAsync(id);
         }
 
-        public async Task<IEnumerable<UserResponse>> GetAll()
+        public async Task<IEnumerable<UserResponse>> GetAllAsync()
         {
             var result = await this.userRepository.GetAllAsync();
 

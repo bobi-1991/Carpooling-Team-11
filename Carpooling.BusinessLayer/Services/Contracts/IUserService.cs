@@ -12,7 +12,7 @@ namespace Carpooling.BusinessLayer.Services.Contracts
 {
     public interface IUserService
     {
-        Task<IEnumerable<UserResponse>> GetAll();
+        Task<IEnumerable<UserResponse>> GetAllAsync();
         Task<UserResponse> GetByIdAsync(string id);
         Task<UserResponse> GetByUsernameAsync(string username);
         Task<User> GetByUsernameAuthAsync(string username);
