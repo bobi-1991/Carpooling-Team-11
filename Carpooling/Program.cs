@@ -14,12 +14,18 @@ using CarPooling.Data.Repositories;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Services;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 public class Program
 {
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        builder.Services.AddControllersWithViews().AddNewtonsoftJson(options =>
+        {
+            options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+        });
 
         ////DB
         builder.Services.AddDbContext<CarPoolingDbContext>(options =>
@@ -44,6 +50,7 @@ public class Program
 
         //Validators
         builder.Services.AddScoped<IUserValidation, UserValidation>();
+        builder.Services.AddScoped<IAuthValidator, AuthValidator>();
 
         //Add repositories to the container
         builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -91,7 +98,11 @@ public class Program
 
         app.MapRazorPages();
 
+        app.MapDefaultControllerRoute();
+
         app.Run();
+
+
 
     }
 }

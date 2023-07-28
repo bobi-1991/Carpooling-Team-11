@@ -28,6 +28,9 @@ namespace CarPooling.Data.Data
             builder.ApplyConfiguration(new CountryConfiguration());
             builder.ApplyConfiguration(new TripRequestConfiguration()); 
             base.OnModelCreating(builder);
+
+
+          
         }
 
 
