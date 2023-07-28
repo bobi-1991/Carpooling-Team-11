@@ -147,6 +147,11 @@ namespace Carpooling.Controllers
             {
                 return Unauthorized(e.Message);
             }
+            catch (ArgumentNullException e)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, e.Message);
+            }
+
         }
 
     }
