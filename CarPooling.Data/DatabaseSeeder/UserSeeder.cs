@@ -15,7 +15,7 @@ namespace CarPooling.Data.DatabaseSeeder
     {
         public static async Task UserSeeding(this IApplicationBuilder application)
         {
-            using(var scope = application.ApplicationServices.CreateScope())
+            using (var scope = application.ApplicationServices.CreateScope())
             {
                 UserManager<User> _userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
                 var userGosho = new User
@@ -48,12 +48,45 @@ namespace CarPooling.Data.DatabaseSeeder
                     AverageRating = 4.5m,
                     IsBlocked = false
                 };
+                var userAngel = new User
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserName = "angel@gmail.com",
+                    FirstName = "Angel",
+                    LastName = "Angelov",
+                    Email = "angel@gmail.com",
+                    AverageRating = 4.5m,
+                    IsBlocked = false
+                };
+                var userVanjo = new User
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserName = "vanjo@gmail.com",
+                    FirstName = "Vanjo",
+                    LastName = "Vanchev",
+                    Email = "vanjo@gmail.com",
+                    AverageRating = 4.5m,
+                    IsBlocked = false
+                };
+                var userAlex = new User
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    UserName = "alex@gmail.com",
+                    FirstName = "Alex",
+                    LastName = "Alexandrev",
+                    Email = "alex@gmail.com",
+                    AverageRating = 4.5m,
+                    IsBlocked = false
+                };
                 var password = "SamplePassword123!";
                 var result1 = await _userManager.CreateAsync(userGosho, password);
                 var result2 = await _userManager.CreateAsync(userPesho, password);
                 var result3 = await _userManager.CreateAsync(userMisho, password);
+                var result4 = await _userManager.CreateAsync(userAlex, password);
+                var result5 = await _userManager.CreateAsync(userVanjo, password);
+                var result6 = await _userManager.CreateAsync(userAngel, password);
                 if (result1.Succeeded)
-                { 
+                {
                     await _userManager.AddToRoleAsync(userGosho, "Administrator");
                 }
                 if (result2.Succeeded)
@@ -63,6 +96,18 @@ namespace CarPooling.Data.DatabaseSeeder
                 if (result3.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(userMisho, "Passenger");
+                }
+                if (result4.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(userAlex, "Driver");
+                }
+                if (result5.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(userVanjo, "Passenger");
+                }
+                if (result6.Succeeded)
+                {
+                    await _userManager.AddToRoleAsync(userAngel, "Passenger");
                 }
             }
             

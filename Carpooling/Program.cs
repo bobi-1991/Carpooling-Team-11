@@ -15,6 +15,7 @@ using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Services;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Newtonsoft.Json;
+using CarPooling.Data.DatabaseSeeder;
 
 public class Program
 {
