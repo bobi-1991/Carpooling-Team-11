@@ -90,9 +90,9 @@ public class Program
         app.SeedDatabaseCountries();
 
         //Infrastructure
-        await app.UserSeeding();
         app.UpdateDatabase();
-        
+        await app.UserSeeding();
+        app.SeedDatabaseTravel();
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
