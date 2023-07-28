@@ -20,12 +20,12 @@ namespace CarPooling.Data.Repositories
         }
         public Car Create(Car car)
         {
-            if(_context.Cars.Any(c=>c.Registration.Equals(car.Registration)))
+            if (_context.Cars.Any(c => c.Registration.Equals(car.Registration)))
             {
                 throw new DuplicateEntityException("Such car already exists!");
             }
             car.CreatedOn = DateTime.Now;
-            _context.Cars.Add(car);   
+            _context.Cars.Add(car);
             _context.SaveChanges();
             return car;
         }
@@ -44,6 +44,7 @@ namespace CarPooling.Data.Repositories
         public List<Car> FilterCarsAndSort(string sortBy)
         {
             IQueryable<Car> cars = _context.Cars
+                .Where(c => c.IsDeleted == false)
                 .Include(c => c.Brand)
                 .Include(c => c.Model)
                 .Include(c => c.Registration)
@@ -51,21 +52,21 @@ namespace CarPooling.Data.Repositories
                 .Include(c => c.CreatedOn)
                 .Include(c => c.UpdatedOn)
                 .Include(c => c.DeletedOn);
-            
 
-            switch(sortBy)
+
+            switch (sortBy)
             {
                 case "create":
-                    cars=cars.OrderBy(c=>c.CreatedOn); 
+                    cars = cars.OrderBy(c => c.CreatedOn);
                     break;
                 case "brand":
                     cars = cars.OrderBy(cars => cars.Brand);
                     break;
                 case "model":
-                    cars=cars.OrderBy(cars => cars.Model);
+                    cars = cars.OrderBy(cars => cars.Model);
                     break;
                 default:
-                    cars=cars.OrderBy(cars=>cars.Id);
+                    cars = cars.OrderBy(cars => cars.Id);
                     break;
             }
             return cars.ToList();
@@ -74,6 +75,7 @@ namespace CarPooling.Data.Repositories
         public List<Car> GetAll()
         {
             return _context.Cars
+                .Where(c => c.IsDeleted == false)
                 .Include(c => c.Brand)
                 .Include(c => c.Model)
                 .Include(c => c.Registration)
@@ -87,7 +89,7 @@ namespace CarPooling.Data.Repositories
         public Car GetByBrand(string brandName)
         {
             Car car = _context.Cars
-                .Where(c => c.Brand.Equals(brandName))
+                .Where(c => c.IsDeleted == false)
                 .Include(c => c.Id)
                 .Include(c => c.Model)
                 .Include(c => c.Registration)
@@ -95,7 +97,7 @@ namespace CarPooling.Data.Repositories
                 .Include(c => c.CreatedOn)
                 .Include(c => c.UpdatedOn)
                 .Include(c => c.DeletedOn)
-                .FirstOrDefault();
+                .FirstOrDefault(c => c.Brand.Equals(brandName));
 
             return car ?? throw new EntityNotFoundException("Not existing car with such brand!");
         }
@@ -103,15 +105,15 @@ namespace CarPooling.Data.Repositories
         public Car GetById(int id)
         {
             Car car = _context.Cars
-                .Where(c => c.Id == id)
-                .Include(c=>c.Brand)
-                .Include(c=>c.Model)
-                .Include(c=>c.Registration)
-                .Include(c=>c.Driver) 
+                .Where(c => c.IsDeleted == false)
+                .Include(c => c.Brand)
+                .Include(c => c.Model)
+                .Include(c => c.Registration)
+                .Include(c => c.Driver)
                 .Include(c => c.CreatedOn)
                 .Include(c => c.UpdatedOn)
                 .Include(c => c.DeletedOn)
-               .FirstOrDefault();
+               .FirstOrDefault(c => c.Id == id);
 
             return car ?? throw new EntityNotFoundException("There is no such car !");
         }
@@ -120,12 +122,12 @@ namespace CarPooling.Data.Repositories
         {
             Car carToUpdate = GetById(id);
 
-            carToUpdate.TotalSeats=car.TotalSeats;
-            carToUpdate.AvailableSeats=car.AvailableSeats;
-            carToUpdate.Color=car.Color;
+            carToUpdate.TotalSeats = car.TotalSeats;
+            carToUpdate.AvailableSeats = car.AvailableSeats;
+            carToUpdate.Color = car.Color;
             carToUpdate.Registration = car.Registration;
-            carToUpdate.CanSmoke= car.CanSmoke;
-            carToUpdate.Brand=car.Brand;
+            carToUpdate.CanSmoke = car.CanSmoke;
+            carToUpdate.Brand = car.Brand;
             carToUpdate.Model = car.Model;
             carToUpdate.UpdatedOn = car.UpdatedOn;
 
