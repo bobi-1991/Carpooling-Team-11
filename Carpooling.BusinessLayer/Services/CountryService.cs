@@ -9,62 +9,64 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Carpooling.BusinessLayer.Services
+namespace CarPooling.BusinessLayer.Services
 {
     public class CountryService : ICountryService
     {
         private readonly ICountryRepository _countryRepository;
 
-        public CountryService(ICountryRepository countryRepository, IUserValidation userValidation)
+        public CountryService(ICountryRepository countryRepository)
         {
             _countryRepository = countryRepository;
-
         }
-        public Country Create(Country country, User user)
+
+        public async Task<Country> CreateAsync(Country country, User user)
         {
-            if (user.IsBlocked == true)
+            if (user.IsBlocked)
             {
-                throw new UnauthorizedOperationException("You do not have permission to create new country!");
+                throw new UnauthorizedOperationException("You do not have permission to create a new country!");
             }
-            return _countryRepository.Create(country);
+            return await _countryRepository.CreateAsync(country);
         }
 
-        public Country Delete(int id, User user)
+        public async Task<Country> DeleteAsync(int id, User user)
         {
-            //Check if user is admin
-            Country countryToDelete = GetById(id);
+            Country countryToDelete = await GetByIdAsync(id);
 
-            if (user.IsBlocked == true)
+            if (user.IsBlocked)
             {
                 throw new UnauthorizedAccessException("You do not have permission to delete this country!");
             }
-            countryToDelete = _countryRepository.Delete(id);
+
+            countryToDelete = await _countryRepository.DeleteAsync(id);
             return countryToDelete;
         }
 
-        public List<Country> FilterCountriesByName(string orderByName)
+        public async Task<List<Country>> FilterCountriesByNameAsync(string orderByName)
         {
-            return _countryRepository.FilterCountriesByName(orderByName);
+            return await _countryRepository.FilterCountriesByNameAsync(orderByName);
         }
 
-        public List<Country> GetAll()
+        public async Task<List<Country>> GetAllAsync()
         {
-            return _countryRepository.GetAll();
+            return await _countryRepository.GetAllAsync();
         }
 
-        public Country GetById(int id)
+        public async Task<Country> GetByIdAsync(int id)
         {
-            return _countryRepository.GetById(id);
+            return await _countryRepository.GetByIdAsync(id);
         }
 
-        public Country Update(int id, Country country, User user)
+        public async Task<Country> UpdateAsync(int id, Country country, User user)
         {
-            Country countryToUpdate = GetById(id);
-            if (user.IsBlocked == true)
+            Country countryToUpdate = await GetByIdAsync(id);
+
+            if (user.IsBlocked)
             {
                 throw new UnauthorizedOperationException("You do not have permission to update this country!");
             }
-            countryToUpdate = _countryRepository.Update(id, country);
+
+            countryToUpdate = await _countryRepository.UpdateAsync(id, country);
             return countryToUpdate;
         }
     }

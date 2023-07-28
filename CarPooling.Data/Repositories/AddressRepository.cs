@@ -3,65 +3,65 @@ using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace CarPooling.Data.Repositories
 {
     public class AddressRepository : IAddressRepository
     {
         private readonly CarPoolingDbContext _context;
+
         public AddressRepository(CarPoolingDbContext context)
         {
             _context = context;
         }
-        public Address Create(Address address)
+
+        public async Task<Address> CreateAsync(Address address)
         {
             _context.Addresses.Add(address);
             address.CreatedOn = DateTime.Now;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return address;
         }
 
-        public Address Delete(int id)
+        public async Task<Address> DeleteAsync(int id)
         {
-            Address addressToRemove=GetById(id);
+            Address addressToRemove = await GetByIdAsync(id);
 
-            addressToRemove.IsDeleted=true;
+            addressToRemove.IsDeleted = true;
             addressToRemove.DeletedOn = DateTime.Now;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return addressToRemove;
         }
 
-
-        public List<Address> GetAll()
+        public async Task<List<Address>> GetAllAsync()
         {
-            return _context.Addresses
+            return await _context.Addresses
                 .Include(a => a.Details)
                 .Include(a => a.City)
                 .Include(a => a.Country)
-                .Include(a=>a.CreatedOn)
-                .Include(a=>a.UpdatedOn)
-                .Include(a=>a.DeletedOn)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Address GetById(int id)
+        public async Task<Address> GetByIdAsync(int id)
         {
-            Address address = _context.Addresses.Where(a=>a.Id == id)
-                .Include(a=>a.Details)
-                .Include(a=>a.City)
-                .Include(a=>a.Country)
-                .Include(a => a.CreatedOn)
-                .Include(a => a.UpdatedOn)
-                .Include(a => a.DeletedOn)
-                .FirstOrDefault();
+            Address address = await _context.Addresses
+                .Where(a => a.Id == id)
+                .Include(a => a.Details)
+                .Include(a => a.City)
+                .Include(a => a.Country)
+                .FirstOrDefaultAsync();
 
             return address ?? throw new EntityNotFoundException($"Could not find an address with id: {id}!");
         }
 
-        public Address Update(int id, Address address)
+        public async Task<Address> UpdateAsync(int id, Address address)
         {
-            Address addressToUpdate = GetById(id);
+            Address addressToUpdate = await GetByIdAsync(id);
 
             addressToUpdate.City = address.City;
             addressToUpdate.Country = address.Country;
@@ -69,7 +69,7 @@ namespace CarPooling.Data.Repositories
             addressToUpdate.UpdatedOn = DateTime.Now;
 
             _context.Update(addressToUpdate);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return addressToUpdate;
         }

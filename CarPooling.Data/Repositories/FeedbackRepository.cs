@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CarPooling.Data.Repositories
@@ -14,35 +13,37 @@ namespace CarPooling.Data.Repositories
     public class FeedbackRepository : IFeedbackRepository
     {
         private readonly CarPoolingDbContext _context;
+
         public FeedbackRepository(CarPoolingDbContext context)
         {
             _context = context;
         }
-        public Feedback Create(Feedback feedback)
+
+        public async Task<Feedback> CreateAsync(Feedback feedback)
         {
             feedback.CreatedOn = DateTime.Now;
 
             _context.Feedbacks.Add(feedback);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return feedback;
         }
 
-        public Feedback Delete(int id)
+        public async Task<Feedback> DeleteAsync(int id)
         {
-            Feedback feedbackToDelete = GetById(id);
+            Feedback feedbackToDelete = await GetByIdAsync(id);
 
             feedbackToDelete.IsDeleted = true;
             feedbackToDelete.DeletedOn = DateTime.Now;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return feedbackToDelete;
         }
 
-        public List<Feedback> GetAll()
+        public async Task<List<Feedback>> GetAllAsync()
         {
-            return _context.Feedbacks
+            return await _context.Feedbacks
                 .Where(c => c.IsDeleted == false)
                 .Include(f => f.Passenger)
                 .Include(f => f.Comment)
@@ -51,12 +52,12 @@ namespace CarPooling.Data.Repositories
                 .Include(f => f.CreatedOn)
                 .Include(f => f.DeletedOn)
                 .Include(f => f.UpdatedOn)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Feedback GetById(int id)
+        public async Task<Feedback> GetByIdAsync(int id)
         {
-            Feedback feedback = _context.Feedbacks
+            Feedback feedback = await _context.Feedbacks
                 .Where(c => c.IsDeleted == false)
                 .Include(f => f.Passenger)
                 .Include(f => f.Rating)
@@ -65,19 +66,20 @@ namespace CarPooling.Data.Repositories
                 .Include(f => f.CreatedOn)
                 .Include(f => f.DeletedOn)
                 .Include(f => f.UpdatedOn)
-                .FirstOrDefault(f => f.Id == id);
+                .FirstOrDefaultAsync(f => f.Id == id);
 
             return feedback ?? throw new EntityNotFoundException($"Feedback not found with id: {id}!");
         }
-        public Feedback Update(int id, Feedback feedback)
+
+        public async Task<Feedback> UpdateAsync(int id, Feedback feedback)
         {
-            Feedback feedbackToUpdate = GetById(id);
+            Feedback feedbackToUpdate = await GetByIdAsync(id);
             feedbackToUpdate.Comment = feedback.Comment;
             feedbackToUpdate.Rating = feedback.Rating;
             feedbackToUpdate.UpdatedOn = DateTime.Now;
 
             _context.Update(feedbackToUpdate);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return feedbackToUpdate;
         }

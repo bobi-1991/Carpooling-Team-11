@@ -1,4 +1,5 @@
 ﻿using CarPooling.Data.Configurations;
+using CarPooling.Data.DatabaseSeeder;
 using CarPooling.Data.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -26,11 +27,10 @@ namespace CarPooling.Data.Data
             builder.ApplyConfiguration(new CarConfiguration());
             builder.ApplyConfiguration(new TravelConfiguration());
             builder.ApplyConfiguration(new CountryConfiguration());
-            builder.ApplyConfiguration(new TripRequestConfiguration()); 
+            builder.ApplyConfiguration(new TripRequestConfiguration());
+            
+            //builder.Seeder();
             base.OnModelCreating(builder);
-
-
-          
         }
 
 

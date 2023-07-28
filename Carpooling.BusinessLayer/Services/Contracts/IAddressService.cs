@@ -4,10 +4,10 @@ namespace Carpooling.BusinessLayer.Services.Contracts
 {
     public interface IAddressService
     {
-        List<Address> GetAll();
-        Address GetById(int id);
-        Address Create(Address address, User user);
-        Address Update(int id, User user, Address address);
-        Address Delete(int id, User user);
+        Task<List<Address>> GetAllAsync();
+        Task<Address> GetByIdAsync(int id);
+        Task<Address> CreateAsync(Address address, User user);
+        Task<Address> UpdateAsync(int id, User user, Address address);
+        Task<Address> DeleteAsync(int id, User user);
     }
 }

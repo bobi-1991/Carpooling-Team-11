@@ -9,12 +9,12 @@ namespace CarPooling.Data.Repositories.Contracts
 {
     public interface ICarRepository
     {
-        List<Car> GetAll();
-        Car GetById(int id);
-        Car GetByBrand(string brandName);
-        Car Create(Car car);
-        Car Update(int id, Car car);
-        Car Delete(int id);
-        List<Car> FilterCarsAndSort(string sortBy);
+        Task<List<Car>> GetAllAsync();
+        Task<Car> GetByIdAsync(int id);
+        Task<Car> GetByBrandAsync(string brandName);
+        Task<Car> CreateAsync(Car car);
+        Task<Car> UpdateAsync(int id, Car car);
+        Task<Car> DeleteAsync(int id);
+        Task<List<Car>> FilterCarsAndSortAsync(string sortBy);
     }
 }

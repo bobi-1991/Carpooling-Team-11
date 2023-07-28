@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CarPooling.Data.Repositories
@@ -14,69 +13,61 @@ namespace CarPooling.Data.Repositories
     public class CountryRepository : ICountryRepository
     {
         private readonly CarPoolingDbContext _context;
+
         public CountryRepository(CarPoolingDbContext context)
         {
             _context = context;
         }
 
-        public Country Create(Country country)
+        public async Task<Country> CreateAsync(Country country)
         {
-            if (_context.Countries.Any(c => c.Name.Equals(country.Name)))
+            if (await _context.Countries.AnyAsync(c => c.Name.Equals(country.Name)))
             {
                 throw new DuplicateEntityException($"Country with this name: {country.Name} already exists!");
             }
             country.CreatedOn = DateTime.Now;
             _context.Countries.Add(country);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return country;
         }
 
-        public Country Delete(int id)
+        public async Task<Country> DeleteAsync(int id)
         {
-            Country countryToDelete = GetById(id);
+            Country countryToDelete = await GetByIdAsync(id);
             countryToDelete.IsDeleted = true;
             countryToDelete.DeletedOn = DateTime.Now;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return countryToDelete;
         }
 
-        public List<Country> FilterCountriesByName(string orderByName)
+        public async Task<List<Country>> FilterCountriesByNameAsync(string orderByName)
         {
-            IQueryable<Country> countries = _context.Countries;
-            countries.OrderBy(c => c.Name);
-            return countries.ToList();
+            IQueryable<Country> countries = _context.Countries.OrderBy(c => c.Name);
+            return await countries.ToListAsync();
         }
 
-        public List<Country> GetAll()
+        public async Task<List<Country>> GetAllAsync()
         {
-            return _context.Countries
+            return await _context.Countries
                 .Where(c => c.IsDeleted == false)
-                .Include(c => c.Name)
-                .Include(c => c.CreatedOn)
-                .Include(c => c.DeletedOn)
-                .Include(c => c.UpdatedOn)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Country GetById(int id)
+        public async Task<Country> GetByIdAsync(int id)
         {
-            Country country = _context.Countries
+            Country country = await _context.Countries
                 .Where(c => c.IsDeleted == false)
-                .Include(c => c.Name)
-                .Include(c => c.CreatedOn)
-                .Include(c => c.DeletedOn)
-                .Include(c => c.UpdatedOn)
-                .FirstOrDefault(c => c.Id == id);
+                .FirstOrDefaultAsync(c => c.Id == id);
             return country ?? throw new EntityNotFoundException("Country not found!");
         }
 
-        public Country Update(int id, Country country)
+        public async Task<Country> UpdateAsync(int id, Country country)
         {
-            Country countryToUpdate = GetById(id);
+            Country countryToUpdate = await GetByIdAsync(id);
             countryToUpdate.UpdatedOn = DateTime.Now;
             countryToUpdate.Name = country.Name;
             _context.Update(countryToUpdate);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return countryToUpdate;
         }
     }

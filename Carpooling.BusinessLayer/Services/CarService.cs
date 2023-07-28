@@ -23,59 +23,64 @@ namespace Carpooling.BusinessLayer.Services
             _carRepository = carRepository;
             _userManager = userManager;
         }
-        public Car Create(Car car, User user)
+
+        public async Task<Car> CreateAsync(Car car, User user)
         {
-            if (user.IsBlocked == true)
+            if (user.IsBlocked)
             {
                 throw new UnauthorizedOperationException("Only non-banned users can create cars!");
             }
             car.Driver = user;
             car.DriverId = user.Id;
 
-            return _carRepository.Create(car);
+            return await _carRepository.CreateAsync(car);
         }
 
-        public Car Delete(int id, User user)
+        public async Task<Car> DeleteAsync(int id, User user)
         {
-            var role = _userManager.GetRolesAsync(user).ToString();
-            Car carToDelete = GetById(id);
-            if (carToDelete.DriverId != user.Id && user.IsBlocked == true && role.Equals("Admin"))
+            var roles = await _userManager.GetRolesAsync(user);
+            Car carToDelete = await GetByIdAsync(id);
+
+            if (carToDelete.DriverId != user.Id && user.IsBlocked && roles.Contains("Administrator"))
             {
                 throw new UnauthorizedOperationException("You cannot delete the car!");
             }
-            carToDelete = _carRepository.Delete(id);
+
+            carToDelete = await _carRepository.DeleteAsync(id);
             return carToDelete;
         }
 
-        public List<Car> FilterCarsAndSort(string sortBy)
+        public async Task<List<Car>> FilterCarsAndSortAsync(string sortBy)
         {
-            return _carRepository.FilterCarsAndSort(sortBy);
+            return await _carRepository.FilterCarsAndSortAsync(sortBy);
         }
 
-        public List<Car> GetAll()
+        public async Task<List<Car>> GetAllAsync()
         {
-            return _carRepository.GetAll();
+            return await _carRepository.GetAllAsync();
         }
 
-        public Car GetByBrand(string brandName)
+        public async Task<Car> GetByBrandAsync(string brandName)
         {
-            return _carRepository.GetByBrand(brandName);
+            return await _carRepository.GetByBrandAsync(brandName);
         }
 
-        public Car GetById(int id)
+        public async Task<Car> GetByIdAsync(int id)
         {
-            return _carRepository.GetById(id);
+            return await _carRepository.GetByIdAsync(id);
         }
 
-        public Car Update(int id, Car car, User user)
+        public async Task<Car> UpdateAsync(int id, Car car, User user)
         {
-            var role = _userManager.GetRolesAsync(user).ToString();
-            Car carToUpdate = GetById(id);
-            if (carToUpdate.DriverId != user.Id && user.IsBlocked == true && role.Equals("Admin"))
+            var roles = await _userManager.GetRolesAsync(user);
+            Car carToUpdate = await GetByIdAsync(id);
+
+            if (carToUpdate.DriverId != user.Id && user.IsBlocked && roles.Contains("Administrator"))
             {
                 throw new UnauthorizedOperationException("You cannot edit the car!");
             }
-            carToUpdate = _carRepository.Update(id, car);
+
+            carToUpdate = await _carRepository.UpdateAsync(id, car);
             return carToUpdate;
         }
     }
