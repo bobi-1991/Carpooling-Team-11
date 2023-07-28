@@ -2,58 +2,63 @@
 using Carpooling.BusinessLayer.Services.Contracts;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Carpooling.BusinessLayer.Services
 {
     public class AddressService : IAddressService
     {
         private readonly IAddressRepository _addressRepository;
-        public AddressService(IAddressRepository addressService)
+
+        public AddressService(IAddressRepository addressRepository)
         {
-            _addressRepository = addressService;
+            _addressRepository = addressRepository;
         }
-        public Address Create(Address address, User user)
+
+        public async Task<Address> CreateAsync(Address address, User user)
         {
-            if(user.IsBlocked == true)
+            if (user.IsBlocked)
             {
                 throw new UnauthorizedOperationException("Only non-banned users can create addresses!");
             }
-            
-            return _addressRepository.Create(address);
+
+            return await _addressRepository.CreateAsync(address);
         }
 
-        public Address Delete(int id, User user)
+        public async Task<Address> DeleteAsync(int id, User user)
         {
-            Address addressToDelete = GetById(id); 
-            if(user.IsBlocked == true)
+            Address addressToDelete = await GetByIdAsync(id);
+
+            if (user.IsBlocked)
             {
                 throw new UnauthorizedOperationException("You do not have permission to delete this address!");
             }
-            addressToDelete = _addressRepository.Delete(id);
+
+            addressToDelete = await _addressRepository.DeleteAsync(id);
             return addressToDelete;
         }
 
-        public List<Address> GetAll()
+        public async Task<List<Address>> GetAllAsync()
         {
-            return _addressRepository.GetAll();
+            return await _addressRepository.GetAllAsync();
         }
 
-        public Address GetById(int id)
+        public async Task<Address> GetByIdAsync(int id)
         {
-            return _addressRepository.GetById(id);
+            return await _addressRepository.GetByIdAsync(id);
         }
 
-
-        public Address Update(int id, User user, Address address)
+        public async Task<Address> UpdateAsync(int id, User user, Address address)
         {
-            Address addressToUpdate = GetById(id);
-            if(user.IsBlocked == true) 
+            Address addressToUpdate = await GetByIdAsync(id);
+
+            if (user.IsBlocked)
             {
                 throw new UnauthorizedOperationException("You do not have permission to update the address!");
             }
 
-            addressToUpdate = _addressRepository.Update(id, address);
-
+            addressToUpdate = await _addressRepository.UpdateAsync(id, address);
             return addressToUpdate;
         }
     }

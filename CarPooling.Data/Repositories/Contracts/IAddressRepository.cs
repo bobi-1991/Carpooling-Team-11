@@ -4,10 +4,10 @@ namespace CarPooling.Data.Repositories.Contracts
 {
     public interface IAddressRepository
     {
-        List<Address> GetAll();
-        Address GetById(int id);
-        Address Create(Address address);
-        Address Update(int id, Address address);
-        Address Delete(int id);
+        Task<List<Address>> GetAllAsync();
+        Task<Address> GetByIdAsync(int id);
+        Task<Address> CreateAsync(Address address);
+        Task<Address> UpdateAsync(int id, Address address);
+        Task<Address> DeleteAsync(int id);
     }  
 }

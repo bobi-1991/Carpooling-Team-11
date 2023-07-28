@@ -14,6 +14,7 @@ using CarPooling.Data.Repositories;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Services;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using CarPooling.Data.DatabaseSeeder;
 
 public class Program
 {
@@ -79,7 +80,9 @@ public class Program
         app.SeedDatabaseCountries();
 
         //Infrastructure
+        await app.UserSeeding();
         app.UpdateDatabase();
+        
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();

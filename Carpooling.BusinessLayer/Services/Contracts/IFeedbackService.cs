@@ -9,10 +9,10 @@ namespace Carpooling.BusinessLayer.Services.Contracts
 {
     public interface IFeedbackService
     {
-        List<Feedback> GetAll();
-        Feedback GetById(int id);
-        Feedback Create(Feedback feedback, User user);
-        Feedback Update(int id, User user, Feedback feedback);
-        Feedback Delete(int id, User user);
+        Task<List<Feedback>> GetAllAsync();
+        Task<Feedback> GetByIdAsync(int id);
+        Task<Feedback> CreateAsync(Feedback feedback, User user);
+        Task<Feedback> UpdateAsync(int id, User user, Feedback feedback);
+        Task<Feedback> DeleteAsync(int id, User user);
     }
 }

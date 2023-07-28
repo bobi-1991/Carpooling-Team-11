@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace CarPooling.Data.Repositories
@@ -14,34 +13,36 @@ namespace CarPooling.Data.Repositories
     public class CarRepository : ICarRepository
     {
         private readonly CarPoolingDbContext _context;
+
         public CarRepository(CarPoolingDbContext context)
         {
             _context = context;
         }
-        public Car Create(Car car)
+
+        public async Task<Car> CreateAsync(Car car)
         {
-            if (_context.Cars.Any(c => c.Registration.Equals(car.Registration)))
+            if (await _context.Cars.AnyAsync(c => c.Registration.Equals(car.Registration)))
             {
                 throw new DuplicateEntityException("Such car already exists!");
             }
             car.CreatedOn = DateTime.Now;
             _context.Cars.Add(car);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return car;
         }
 
-        public Car Delete(int id)
+        public async Task<Car> DeleteAsync(int id)
         {
-            Car carToDelete = GetById(id);
+            Car carToDelete = await GetByIdAsync(id);
 
             carToDelete.IsDeleted = true;
             carToDelete.DeletedOn = DateTime.Now;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return carToDelete;
         }
 
-        public List<Car> FilterCarsAndSort(string sortBy)
+        public async Task<List<Car>> FilterCarsAndSortAsync(string sortBy)
         {
             IQueryable<Car> cars = _context.Cars
                 .Where(c => c.IsDeleted == false)
@@ -52,7 +53,6 @@ namespace CarPooling.Data.Repositories
                 .Include(c => c.CreatedOn)
                 .Include(c => c.UpdatedOn)
                 .Include(c => c.DeletedOn);
-
 
             switch (sortBy)
             {
@@ -69,12 +69,12 @@ namespace CarPooling.Data.Repositories
                     cars = cars.OrderBy(cars => cars.Id);
                     break;
             }
-            return cars.ToList();
+            return await cars.ToListAsync();
         }
 
-        public List<Car> GetAll()
+        public async Task<List<Car>> GetAllAsync()
         {
-            return _context.Cars
+            return await _context.Cars
                 .Where(c => c.IsDeleted == false)
                 .Include(c => c.Brand)
                 .Include(c => c.Model)
@@ -83,12 +83,12 @@ namespace CarPooling.Data.Repositories
                 .Include(c => c.CreatedOn)
                 .Include(c => c.UpdatedOn)
                 .Include(c => c.DeletedOn)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Car GetByBrand(string brandName)
+        public async Task<Car> GetByBrandAsync(string brandName)
         {
-            Car car = _context.Cars
+            Car car = await _context.Cars
                 .Where(c => c.IsDeleted == false)
                 .Include(c => c.Id)
                 .Include(c => c.Model)
@@ -97,14 +97,14 @@ namespace CarPooling.Data.Repositories
                 .Include(c => c.CreatedOn)
                 .Include(c => c.UpdatedOn)
                 .Include(c => c.DeletedOn)
-                .FirstOrDefault(c => c.Brand.Equals(brandName));
+                .FirstOrDefaultAsync(c => c.Brand.Equals(brandName));
 
             return car ?? throw new EntityNotFoundException("Not existing car with such brand!");
         }
 
-        public Car GetById(int id)
+        public async Task<Car> GetByIdAsync(int id)
         {
-            Car car = _context.Cars
+            Car car = await _context.Cars
                 .Where(c => c.IsDeleted == false)
                 .Include(c => c.Brand)
                 .Include(c => c.Model)
@@ -113,14 +113,14 @@ namespace CarPooling.Data.Repositories
                 .Include(c => c.CreatedOn)
                 .Include(c => c.UpdatedOn)
                 .Include(c => c.DeletedOn)
-               .FirstOrDefault(c => c.Id == id);
+                .FirstOrDefaultAsync(c => c.Id == id);
 
-            return car ?? throw new EntityNotFoundException("There is no such car !");
+            return car ?? throw new EntityNotFoundException("There is no such car!");
         }
 
-        public Car Update(int id, Car car)
+        public async Task<Car> UpdateAsync(int id, Car car)
         {
-            Car carToUpdate = GetById(id);
+            Car carToUpdate = await GetByIdAsync(id);
 
             carToUpdate.TotalSeats = car.TotalSeats;
             carToUpdate.AvailableSeats = car.AvailableSeats;
@@ -132,7 +132,7 @@ namespace CarPooling.Data.Repositories
             carToUpdate.UpdatedOn = car.UpdatedOn;
 
             _context.Update(carToUpdate);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return carToUpdate;
         }

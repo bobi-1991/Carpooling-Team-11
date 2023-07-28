@@ -9,12 +9,12 @@ namespace Carpooling.BusinessLayer.Services.Contracts
 {
     public interface ICarService
     {
-        List<Car> GetAll();
-        Car GetById(int id);
-        Car GetByBrand(string brandName);
-        Car Create(Car car, User user);
-        Car Update(int id, Car car, User user);
-        Car Delete(int id, User user);
-        List<Car> FilterCarsAndSort(string sortBy);
+        Task<List<Car>> GetAllAsync();
+        Task<Car> GetByIdAsync(int id);
+        Task<Car> GetByBrandAsync(string brandName);
+        Task<Car> CreateAsync(Car car, User user);
+        Task<Car> UpdateAsync(int id, Car car, User user);
+        Task<Car> DeleteAsync(int id, User user);
+        Task<List<Car>> FilterCarsAndSortAsync(string sortBy);
     }
 }

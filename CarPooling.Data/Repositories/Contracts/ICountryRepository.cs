@@ -9,11 +9,11 @@ namespace CarPooling.Data.Repositories.Contracts
 {
     public interface ICountryRepository
     {
-        List<Country> GetAll();
-        Country GetById(int id);
-        Country Create(Country country);
-        Country Update(int id, Country country);
-        Country Delete(int id);
-        List<Country> FilterCountriesByName(string orderByName);    
+        Task<List<Country>> GetAllAsync();
+        Task<Country> GetByIdAsync(int id);
+        Task<Country> CreateAsync(Country country);
+        Task<Country> UpdateAsync(int id, Country country);
+        Task<Country> DeleteAsync(int id);
+        Task<List<Country>> FilterCountriesByNameAsync(string orderByName);
     }
 }

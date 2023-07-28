@@ -9,10 +9,10 @@ namespace CarPooling.Data.Repositories.Contracts
 {
     public interface IFeedbackRepository
     {
-        List<Feedback> GetAll();
-        Feedback GetById(int id);
-        Feedback Create(Feedback feedback);
-        Feedback Update(int id, Feedback feedback);
-        Feedback Delete(int id);
+        Task<List<Feedback>> GetAllAsync();
+        Task<Feedback> GetByIdAsync(int id);
+        Task<Feedback> CreateAsync(Feedback feedback);
+        Task<Feedback> UpdateAsync(int id, Feedback feedback);
+        Task<Feedback> DeleteAsync(int id);
     }
 }
