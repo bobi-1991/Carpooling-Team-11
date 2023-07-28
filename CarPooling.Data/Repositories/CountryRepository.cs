@@ -21,7 +21,7 @@ namespace CarPooling.Data.Repositories
 
         public Country Create(Country country)
         {
-            if(_context.Countries.Any(c=>c.Name.Equals(country.Name)))
+            if (_context.Countries.Any(c => c.Name.Equals(country.Name)))
             {
                 throw new DuplicateEntityException($"Country with this name: {country.Name} already exists!");
             }
@@ -50,6 +50,7 @@ namespace CarPooling.Data.Repositories
         public List<Country> GetAll()
         {
             return _context.Countries
+                .Where(c => c.IsDeleted == false)
                 .Include(c => c.Name)
                 .Include(c => c.CreatedOn)
                 .Include(c => c.DeletedOn)
@@ -60,19 +61,19 @@ namespace CarPooling.Data.Repositories
         public Country GetById(int id)
         {
             Country country = _context.Countries
-                .Where(c=>c.Id == id)
-                .Include(c=>c.Name)
-                .Include(c=>c.CreatedOn)
-                .Include (c=>c.DeletedOn)
-                .Include(c=>c.UpdatedOn)
-                .FirstOrDefault();
+                .Where(c => c.IsDeleted == false)
+                .Include(c => c.Name)
+                .Include(c => c.CreatedOn)
+                .Include(c => c.DeletedOn)
+                .Include(c => c.UpdatedOn)
+                .FirstOrDefault(c => c.Id == id);
             return country ?? throw new EntityNotFoundException("Country not found!");
         }
 
         public Country Update(int id, Country country)
         {
             Country countryToUpdate = GetById(id);
-            countryToUpdate.UpdatedOn = DateTime.Now ;
+            countryToUpdate.UpdatedOn = DateTime.Now;
             countryToUpdate.Name = country.Name;
             _context.Update(countryToUpdate);
             _context.SaveChanges();

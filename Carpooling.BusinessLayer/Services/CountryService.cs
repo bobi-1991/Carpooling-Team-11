@@ -1,5 +1,6 @@
 ﻿using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services.Contracts;
+using Carpooling.BusinessLayer.Validation.Contracts;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
 using System;
@@ -13,9 +14,11 @@ namespace Carpooling.BusinessLayer.Services
     public class CountryService : ICountryService
     {
         private readonly ICountryRepository _countryRepository;
-        public CountryService(ICountryRepository countryRepository)
+
+        public CountryService(ICountryRepository countryRepository, IUserValidation userValidation)
         {
             _countryRepository = countryRepository;
+
         }
         public Country Create(Country country, User user)
         {
@@ -30,6 +33,7 @@ namespace Carpooling.BusinessLayer.Services
         {
             //Check if user is admin
             Country countryToDelete = GetById(id);
+
             if (user.IsBlocked == true)
             {
                 throw new UnauthorizedAccessException("You do not have permission to delete this country!");

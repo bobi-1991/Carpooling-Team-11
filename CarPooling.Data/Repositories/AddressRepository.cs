@@ -15,10 +15,6 @@ namespace CarPooling.Data.Repositories
         }
         public Address Create(Address address)
         {
-            if(_context.Addresses.Any(a=>a.Details.Equals(address.Details)))
-            {
-                throw new DuplicateEntityException("Address with current details already exists!");
-            }
             _context.Addresses.Add(address);
             address.CreatedOn = DateTime.Now;
             _context.SaveChanges();
