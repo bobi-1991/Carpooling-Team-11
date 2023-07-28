@@ -14,22 +14,24 @@ namespace CarPooling.Data.Repositories.Contracts
         Task<IEnumerable<User>> GetAllAsync();
         Task<User> GetByIdAsync(string id);   
         Task<User> GetByUsernameAsync(string username);
+        Task<bool> DoesExist(string username);
         Task<IEnumerable<Travel>> TravelHistoryAsync(string userId);
         Task<User> CreateAsync(User user);
         Task<User> UpdateAsync(string id, User user);
         Task<string> DeleteAsync(string id);
+        Task<string> BanUser(User userToBeBanned);
 
-     //   Task<IEnumerable<Car>> SeeAllCarsAsync(int userId);
-      //  Task<IEnumerable<Feedback>> SeeAllPassengerFeedbacksAsync(int userId);
-       // Task<IEnumerable<Feedback>> SeeAllDriverFeedbacksAsync(int userId);
+        //   Task<IEnumerable<Car>> SeeAllCarsAsync(int userId);
+        //  Task<IEnumerable<Feedback>> SeeAllPassengerFeedbacksAsync(int userId);
+        // Task<IEnumerable<Feedback>> SeeAllDriverFeedbacksAsync(int userId);
 
         // Request TripRequests:
 
-      //  Task<IEnumerable<TripRequest>> SeeAllPassengerTripRequestsAsync(int userId);
-      //  Task<IEnumerable<TripRequest>> SeeAllDriverTripRequestsAsync(int userId);
-      //  Task<TripRequest> CreateRequestAsync(int userId, int recipientId, int travelId);
-       // Task<TripRequest> EditRequestAsync(int userId, int requestId, bool answer);
-     //   Task DeleteRequestAsync(int userId, int requestId);
+        //  Task<IEnumerable<TripRequest>> SeeAllPassengerTripRequestsAsync(int userId);
+        //  Task<IEnumerable<TripRequest>> SeeAllDriverTripRequestsAsync(int userId);
+        //  Task<TripRequest> CreateRequestAsync(int userId, int recipientId, int travelId);
+        // Task<TripRequest> EditRequestAsync(int userId, int requestId, bool answer);
+        //   Task DeleteRequestAsync(int userId, int requestId);
 
 
 

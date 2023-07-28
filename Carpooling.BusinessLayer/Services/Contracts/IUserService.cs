@@ -1,4 +1,5 @@
-﻿using Carpooling.BusinessLayer.Dto_s.UpdateModels;
+﻿using Carpooling.BusinessLayer.Dto_s.AdminModels;
+using Carpooling.BusinessLayer.Dto_s.UpdateModels;
 using Carpooling.Service.Dto_s.Requests;
 using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Models;
@@ -20,5 +21,6 @@ namespace Carpooling.BusinessLayer.Services.Contracts
         Task<UserResponse> RegisterAsync(UserRequest userRequest);
         Task<UserResponse> UpdateAsync(User loggedUser, string id, UserUpdateDto userUpdateDto);
         Task<string> DeleteAsync(User loggedUser, string id);
+        Task<string> BanUser(User loggedUser, BanOrUnBanDto userToBeBanned);
     }
 }

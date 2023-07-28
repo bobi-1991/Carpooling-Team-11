@@ -66,6 +66,13 @@ namespace CarPooling.Data.Repositories
             return user;
         }
 
+        public async Task<bool> DoesExist(string username)
+        {
+            return dbContext.Users
+           .Where(x => !x.IsDeleted)
+           .Any(x => x.UserName.Equals(username));
+        }
+
         public async Task<User> GetByUsernameAsync(string username)
         {
             var user = dbContext.Users
@@ -103,6 +110,13 @@ namespace CarPooling.Data.Repositories
             //dbContext.SaveChanges();
 
             //return updatedUser;
+        }
+
+        public async Task<string> BanUser(User userToBeBanned)
+        {
+            userToBeBanned.IsBlocked = true;
+            dbContext.SaveChanges();
+            return "User successfully banned";
         }
     }
 }

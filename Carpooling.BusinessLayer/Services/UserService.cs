@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Carpooling.BusinessLayer.Dto_s.AdminModels;
 using Carpooling.BusinessLayer.Dto_s.UpdateModels;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
@@ -84,7 +85,7 @@ namespace Carpooling.BusinessLayer.Services
 
         public async Task<IEnumerable<TravelResponse>> TravelHistoryAsync(User loggeduser, string userId)
         {
-            await this.userValidator.ValidateUserLoggedAndAdmin(loggeduser,userId);
+            await this.userValidator.ValidateUserLoggedAndAdmin(loggeduser, userId);
             var travels = await this.userRepository.TravelHistoryAsync(userId);
 
             return travels.Select(x => mapper.Map<TravelResponse>(x));
@@ -96,6 +97,17 @@ namespace Carpooling.BusinessLayer.Services
             await this._userManager.UpdateAsync(this.mapper.Map<User>(userUpdateDto));
 
             return this.mapper.Map<UserResponse>(this.userRepository.GetByIdAsync(id));
+        }
+        public async Task<string> BanUser(User loggedUser, BanOrUnBanDto userToBeBanned)
+        {
+            await this.userValidator.ValidateIfUsernameExist(userToBeBanned.Username);
+            await this.userValidator.ValidateLoggedUserIsAdmin(loggedUser);
+
+            var userToBeBannedActual = await this.userRepository.GetByUsernameAsync(userToBeBanned.Username);
+
+            await this.userValidator.ValidateUserAlreadyBanned(userToBeBannedActual);
+
+            return await this.userRepository.BanUser(userToBeBannedActual);
         }
 
     }

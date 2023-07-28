@@ -15,6 +15,7 @@ using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Services;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Carpooling.BusinessLayer.Helpers;
 
 public class Program
 {
@@ -38,6 +39,8 @@ public class Program
         //Helpers
         builder.Services.AddScoped<IJsonManager, JsonManager>();
         builder.Services.AddAutoMapper(typeof(Carpooling.BusinessLayer.Helpers.Mapper));
+        builder.Services.AddScoped<IdentityHelper>();
+
 
         // Add services to the container
         builder.Services.AddRazorPages();

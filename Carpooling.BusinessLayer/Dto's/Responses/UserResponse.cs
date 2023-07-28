@@ -19,9 +19,9 @@ namespace Carpooling.Service.Dto_s.Responses
 
         // Optional? |
 
-        public ICollection<Feedback> Feedbacks { get; set; }
-        public ICollection<Travel> TravelHistory { get; set; }
-        public ICollection<Car> Cars { get; set; }
+        //public ICollection<Feedback> Feedbacks { get; set; }
+        //public ICollection<Travel> TravelHistory { get; set; }
+        //public ICollection<Car> Cars { get; set; }
        
     }
 }

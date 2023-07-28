@@ -1,4 +1,5 @@
-﻿using Carpooling.BusinessLayer.Dto_s.UpdateModels;
+﻿using Carpooling.BusinessLayer.Dto_s.AdminModels;
+using Carpooling.BusinessLayer.Dto_s.UpdateModels;
 using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
@@ -150,6 +151,30 @@ namespace Carpooling.Controllers
             catch (ArgumentNullException e)
             {
                 return StatusCode(StatusCodes.Status403Forbidden, e.Message);
+            }
+
+        }
+
+        [HttpPut("ban")]
+        public async Task<IActionResult> Ban([FromHeader] string credentials, [FromBody] BanOrUnBanDto userToBeBanned)
+        {
+            try
+            {
+                User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                var message = await this.userService.BanUser(loggedUser, userToBeBanned);
+                return Ok(message);
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (ArgumentNullException e)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, e.Message);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
             }
 
         }

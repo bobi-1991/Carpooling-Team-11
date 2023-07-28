@@ -3,6 +3,8 @@ using Carpooling.BusinessLayer.Dto_s.UpdateModels;
 using Carpooling.Service.Dto_s.Requests;
 using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Carpooling.BusinessLayer.Helpers
 {
