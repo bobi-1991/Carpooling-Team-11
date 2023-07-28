@@ -20,6 +20,7 @@ namespace CarPooling.Data.Repositories.Contracts
         Task<User> UpdateAsync(string id, User user);
         Task<string> DeleteAsync(string id);
         Task<string> BanUser(User userToBeBanned);
+        Task<string> UnBanUser(User userToBeUnBanned);
 
         //   Task<IEnumerable<Car>> SeeAllCarsAsync(int userId);
         //  Task<IEnumerable<Feedback>> SeeAllPassengerFeedbacksAsync(int userId);

@@ -77,6 +77,15 @@ namespace Carpooling.BusinessLayer.Validation
 
             return true;
         }
+        public async Task<bool> ValidateUserNotBanned(User userToBeUnBanned)
+        {
+            if (!userToBeUnBanned.IsBlocked)
+            {
+                throw new ArgumentException("The user you are trying to UnBan is not banned");
+            }
+
+            return true;
+        }
 
     }
 }

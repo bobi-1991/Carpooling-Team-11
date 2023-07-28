@@ -22,5 +22,6 @@ namespace Carpooling.BusinessLayer.Services.Contracts
         Task<UserResponse> UpdateAsync(User loggedUser, string id, UserUpdateDto userUpdateDto);
         Task<string> DeleteAsync(User loggedUser, string id);
         Task<string> BanUser(User loggedUser, BanOrUnBanDto userToBeBanned);
+        Task<string> UnBanUser(User loggedUser,BanOrUnBanDto userToBeUnBanned);
     }
 }

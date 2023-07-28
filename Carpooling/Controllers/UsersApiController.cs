@@ -152,6 +152,10 @@ namespace Carpooling.Controllers
             {
                 return StatusCode(StatusCodes.Status403Forbidden, e.Message);
             }
+            catch (DublicateEntityException e)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, e.Message);
+            }
 
         }
 
@@ -176,7 +180,29 @@ namespace Carpooling.Controllers
             {
                 return NotFound(e.Message);
             }
+        }
 
+        [HttpPut("unban")]
+        public async Task<IActionResult> UnBan([FromHeader] string credentials, [FromBody] BanOrUnBanDto userToBeUnBanned)
+        {
+            try
+            {
+                User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                var message = await this.userService.UnBanUser(loggedUser, userToBeUnBanned);
+                return StatusCode(StatusCodes.Status200OK, message);
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (ArgumentNullException e)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, e.Message);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
     }

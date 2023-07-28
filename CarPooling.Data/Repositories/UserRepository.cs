@@ -2,6 +2,7 @@
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -96,27 +97,38 @@ namespace CarPooling.Data.Repositories
 
         public async Task<User> UpdateAsync(string id, User user)
         {
-            throw new NotImplementedException();
-            //User userToUpdate = await GetByIdAsync(id);
+            User userToUpdate = await GetByIdAsync(id);
+            var userEmail = await this.dbContext.Users.FirstOrDefaultAsync(x => x.Email == user.Email);
 
-            //if (await this.dbContext.Users.AnyAsync(x => x.Email == user.Email))
-            //{
-            //    throw new DublicateEntityException($"Email: {user.Email} is already exist");
-            //}
+            if (!userToUpdate.Email.Equals(userEmail.Email))
+            {
+                throw new DublicateEntityException($"Email: {user.Email} is already exist");
+            }
 
-            //var updatedUser =  userToUpdate.Update(user);
+            userToUpdate.FirstName = user.FirstName;
+            userToUpdate.LastName = user.LastName;
+            // TODO
+           // userToUpdate.PasswordHash = user.PasswordHash;
+            userToUpdate.Email = user.Email;
 
-            //dbContext.Update(updatedUser);
-            //dbContext.SaveChanges();
+            dbContext.Update(userToUpdate);
+            dbContext.SaveChanges();
 
-            //return updatedUser;
+            return userToUpdate;
         }
 
         public async Task<string> BanUser(User userToBeBanned)
         {
             userToBeBanned.IsBlocked = true;
-            dbContext.SaveChanges();
+            this.dbContext.SaveChanges();
             return "User successfully banned";
+        }
+
+        public async Task<string> UnBanUser(User userToBeUnBanned)
+        {
+            userToBeUnBanned.IsBlocked = false;
+            this.dbContext.SaveChanges();
+            return "User successfully UnBanned";
         }
     }
 }

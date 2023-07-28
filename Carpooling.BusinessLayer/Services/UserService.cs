@@ -109,6 +109,17 @@ namespace Carpooling.BusinessLayer.Services
 
             return await this.userRepository.BanUser(userToBeBannedActual);
         }
+        public async Task<string> UnBanUser(User loggedUser, BanOrUnBanDto userToUnBan)
+        {
+            await this.userValidator.ValidateIfUsernameExist(userToUnBan.Username);
+            await this.userValidator.ValidateLoggedUserIsAdmin(loggedUser);
+
+            var userToBeUnBanned = await this.userRepository.GetByUsernameAsync(userToUnBan.Username);
+
+            await this.userValidator.ValidateUserNotBanned(userToBeUnBanned);
+
+            return await this.userRepository.UnBanUser(userToBeUnBanned);
+        }
 
     }
 }
