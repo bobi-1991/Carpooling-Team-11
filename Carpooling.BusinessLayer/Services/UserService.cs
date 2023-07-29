@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Carpooling.BusinessLayer.Dto_s.AdminModels;
 using Carpooling.BusinessLayer.Dto_s.UpdateModels;
+using Carpooling.BusinessLayer.Helpers;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
 using Carpooling.Service.Dto_s.Requests;
@@ -27,18 +28,20 @@ namespace Carpooling.BusinessLayer.Services
         private readonly IMapper mapper;
         private readonly IUserValidation userValidator;
         private readonly CarPoolingDbContext dbContext;
+        private readonly IdentityHelper identityHelper;
 
 
         private readonly UserManager<User> _userManager;
 
 
-        public UserService(IUserRepository userRepository, IMapper mapper, UserManager<User> userManager, CarPoolingDbContext dbContext, IUserValidation userValidator)
+        public UserService(IUserRepository userRepository, IMapper mapper, UserManager<User> userManager, CarPoolingDbContext dbContext, IUserValidation userValidator, IdentityHelper identityHelper)
         {
             this.userRepository = userRepository;
             this.mapper = mapper;
             _userManager = userManager;
             this.dbContext = dbContext;
             this.userValidator = userValidator;
+            this.identityHelper = identityHelper;
         }
         public Task<User> GetByUsernameAuthAsync(string username)
         {
@@ -139,6 +142,7 @@ namespace Carpooling.BusinessLayer.Services
 
         public async Task<UserResponse> UpdateAsync(User loggedUser, string id, UserUpdateDto userUpdateDto)
         {
+            string role = "";
             await userValidator.ValidateUserLoggedAndAdmin(loggedUser, id);
             var userToUpdate = await this.userRepository.GetByIdAsync(id);
 
@@ -149,12 +153,24 @@ namespace Carpooling.BusinessLayer.Services
                 Email = userUpdateDto.Email ?? userToUpdate.Email
             };
 
+            // Ако има предоставена нова парола, хеширане и записване.
             if (!string.IsNullOrEmpty(userUpdateDto.Password))
             {
-                userDataToUpdate.PasswordHash = userUpdateDto.Password;
+                var hashedPassword = _userManager.PasswordHasher.HashPassword(userDataToUpdate, userUpdateDto.Password);
+                userDataToUpdate.PasswordHash = hashedPassword;
+            }
+            
+            if (!string.IsNullOrEmpty(userUpdateDto.Role))
+            {
+                role = userUpdateDto.Role;
             }
 
-            var updatedUser = await this.userRepository.UpdateAsync(id, userDataToUpdate);
+            //if (!string.IsNullOrEmpty(userUpdateDto.Role))
+            //{
+            //    userDataToUpdate = await this.identityHelper.TryChangeRoleAsync(userDataToUpdate, userUpdateDto);
+            //}
+
+            var updatedUser = await this.userRepository.UpdateAsync(id, userDataToUpdate, role);
 
             return new UserResponse(
             updatedUser.FirstName,
@@ -163,9 +179,7 @@ namespace Carpooling.BusinessLayer.Services
             updatedUser.Email,
             updatedUser.AverageRating);
 
-
             //await this._userManager.UpdateAsync(this.mapper.Map<User>(userUpdateDto));
-
             //return this.mapper.Map<UserResponse>(this.userRepository.GetByIdAsync(id));
         }
         public async Task<string> BanUser(User loggedUser, BanOrUnBanDto userToBeBanned)

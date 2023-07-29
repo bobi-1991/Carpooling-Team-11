@@ -1,4 +1,8 @@
-﻿using CarPooling.Data.Data;
+﻿using Carpooling.BusinessLayer.Dto_s.UpdateModels;
+using Carpooling.BusinessLayer.Validation;
+using Carpooling.Service.Dto_s.Responses;
+using CarPooling.Data.Data;
+using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +31,7 @@ namespace Carpooling.BusinessLayer.Helpers
             string role;
 
             if (roles.Count == 0)
-            { 
+            {
                 role = "No role";
             }
             else
@@ -38,29 +42,49 @@ namespace Carpooling.BusinessLayer.Helpers
             return role;
         }
 
-        //public async Task<User> GetAdmin()
-        //{
-        //    var adminRole = await dbContext.Roles.FirstOrDefaultAsync(role => role.Name.ToLower() == "administrator").ConfigureAwait(false);
-        //    adminRole.ValidateIfNull(ExceptionMessages.RoleNull);
-        //    var adminId = await dbContext.UserRoles.FirstOrDefaultAsync(role => role.RoleId == adminRole.Id).ConfigureAwait(false);
-        //    adminId.ValidateIfNull(ExceptionMessages.UserRoleNull);
-        //    var admin = await GetUserByID(adminId.UserId).ConfigureAwait(false);
-        //    admin.ValidateIfNull(ExceptionMessages.AppUserNull);
-        //    return admin;
-        //}
+        public async Task<User> TryChangeRoleAsync(User userToUpdate, UserUpdateDto userUpdateDto)
+        {
+            var currentRole = userUpdateDto.Role;
 
-        //public async Task<User> GetUserByID(string id) 
-        //{
+            if (currentRole == "Passenger" || currentRole == "Driver")
+            {
+                await userManager.AddToRoleAsync(userToUpdate, currentRole);
+            }
+            else
+            {
+                throw new EntityNotFoundException($"Role {currentRole} not exist in the system.");
+            }
 
-        //    id.ValidateIfNull(ExceptionMessages.IdNull);
-
-        //    var user = await dbContext.Users.FindAsync(id);
-
-        //    user.ValidateIfNull(ExceptionMessages.AppUserNull);
-
-        //    return user;
-
-        //}
-
+            return userToUpdate;
+        }
     }
+
+
+
+
+    //public async Task<User> GetAdmin()
+    //{
+    //    var adminRole = await dbContext.Roles.FirstOrDefaultAsync(role => role.Name.ToLower() == "administrator").ConfigureAwait(false);
+    //    adminRole.ValidateIfNull(ExceptionMessages.RoleNull);
+    //    var adminId = await dbContext.UserRoles.FirstOrDefaultAsync(role => role.RoleId == adminRole.Id).ConfigureAwait(false);
+    //    adminId.ValidateIfNull(ExceptionMessages.UserRoleNull);
+    //    var admin = await GetUserByID(adminId.UserId).ConfigureAwait(false);
+    //    admin.ValidateIfNull(ExceptionMessages.AppUserNull);
+    //    return admin;
+    //}
+
+    //public async Task<User> GetUserByID(string id) 
+    //{
+
+    //    id.ValidateIfNull(ExceptionMessages.IdNull);
+
+    //    var user = await dbContext.Users.FindAsync(id);
+
+    //    user.ValidateIfNull(ExceptionMessages.AppUserNull);
+
+    //    return user;
+
+    //}
+
 }
+

@@ -33,6 +33,7 @@ public class Program
         builder.Services.AddDbContext<CarPoolingDbContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
         builder.Services.AddDefaultIdentity<User>()
             .AddRoles<UserRole>()
             .AddEntityFrameworkStores<CarPoolingDbContext>();
@@ -47,10 +48,8 @@ public class Program
         builder.Services.AddRazorPages();
         builder.Services.AddScoped<IUserService, UserService>();
 
-        //Add identity services
+       //Add identity services
         builder.Services.AddScoped<UserManager<User>>();
-
-
 
         //Validators
         builder.Services.AddScoped<IUserValidation, UserValidation>();
@@ -61,6 +60,7 @@ public class Program
         builder.Services.AddScoped<ITravelRepository, TravelRepository>();
         builder.Services.AddScoped<ITripRequestRepository, TripRequestRepository>();
         builder.Services.AddScoped<IAddressRepository, AddressRepository>();
+
 
 
 
