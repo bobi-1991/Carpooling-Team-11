@@ -60,9 +60,10 @@ public class Program
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<ITravelRepository, TravelRepository>();
         builder.Services.AddScoped<ITripRequestRepository, TripRequestRepository>();
-       
+        builder.Services.AddScoped<IAddressRepository, AddressRepository>();
 
-        
+
+
 
 
         builder.Services.AddSwaggerGen(options =>

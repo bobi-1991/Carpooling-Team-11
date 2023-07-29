@@ -97,22 +97,26 @@ namespace CarPooling.Data.Repositories
 
         public async Task<User> UpdateAsync(string id, User user)
         {
+
             User userToUpdate = await GetByIdAsync(id);
             var userEmail = await this.dbContext.Users.FirstOrDefaultAsync(x => x.Email == user.Email);
 
-            if (!userToUpdate.Email.Equals(userEmail.Email))
+            if (userEmail is not null)
             {
-                throw new DublicateEntityException($"Email: {user.Email} is already exist");
+                if (!userToUpdate.Email.Equals(userEmail.Email))
+                {
+                    throw new DublicateEntityException($"Email: {user.Email} is already exist");
+                }
             }
 
-            userToUpdate.FirstName = user.FirstName;
-            userToUpdate.LastName = user.LastName;
-            // TODO
-           // userToUpdate.PasswordHash = user.PasswordHash;
-            userToUpdate.Email = user.Email;
+            userToUpdate.FirstName = user.FirstName ?? userToUpdate.FirstName;
+            userToUpdate.LastName = user.LastName ?? userToUpdate.LastName;
+            userToUpdate.PasswordHash = user.PasswordHash ?? userToUpdate.PasswordHash;
+            userToUpdate.Email = user.Email ?? userToUpdate.Email;
 
             dbContext.Update(userToUpdate);
             dbContext.SaveChanges();
+
 
             return userToUpdate;
         }

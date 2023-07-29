@@ -33,7 +33,19 @@ namespace CarPooling.Data.DatabaseSeeder
                     UpdatedOn = DateTime.Now
                 };
 
-                _context.Cars.Add(car);
+        //             public string Registration { get; set; }
+        //public int TotalSeats { get; set; }
+        //public int AvailableSeats { get; set; }
+        //public string Brand { get; set; }
+        //public string Model { get; set; }
+        //public string Color { get; set; }
+        //public bool CanSmoke { get; set; }
+
+        //// Foreign keys with navigation properties
+        //public string DriverId { get; set; }
+        //public User Driver { get; set; }
+
+        _context.Cars.Add(car);
                 _context.SaveChanges();
 
                 var startLocaion = _context.Addresses.FirstOrDefault(a => a.Id == 1);

@@ -14,12 +14,12 @@ namespace Carpooling.Controllers
 {
     [ApiController]
     [Route("api/users")]
-    public class UserApiController : ControllerBase
+    public class UsersApiController : ControllerBase
     {
         private readonly IUserService userService;
         private readonly IAuthValidator authValidator;
 
-        public UserApiController(IUserService userService, IAuthValidator authValidator)
+        public UsersApiController(IUserService userService, IAuthValidator authValidator)
         {
             this.userService = userService;
             this.authValidator = authValidator;
@@ -42,8 +42,8 @@ namespace Carpooling.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById([FromHeader] string credentials, string id)
+        [HttpGet("id/{id}")]
+        public async Task<IActionResult> GetById([FromHeader] string credentials,[FromRoute] string id)
         {
             try
             {
@@ -76,6 +76,14 @@ namespace Carpooling.Controllers
             {
                 return StatusCode(StatusCodes.Status403Forbidden, e.Message);
             }
+            catch (DublicateEntityException e)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, e.Message);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         [HttpDelete("{id}")]
@@ -98,8 +106,8 @@ namespace Carpooling.Controllers
             }
         }
 
-        [HttpGet("{username}")]
-        public async Task<IActionResult> GetByUsernameAsync([FromHeader] string credentials, string username)
+        [HttpGet("username/{username}")]
+        public async Task<IActionResult> GetByUsernameAsync([FromHeader] string credentials,[FromRoute] string username)
         {
             try
             {
@@ -118,7 +126,7 @@ namespace Carpooling.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("travel-history/{id}")]
         public async Task<IActionResult> TravelHistoryAsync([FromHeader] string credentials, string id)
         {
             try
@@ -159,51 +167,51 @@ namespace Carpooling.Controllers
 
         }
 
-        [HttpPut("ban")]
-        public async Task<IActionResult> Ban([FromHeader] string credentials, [FromBody] BanOrUnBanDto userToBeBanned)
-        {
-            try
-            {
-                User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                var message = await this.userService.BanUser(loggedUser, userToBeBanned);
-                return Ok(message);
-            }
-            catch (EntityUnauthorizatedException e)
-            {
-                return Unauthorized(e.Message);
-            }
-            catch (ArgumentNullException e)
-            {
-                return StatusCode(StatusCodes.Status403Forbidden, e.Message);
-            }
-            catch (EntityNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-        }
+        //[HttpPut("ban")]
+        //public async Task<IActionResult> BanAsync([FromHeader] string credentials, [FromBody] BanOrUnBanDto userToBeBanned)
+        //{
+        //    try
+        //    {
+        //        User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+        //        var message = await this.userService.BanUser(loggedUser, userToBeBanned);
+        //        return Ok(message);
+        //    }
+        //    catch (EntityUnauthorizatedException e)
+        //    {
+        //        return Unauthorized(e.Message);
+        //    }
+        //    catch (ArgumentNullException e)
+        //    {
+        //        return StatusCode(StatusCodes.Status403Forbidden, e.Message);
+        //    }
+        //    catch (EntityNotFoundException e)
+        //    {
+        //        return NotFound(e.Message);
+        //    }
+        //}
 
-        [HttpPut("unban")]
-        public async Task<IActionResult> UnBan([FromHeader] string credentials, [FromBody] BanOrUnBanDto userToBeUnBanned)
-        {
-            try
-            {
-                User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                var message = await this.userService.UnBanUser(loggedUser, userToBeUnBanned);
-                return StatusCode(StatusCodes.Status200OK, message);
-            }
-            catch (EntityUnauthorizatedException e)
-            {
-                return Unauthorized(e.Message);
-            }
-            catch (ArgumentNullException e)
-            {
-                return StatusCode(StatusCodes.Status403Forbidden, e.Message);
-            }
-            catch (EntityNotFoundException e)
-            {
-                return NotFound(e.Message);
-            }
-        }
+        //[HttpPut("unban")]
+        //public async Task<IActionResult> UnBanAsync([FromHeader] string credentials, [FromBody] BanOrUnBanDto userToBeUnBanned)
+        //{
+        //    try
+        //    {
+        //        User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+        //        var message = await this.userService.UnBanUser(loggedUser, userToBeUnBanned);
+        //        return StatusCode(StatusCodes.Status200OK, message);
+        //    }
+        //    catch (EntityUnauthorizatedException e)
+        //    {
+        //        return Unauthorized(e.Message);
+        //    }
+        //    catch (ArgumentNullException e)
+        //    {
+        //        return StatusCode(StatusCodes.Status403Forbidden, e.Message);
+        //    }
+        //    catch (EntityNotFoundException e)
+        //    {
+        //        return NotFound(e.Message);
+        //    }
+        //}
 
     }
 }
