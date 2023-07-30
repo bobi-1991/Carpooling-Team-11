@@ -45,14 +45,13 @@ namespace CarPooling.Data.Repositories
         public async Task<List<Car>> FilterCarsAndSortAsync(string sortBy)
         {
             IQueryable<Car> cars = _context.Cars
-                .Where(c => c.IsDeleted == false)
-                .Include(c => c.Brand)
-                .Include(c => c.Model)
-                .Include(c => c.Registration)
-                .Include(c => c.Driver)
-                .Include(c => c.CreatedOn)
-                .Include(c => c.UpdatedOn)
-                .Include(c => c.DeletedOn);
+                .Where(c => c.IsDeleted == false);
+                //.Include(c => c.Model)
+                //.Include(c => c.Registration)
+                //.Include(c => c.Driver)
+                //.Include(c => c.CreatedOn)
+                //.Include(c => c.UpdatedOn)
+                //.Include(c => c.DeletedOn)
 
             switch (sortBy)
             {
@@ -81,44 +80,40 @@ namespace CarPooling.Data.Repositories
         {
             return await _context.Cars
                 .Where(c => c.IsDeleted == false)
-                .Include(c => c.Brand)
-                .Include(c => c.Model)
-                .Include(c => c.Registration)
-                .Include(c => c.Driver)
-                .Include(c => c.CreatedOn)
-                .Include(c => c.UpdatedOn)
-                .Include(c => c.DeletedOn)
+                //.Include(c => c.Model)
+                //.Include(c => c.Registration)
+                //.Include(c => c.Driver)
+                //.Include(c => c.CreatedOn)
+                //.Include(c => c.UpdatedOn)
+                //.Include(c => c.DeletedOn)
                 .ToListAsync();
         }
 
         public async Task<Car> GetByBrandAndModelAsync(string brandName, string model)
         {
             Car car = await _context.Cars
-                .Where(c => c.IsDeleted == false)
-                .Include(c => c.Id)
-                .Include(c => c.Model)
-                .Include(c => c.Registration)
-                .Include(c => c.Driver)
-                .Include(c => c.CreatedOn)
-                .Include(c => c.UpdatedOn)
-                .Include(c => c.DeletedOn)
-                .FirstOrDefaultAsync(c => c.Brand.Equals(brandName) && c.Model.Equals(model));
+                .Where(c => c.IsDeleted == false && c.Brand.Equals(brandName) && c.Model.Equals(model))
+                //.Include(c => c.Model)
+                //.Include(c => c.Registration)
+                //.Include(c => c.Driver)
+                //.Include(c => c.CreatedOn)
+                //.Include(c => c.UpdatedOn)
+                //.Include(c => c.DeletedOn)
+                .FirstOrDefaultAsync();
 
             return car ?? throw new EntityNotFoundException("Not existing car with such brand and model!");
         }
 
         public async Task<Car> GetByIdAsync(int id)
         {
-            Car car = await _context.Cars
-                .Where(c => c.IsDeleted == false)
-                .Include(c => c.Brand)
-                .Include(c => c.Model)
-                .Include(c => c.Registration)
-                .Include(c => c.Driver)
-                .Include(c => c.CreatedOn)
-                .Include(c => c.UpdatedOn)
-                .Include(c => c.DeletedOn)
-                .FirstOrDefaultAsync(c => c.Id == id);
+            Car car = await _context.Cars.Where(c => c.Id == id && c.IsDeleted == false)
+                //.Include(c => c.Brand)
+                //.Include(c => c.Model)
+                //.Include(c => c.Registration)
+                //.Include(c => c.Color)
+                //.Include(c => c.TotalSeats)
+                //.Include(c => c.AvailableSeats)
+                .FirstOrDefaultAsync();
 
             return car ?? throw new EntityNotFoundException("There is no such car!");
         }

@@ -33,20 +33,22 @@ namespace CarPooling.Data.DatabaseSeeder
                     UpdatedOn = DateTime.Now
                 };
 
-        //             public string Registration { get; set; }
-        //public int TotalSeats { get; set; }
-        //public int AvailableSeats { get; set; }
-        //public string Brand { get; set; }
-        //public string Model { get; set; }
-        //public string Color { get; set; }
-        //public bool CanSmoke { get; set; }
+                //             public string Registration { get; set; }
+                //public int TotalSeats { get; set; }
+                //public int AvailableSeats { get; set; }
+                //public string Brand { get; set; }
+                //public string Model { get; set; }
+                //public string Color { get; set; }
+                //public bool CanSmoke { get; set; }
 
-        //// Foreign keys with navigation properties
-        //public string DriverId { get; set; }
-        //public User Driver { get; set; }
-
-        _context.Cars.Add(car);
-                _context.SaveChanges();
+                //// Foreign keys with navigation properties
+                //public string DriverId { get; set; }
+                //public User Driver { get; set; }
+                if (!_context.Cars.Any(x=>x.Registration == car.Registration))
+                {
+                    _context.Cars.Add(car);    
+                    _context.SaveChanges();
+                }
 
                 var startLocaion = _context.Addresses.FirstOrDefault(a => a.Id == 1);
                 var endLocation = _context.Addresses.FirstOrDefault(a => a.Id == 1);
