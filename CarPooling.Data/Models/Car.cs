@@ -10,7 +10,7 @@ namespace CarPooling.Data.Models
         }
 
         public string Registration { get; set; }
-        public int TotalSeats { get; set; }
+        public int TotalSeats { get; set; } = 4;
         public int AvailableSeats { get; set; }
         public string Brand { get; set; }
         public string Model { get; set; }

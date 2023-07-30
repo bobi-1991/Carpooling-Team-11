@@ -51,12 +51,6 @@ namespace Carpooling.BusinessLayer.Services
         public async Task<UserResponse> RegisterAsync(UserRequest userRequest)
         {
             var user = mapper.Map<User>(userRequest);
-
-            //await _userStore.SetUserNameAsync(user, user.Email, CancellationToken.None);
-            //await _emailStore.SetEmailAsync(user, user.Email, CancellationToken.None);
-            //var result = await _userManager.CreateAsync(user, user.Password);
-            //await _userManager.AddToRolesAsync(user, new List<string> { "Passenger" });
-
             var result = await this._userManager.CreateAsync(user, userRequest.Password);
 
             if (result.Succeeded)

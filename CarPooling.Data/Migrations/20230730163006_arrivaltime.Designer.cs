@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarPooling.Data.Migrations
 {
     [DbContext(typeof(CarPoolingDbContext))]
-    [Migration("20230730063749_initial")]
-    partial class initial
+    [Migration("20230730163006_arrivaltime")]
+    partial class arrivaltime
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -200,6 +200,9 @@ namespace CarPooling.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("ArrivalTime")
+                        .HasColumnType("datetime2");
 
                     b.Property<int?>("CarId")
                         .HasColumnType("int");

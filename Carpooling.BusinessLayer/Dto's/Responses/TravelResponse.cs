@@ -11,11 +11,9 @@ namespace Carpooling.Service.Dto_s.Responses
         public string StartLocationName { get; set; }
         public string DestinationName { get; set; }
         public DateTime DepartureTime { get; set; }
-
-        // След интегрирането на Microsoft maps
-       // public DateTime ArrivalTime { get; set; }
-
+        public DateTime ArrivalTime { get; set; }
         public int AvaibleSeats { get; set; }
+        public bool IsComplete { get; set; }
         public string CarRegistration { get; set; }
     }
 }
