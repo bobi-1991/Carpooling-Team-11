@@ -24,7 +24,7 @@ namespace CarPooling.Data.Models
         // Foreign keys with navigation properties
         public int? AddressId { get; set; }
         public Address? Address { get; set; }
-
+        
         public ICollection<Feedback>? PassengerFeedbacks { get; set; } = new List<Feedback>();
         public ICollection<Feedback>? DriverFeedbacks { get; set; } = new List<Feedback>();
         public ICollection<TripRequest>? PassengerTripRequests { get; set; } = new List<TripRequest>();

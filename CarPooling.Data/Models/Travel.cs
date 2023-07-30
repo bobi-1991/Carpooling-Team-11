@@ -1,4 +1,5 @@
 ﻿using CarPooling.Data.Models.Abstract;
+using System.Text.Json.Serialization;
 
 namespace CarPooling.Data.Models
 {
@@ -24,7 +25,6 @@ namespace CarPooling.Data.Models
 
         //public int? CarId { get; set; }
         public Car? Car { get; set; }
-
         public List<User>? Passengers { get; set; } = new List<User>();
         public List<Feedback>? Feedbacks { get; set; } = new List<Feedback>();
 

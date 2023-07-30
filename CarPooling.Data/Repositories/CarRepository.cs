@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace CarPooling.Data.Repositories
 {
-    public class CarRepository : ICarRepository
+    public class CarRepository : ICarRepository 
     {
         private readonly CarPoolingDbContext _context;
 
@@ -69,7 +69,12 @@ namespace CarPooling.Data.Repositories
                     cars = cars.OrderBy(cars => cars.Id);
                     break;
             }
-            return await cars.ToListAsync();
+            if(cars.Count() > 0) 
+            {
+                return await cars.ToListAsync();
+            }
+            throw new EmptyListException("No cars added yet!");
+            
         }
 
         public async Task<List<Car>> GetAllAsync()
@@ -86,7 +91,7 @@ namespace CarPooling.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Car> GetByBrandAsync(string brandName)
+        public async Task<Car> GetByBrandAndModelAsync(string brandName, string model)
         {
             Car car = await _context.Cars
                 .Where(c => c.IsDeleted == false)
@@ -97,9 +102,9 @@ namespace CarPooling.Data.Repositories
                 .Include(c => c.CreatedOn)
                 .Include(c => c.UpdatedOn)
                 .Include(c => c.DeletedOn)
-                .FirstOrDefaultAsync(c => c.Brand.Equals(brandName));
+                .FirstOrDefaultAsync(c => c.Brand.Equals(brandName) && c.Model.Equals(model));
 
-            return car ?? throw new EntityNotFoundException("Not existing car with such brand!");
+            return car ?? throw new EntityNotFoundException("Not existing car with such brand and model!");
         }
 
         public async Task<Car> GetByIdAsync(int id)

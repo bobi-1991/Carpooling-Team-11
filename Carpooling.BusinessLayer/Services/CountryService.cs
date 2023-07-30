@@ -3,11 +3,6 @@ using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CarPooling.BusinessLayer.Services
 {

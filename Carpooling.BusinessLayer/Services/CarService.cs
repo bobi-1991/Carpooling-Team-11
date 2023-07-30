@@ -60,9 +60,9 @@ namespace Carpooling.BusinessLayer.Services
             return await _carRepository.GetAllAsync();
         }
 
-        public async Task<Car> GetByBrandAsync(string brandName)
+        public async Task<Car> GetByBrandAndModelAsync(string brandName, string model)
         {
-            return await _carRepository.GetByBrandAsync(brandName);
+            return await _carRepository.GetByBrandAndModelAsync(brandName, model);
         }
 
         public async Task<Car> GetByIdAsync(int id)
