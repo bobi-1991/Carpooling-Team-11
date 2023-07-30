@@ -142,7 +142,6 @@ namespace Carpooling.BusinessLayer.Services
 
         public async Task<UserResponse> UpdateAsync(User loggedUser, string id, UserUpdateDto userUpdateDto)
         {
-            string role = "";
             await userValidator.ValidateUserLoggedAndAdmin(loggedUser, id);
             var userToUpdate = await this.userRepository.GetByIdAsync(id);
 
@@ -159,18 +158,13 @@ namespace Carpooling.BusinessLayer.Services
                 var hashedPassword = _userManager.PasswordHasher.HashPassword(userDataToUpdate, userUpdateDto.Password);
                 userDataToUpdate.PasswordHash = hashedPassword;
             }
-            
+
+            var updatedUser = await this.userRepository.UpdateAsync(id, userDataToUpdate);
+
             if (!string.IsNullOrEmpty(userUpdateDto.Role))
             {
-                role = userUpdateDto.Role;
+                await this.identityHelper.ChangeRole(loggedUser, updatedUser, userUpdateDto.Role);
             }
-
-            //if (!string.IsNullOrEmpty(userUpdateDto.Role))
-            //{
-            //    userDataToUpdate = await this.identityHelper.TryChangeRoleAsync(userDataToUpdate, userUpdateDto);
-            //}
-
-            var updatedUser = await this.userRepository.UpdateAsync(id, userDataToUpdate, role);
 
             return new UserResponse(
             updatedUser.FirstName,

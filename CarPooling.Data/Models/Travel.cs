@@ -25,8 +25,28 @@ namespace CarPooling.Data.Models
         //public int? CarId { get; set; }
         public Car? Car { get; set; }
 
+
+        //NEW PROPERTY
+        //public int FreeSlots
+        //{
+        //    get
+        //    { 
+        //    return this.FreeSlots
+        //    }
+        //    set
+        //    { 
+            
+        //    }
+        //}
+
         public List<User>? Passengers { get; set; } = new List<User>();
         public List<Feedback>? Feedbacks { get; set; } = new List<Feedback>();
+
+
+        //private int IsSlotsExists()
+        //{ 
+        
+        //}
 
     
     }

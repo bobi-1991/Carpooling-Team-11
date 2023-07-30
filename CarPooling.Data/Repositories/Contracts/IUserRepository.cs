@@ -17,7 +17,7 @@ namespace CarPooling.Data.Repositories.Contracts
         Task<bool> DoesExist(string username);
         Task<IEnumerable<Travel>> TravelHistoryAsync(string userId);
         Task<User> CreateAsync(User user);
-        Task<User> UpdateAsync(string id, User user,string role);
+        Task<User> UpdateAsync(string id, User user);
         Task<string> DeleteAsync(string id);
         Task<string> BanUser(User userToBeBanned);
         Task<string> UnBanUser(User userToBeUnBanned);

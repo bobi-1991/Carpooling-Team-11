@@ -98,7 +98,7 @@ namespace CarPooling.Data.Repositories
             return user.TravelHistory;
         }
 
-        public async Task<User> UpdateAsync(string id, User user,string role)
+        public async Task<User> UpdateAsync(string id, User user)
         {
             User userToUpdate = await GetByIdAsync(id);
             var userEmail = await this.dbContext.Users.FirstOrDefaultAsync(x => x.Email == user.Email);
@@ -116,23 +116,7 @@ namespace CarPooling.Data.Repositories
             userToUpdate.PasswordHash = user.PasswordHash ?? userToUpdate.PasswordHash;
             userToUpdate.Email = user.Email ?? userToUpdate.Email;
 
-
             await this.userManger.UpdateAsync(userToUpdate);
-
-            //TODO
-            //update role curently not working
-            if (!string.IsNullOrEmpty(role))
-            {
-                if (role == "Passenger" || role == "Driver")
-                {
-
-                    await this.userManger.AddToRoleAsync(userToUpdate, role);
-                }
-                else
-                {
-                    throw new EntityNotFoundException($"Role {role} not exist in the system.");
-                }
-            }
 
             return userToUpdate;
         }
