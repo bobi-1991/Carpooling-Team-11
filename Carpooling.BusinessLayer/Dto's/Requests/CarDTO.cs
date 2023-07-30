@@ -1,14 +1,13 @@
-﻿using CarPooling.Data.Models.Abstract;
-using System.Text.Json.Serialization;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace CarPooling.Data.Models
+namespace Carpooling.BusinessLayer.Dto_s.Requests
 {
-    public class Car : EntityBase
+    public class CarDTO
     {
-        public Car()
-        {
-        }
-
         public string Registration { get; set; }
         public int TotalSeats { get; set; }
         public int AvailableSeats { get; set; }
@@ -16,9 +15,5 @@ namespace CarPooling.Data.Models
         public string Model { get; set; }
         public string Color { get; set; }
         public bool CanSmoke { get; set; }
-
-        // Foreign keys with navigation properties
-        public string DriverId { get; set; }
-        public User Driver { get; set; }
     }
 }

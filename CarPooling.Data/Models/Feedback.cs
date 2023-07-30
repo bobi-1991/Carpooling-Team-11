@@ -1,4 +1,5 @@
 ﻿using CarPooling.Data.Models.Abstract;
+using System.Text.Json.Serialization;
 
 namespace CarPooling.Data.Models
 {
@@ -18,6 +19,7 @@ namespace CarPooling.Data.Models
         public string DriverId { get; set; }
 
         // Navigation property for Driver
+        
         public User Driver { get; set; }
 
         // Navigation property for TravelId

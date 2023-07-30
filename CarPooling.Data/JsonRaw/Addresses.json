@@ -2,6 +2,46 @@
   {
     "CountryId": "1",
     "City": "Sofia",
-    "Details": "Ovcha Kupel" 
+    "Details": "Ovcha Kupel"
+  },
+  {
+    "CountryId": "1",
+    "City": "Burgas",
+    "Details": "Centar"
+  },
+  {
+    "CountryId": "1",
+    "City": "Pazardzhik",
+    "Details": "Ostrova"
+  },
+  {
+    "CountryId": "1",
+    "City": "Sofia",
+    "Details": "NDK"
+  },
+  {
+    "CountryId": "1",
+    "City": "Sofia",
+    "Details": "Ovcha Kupel"
+  },
+  {
+    "CountryId": "1",
+    "City": "Ravda",
+    "Details": "South Beach"
+  },
+  {
+    "CountryId": "1",
+    "City": "Pleven",
+    "Details": "Centar"
+  },
+  {
+    "CountryId": "1",
+    "City": "Sofia",
+    "Details": "Ovcha Kupel"
+  },
+  {
+    "CountryId": "1",
+    "City": "Stara Zagora",
+    "Details": "Kraen kvartal"
   }
 ]

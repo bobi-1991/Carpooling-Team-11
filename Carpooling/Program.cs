@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Newtonsoft.Json;
 using CarPooling.Data.DatabaseSeeder;
 using Carpooling.BusinessLayer.Helpers;
+using CarPooling.BusinessLayer.Services;
 
 public class Program
 {
@@ -47,8 +48,11 @@ public class Program
         // Add services to the container
         builder.Services.AddRazorPages();
         builder.Services.AddScoped<IUserService, UserService>();
-
-       //Add identity services
+        builder.Services.AddScoped<ICarService, CarService>();
+        builder.Services.AddScoped<IAddressService, AddressService>();
+        builder.Services.AddScoped<ICountryService, CountryService>();
+        builder.Services.AddScoped<IFeedbackService, FeedbackService>();
+        //Add identity services
         builder.Services.AddScoped<UserManager<User>>();
 
         //Validators
@@ -60,8 +64,9 @@ public class Program
         builder.Services.AddScoped<ITravelRepository, TravelRepository>();
         builder.Services.AddScoped<ITripRequestRepository, TripRequestRepository>();
         builder.Services.AddScoped<IAddressRepository, AddressRepository>();
-
-
+        builder.Services.AddScoped<ICarRepository, CarRepository>();
+        builder.Services.AddScoped<ICountryRepository, CountryRepository>();
+        builder.Services.AddScoped<IFeedbackRepository,FeedbackRepository>();
 
 
 
@@ -69,6 +74,7 @@ public class Program
         builder.Services.AddSwaggerGen(options =>
         {
             options.SwaggerDoc("v1", new OpenApiInfo { Title = "Carpooling API", Version = "v1" });
+            options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
         });
 
         var app = builder.Build();
@@ -85,6 +91,7 @@ public class Program
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "Carpooling API V1");
             options.RoutePrefix = "api/swagger";
+           
         });
 
         //Seed DB

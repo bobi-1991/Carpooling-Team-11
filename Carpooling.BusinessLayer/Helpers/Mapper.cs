@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Carpooling.BusinessLayer.Dto_s.Requests;
 using Carpooling.BusinessLayer.Dto_s.UpdateModels;
 using Carpooling.Service.Dto_s.Requests;
 using Carpooling.Service.Dto_s.Responses;
@@ -15,6 +16,10 @@ namespace Carpooling.BusinessLayer.Helpers
             CreateMap<UserRequest, User>().ReverseMap();
             CreateMap<TravelRequest, Travel>().ReverseMap();
             CreateMap<UserUpdateDto, User>().ReverseMap();
+            CreateMap<Feedback, FeedbackResponse>().ReverseMap();
+            CreateMap<Feedback, FeedbackRequest>().ReverseMap();
+            CreateMap<Address, AddressDTO>().ReverseMap();
+            CreateMap<Car, CarDTO>().ReverseMap();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CarPooling.Data.Models.Abstract;
+using System.Text.Json.Serialization;
 
 namespace CarPooling.Data.Models
 {
