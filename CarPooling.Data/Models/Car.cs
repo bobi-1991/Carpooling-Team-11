@@ -5,9 +5,9 @@ namespace CarPooling.Data.Models
 {
     public class Car : EntityBase
     {
-        public Car()
-        {
-        }
+        //public Car()
+        //{
+        //}
 
         public string Registration { get; set; }
         public int TotalSeats { get; set; } = 4;
@@ -18,7 +18,9 @@ namespace CarPooling.Data.Models
         public bool CanSmoke { get; set; }
 
         // Foreign keys with navigation properties
+        [JsonIgnore]
         public string DriverId { get; set; }
+        [JsonIgnore]
         public User Driver { get; set; }
     }
 }

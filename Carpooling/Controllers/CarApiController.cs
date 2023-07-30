@@ -32,14 +32,14 @@ namespace Carpooling.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllCarsAsync([FromHeader] string credentials)
+        public async Task<ActionResult<IEnumerable<CarDTO>>> GetAllCarsAsync([FromHeader] string credentials)
         {
             try
             {
                 var loggedUser = await _authValidator.ValidateCredentialAsync(credentials);
-                var cars = _carService.GetAllAsync();
-
-                return StatusCode(StatusCodes.Status200OK, cars);
+                var cars = await _carService.GetAllAsync();
+                var carDtos = _mapper.Map<IEnumerable<CarDTO>>(cars);
+                return StatusCode(StatusCodes.Status200OK, carDtos);
             }
             catch (UnauthorizedOperationException e)
             {
@@ -48,12 +48,13 @@ namespace Carpooling.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetCarByIdAsync([FromHeader] string credentials, int id)
+        public async Task<ActionResult<CarDTO>> GetCarByIdAsync([FromHeader] string credentials, int id)
         {
             try
             {
                 var loggerUser = await _authValidator.ValidateCredentialAsync(credentials);
-                var car = await _carService.GetByIdAsync(id);
+                var car = _mapper.Map<CarDTO>(await _carService.GetByIdAsync(id));
+
                 return StatusCode(StatusCodes.Status200OK, car);
             }
             catch (UnauthorizedOperationException e)
@@ -65,14 +66,16 @@ namespace Carpooling.Controllers
                 return StatusCode(StatusCodes.Status404NotFound, e.Message);
             }
         }
-        [HttpGet("{filter}")]
-        public async Task<IActionResult> FilterCarsAndSortAsync([FromHeader] string credentials, [FromQuery] string sortBy)
+        [HttpGet("filter")]
+        public async Task<ActionResult<CarDTO>> FilterCarsAndSortAsync([FromHeader] string credentials, string sortBy)
         {
             try
             {
                 var loggerUser = await _authValidator.ValidateCredentialAsync(credentials);
                 var filteredAndSortedCars = await _carService.FilterCarsAndSortAsync(sortBy);
-                return StatusCode(StatusCodes.Status200OK, filteredAndSortedCars);
+                var carDtos = _mapper.Map<IEnumerable<CarDTO>>(filteredAndSortedCars);
+
+                return StatusCode(StatusCodes.Status200OK, carDtos);
             }
             catch (UnauthorizedOperationException e)
             {
@@ -87,12 +90,13 @@ namespace Carpooling.Controllers
 
         [HttpGet("cars/{brand}/{model}")]
 
-        public async Task<IActionResult> GetCarByBrandAndModelAsync([FromHeader] string credentials, string brand, string model)
+        public async Task<ActionResult<CarDTO>> GetCarByBrandAndModelAsync([FromHeader] string credentials, string brand, string model)
         {
             try
             {
                 var loggerUser = await _authValidator.ValidateCredentialAsync(credentials);
-                var car = await _carService.GetByBrandAndModelAsync(brand, model);
+                var car = _mapper.Map<CarDTO>(await _carService.GetByBrandAndModelAsync(brand, model));
+
                 return StatusCode(StatusCodes.Status200OK, car);
             }
             catch (UnauthorizedOperationException e)
@@ -105,13 +109,14 @@ namespace Carpooling.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<Feedback>> CreateCarAsync([FromHeader] string credentials, [FromBody] CarDTO carDTO)
+        public async Task<ActionResult<CarDTO>> CreateCarAsync([FromHeader] string credentials, [FromBody] CarDTO carDTO)
         {
             try
             {
                 var loggedUser = await _authValidator.ValidateCredentialAsync(credentials);
                 Car car = _mapper.Map<Car>(carDTO);
                 Car carToCreate = await _carService.CreateAsync(car, loggedUser);
+
                 return StatusCode(StatusCodes.Status201Created, carToCreate);
             }
             catch (UnauthorizedOperationException e)

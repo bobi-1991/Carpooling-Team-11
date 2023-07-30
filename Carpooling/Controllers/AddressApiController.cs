@@ -26,14 +26,15 @@ namespace Carpooling.Controllers
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllAddressesAsync([FromHeader] string credentials)
+        public async Task<ActionResult<IEnumerable<AddressDTO>>> GetAllAddressesAsync([FromHeader] string credentials)
         {
             try
             {
                 var loggedUser = await _authValidator.ValidateCredentialAsync(credentials);
-                var addresses = _addressService.GetAllAsync();
+                var addresses = await _addressService.GetAllAsync();
+                var addressDTOS = _mapper.Map<AddressDTO>(addresses);
 
-                return StatusCode(StatusCodes.Status200OK, addresses);
+                return StatusCode(StatusCodes.Status200OK, addressDTOS);
             }
             catch (UnauthorizedOperationException e)
             {
@@ -42,12 +43,12 @@ namespace Carpooling.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAddressByIdAsync([FromHeader] string credentials, int id)
+        public async Task<ActionResult<AddressDTO>> GetAddressByIdAsync([FromHeader] string credentials, int id)
         {
             try
             {
                 var loggerUser = await _authValidator.ValidateCredentialAsync(credentials);
-                var address = await _addressService.GetByIdAsync(id);
+                var address = _mapper.Map<AddressDTO>(await _addressService.GetByIdAsync(id));
                 return StatusCode(StatusCodes.Status200OK, address);
             }
             catch (UnauthorizedOperationException e)
@@ -60,7 +61,7 @@ namespace Carpooling.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<Feedback>> CreateAddressAsync([FromHeader] string credentials, [FromBody] AddressDTO addressDTO)
+        public async Task<ActionResult<AddressDTO>> CreateAddressAsync([FromHeader] string credentials, [FromBody] AddressDTO addressDTO)
         {
             try
             {
@@ -77,7 +78,7 @@ namespace Carpooling.Controllers
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateFeedbackAsync(int id, [FromHeader] string credentials, [FromBody] AddressDTO addressDTO)
+        public async Task<IActionResult> UpdateAddressAsync(int id, [FromHeader] string credentials, [FromBody] AddressDTO addressDTO)
         {
             try
             {
@@ -97,7 +98,7 @@ namespace Carpooling.Controllers
             }
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFeedbackAsync(int id, [FromHeader] string credentials)
+        public async Task<IActionResult> DeleteAddressAsync(int id, [FromHeader] string credentials)
         {
             try
             {

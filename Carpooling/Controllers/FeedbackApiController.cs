@@ -26,12 +26,12 @@ namespace Carpooling.Controllers
         }
         //Create Delete Update
         [HttpGet]
-        public async Task<IActionResult> GetAllFeedbacksAsync([FromHeader] string credentials)
+        public async Task<ActionResult<IEnumerable<FeedbackResponse>>> GetAllFeedbacksAsync([FromHeader] string credentials)
         {
             try
             {
                 var loggedUser = await _authValidator.ValidateCredentialAsync(credentials);
-                var feedbacks = _feedbackService.GetAllAsync();
+                var feedbacks =  await _feedbackService.GetAllAsync();
 
                 return StatusCode(StatusCodes.Status200OK, feedbacks);
             }
@@ -43,12 +43,12 @@ namespace Carpooling.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetFeedbackByIdAsync([FromHeader] string credentials, int id)
+        public async Task<ActionResult<FeedbackResponse>> GetFeedbackByIdAsync([FromHeader] string credentials, int id)
         {
             try
             {
                 var loggerUser = await _authValidator.ValidateCredentialAsync(credentials);
-                var feedback = await _feedbackService.GetByIdAsync(id);
+                var feedback = _mapper.Map<FeedbackResponse>(await _feedbackService.GetByIdAsync(id));
                 return StatusCode(StatusCodes.Status200OK, feedback);
             }
             catch (UnauthorizedOperationException e)
@@ -61,7 +61,7 @@ namespace Carpooling.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<Feedback>> CreateFeedbackAsync([FromHeader] string credentials, [FromBody] FeedbackRequest feedbackDTO)
+        public async Task<ActionResult<FeedbackRequest>> CreateFeedbackAsync([FromHeader] string credentials, [FromBody] FeedbackRequest feedbackDTO)
         {
             try
             {
