@@ -42,6 +42,64 @@ namespace Carpooling.BusinessLayer.Helpers
             return role;
         }
 
+        public async Task ChangeRole(User loggedUser, User user,string currentRole)
+        {
+            var role = await userManager.GetRolesAsync(user);
+            var loggedUserRole = await userManager.GetRolesAsync(loggedUser);
+
+            if (currentRole.ToLower() == "driver" || currentRole.ToLower() == "passenger")
+            {
+                await userManager.RemoveFromRolesAsync(user, role);
+                await userManager.AddToRoleAsync(user, currentRole);
+            }
+            if (loggedUserRole.FirstOrDefault().ToLower() == "administrator" && currentRole.ToLower() == "administrator")
+            {
+                await userManager.RemoveFromRolesAsync(user, role);
+                await userManager.AddToRoleAsync(user, currentRole);
+            }
+
+            await dbContext.SaveChangesAsync();
+
+
+
+
+
+            //if (result.Errors.Count() > 0)
+            //{
+            //    var message =  result.Errors.FirstOrDefault().Description;
+            //    throw new EntityNotFoundException(message);
+            //}
+
+
+        }
+
+
+        //public async Task<IdentityResult> ChangeUserRoleAsync(ApplicationUser user, string newRoleName)
+        //{
+        //    if (user == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(user));
+        //    }
+
+        //    var currentRoles = await userManager.GetRolesAsync(user);
+        //    var isUserInRole = await userManager.IsInRoleAsync(user, newRoleName);
+
+        //    if (!isUserInRole)
+        //    {
+        //        var removeRolesResult = await userManager.RemoveFromRolesAsync(user, currentRoles);
+        //        if (!removeRolesResult.Succeeded)
+        //        {
+        //            return removeRolesResult;
+        //        }
+
+        //        var addRoleResult = await userManager.AddToRoleAsync(user, newRoleName);
+        //        return addRoleResult;
+        //    }
+
+        //    return IdentityResult.Success;
+        //}
+
+
         //public async Task<User> TryChangeRoleAsync(User userToUpdate, UserUpdateDto userUpdateDto)
         //{
         //    var currentRole = userUpdateDto.Role;

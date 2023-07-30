@@ -168,6 +168,10 @@ namespace Carpooling.Controllers
             {
                 return StatusCode(StatusCodes.Status403Forbidden, e.Message);
             }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
 
         }
 
