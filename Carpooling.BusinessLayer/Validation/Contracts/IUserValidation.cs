@@ -12,7 +12,7 @@ namespace Carpooling.BusinessLayer.Validation.Contracts
 {
     public interface IUserValidation
     {
-        Task<bool> ValidateUserLoggedAndAdmin(User loggedUser, string Id);
+        Task<bool> ValidateUserLoggedAndAdmin(User loggedUser, string id);
         Task<bool> ValidateIfUsernameExist(string username);
         Task<bool> ValidateLoggedUserIsAdmin(User user);
         Task<bool> ValidateUserAlreadyBanned(User userToBeBanned);

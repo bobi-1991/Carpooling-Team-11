@@ -34,6 +34,7 @@ public class Program
         builder.Services.AddDbContext<CarPoolingDbContext>(options =>
                     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
         builder.Services.AddDefaultIdentity<User>()
             .AddRoles<UserRole>()
             .AddEntityFrameworkStores<CarPoolingDbContext>();
@@ -54,8 +55,6 @@ public class Program
         //Add identity services
         builder.Services.AddScoped<UserManager<User>>();
 
-
-
         //Validators
         builder.Services.AddScoped<IUserValidation, UserValidation>();
         builder.Services.AddScoped<IAuthValidator, AuthValidator>();
@@ -69,7 +68,7 @@ public class Program
         builder.Services.AddScoped<ICountryRepository, CountryRepository>();
         builder.Services.AddScoped<IFeedbackRepository,FeedbackRepository>();
 
-        
+
 
 
         builder.Services.AddSwaggerGen(options =>

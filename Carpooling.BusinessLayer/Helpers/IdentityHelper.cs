@@ -1,4 +1,8 @@
-﻿using CarPooling.Data.Data;
+﻿using Carpooling.BusinessLayer.Dto_s.UpdateModels;
+using Carpooling.BusinessLayer.Validation;
+using Carpooling.Service.Dto_s.Responses;
+using CarPooling.Data.Data;
+using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +31,7 @@ namespace Carpooling.BusinessLayer.Helpers
             string role;
 
             if (roles.Count == 0)
-            { 
+            {
                 role = "No role";
             }
             else
@@ -38,29 +42,77 @@ namespace Carpooling.BusinessLayer.Helpers
             return role;
         }
 
-        //public async Task<User> GetAdmin()
+        //public async Task<User> TryChangeRoleAsync(User userToUpdate, UserUpdateDto userUpdateDto)
         //{
-        //    var adminRole = await dbContext.Roles.FirstOrDefaultAsync(role => role.Name.ToLower() == "administrator").ConfigureAwait(false);
-        //    adminRole.ValidateIfNull(ExceptionMessages.RoleNull);
-        //    var adminId = await dbContext.UserRoles.FirstOrDefaultAsync(role => role.RoleId == adminRole.Id).ConfigureAwait(false);
-        //    adminId.ValidateIfNull(ExceptionMessages.UserRoleNull);
-        //    var admin = await GetUserByID(adminId.UserId).ConfigureAwait(false);
-        //    admin.ValidateIfNull(ExceptionMessages.AppUserNull);
-        //    return admin;
+        //    var currentRole = userUpdateDto.Role;
+
+        //    if (currentRole == "Passenger" || currentRole == "Driver")
+        //    {
+        //        await userManager.AddToRoleAsync(userToUpdate, currentRole);
+        //    }
+        //    else
+        //    {
+        //        throw new EntityNotFoundException($"Role {currentRole} not exist in the system.");
+        //    }
+
+        //    return userToUpdate;
         //}
 
-        //public async Task<User> GetUserByID(string id) 
-        //{
 
-        //    id.ValidateIfNull(ExceptionMessages.IdNull);
+        //Not tested yet
+        public async Task<User> GetAdmin()
+        {
+            var adminRole = await dbContext.Roles.FirstOrDefaultAsync(role => role.Name.ToLower() == "administrator").ConfigureAwait(false);
 
-        //    var user = await dbContext.Users.FindAsync(id);
+            if (adminRole is null)
+            { 
+                throw new EntityNotFoundException($"Role {adminRole} is not found.");
+            }
 
-        //    user.ValidateIfNull(ExceptionMessages.AppUserNull);
+            var adminId = await dbContext.UserRoles.FirstOrDefaultAsync(role => role.RoleId == adminRole.Id).ConfigureAwait(false);
 
-        //    return user;
+            if (string.IsNullOrEmpty(adminId.ToString()))
+            {
+                throw new EntityNotFoundException($"Id {adminId} is not found.");
+            }
 
-        //}
+            var admin = await GetUserByID(adminId.UserId).ConfigureAwait(false);
 
+            if (admin is null)
+            {
+                throw new EntityNotFoundException($"Id {admin} is not found.");
+            }
+
+            return admin;
+        }
+
+        public async Task<User> GetUserByID(string id)
+        {
+
+            if (string.IsNullOrEmpty(id))
+            {
+                throw new EntityNotFoundException($"Id {id} is not found.");
+            }
+
+
+            var user = await dbContext.Users.FindAsync(id);
+
+            if (user is null)
+            {
+                throw new EntityNotFoundException($"Id {user} is not found.");
+            }
+
+            return user;
+
+        }
     }
+
+
+
+
+
+
+
+
 }
+

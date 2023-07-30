@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Carpooling.BusinessLayer.Dto_s.AdminModels;
 using Carpooling.BusinessLayer.Dto_s.UpdateModels;
+using Carpooling.BusinessLayer.Helpers;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
 using Carpooling.Service.Dto_s.Requests;
@@ -26,15 +27,21 @@ namespace Carpooling.BusinessLayer.Services
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
         private readonly IUserValidation userValidator;
+        private readonly CarPoolingDbContext dbContext;
+        private readonly IdentityHelper identityHelper;
+
 
         private readonly UserManager<User> _userManager;
 
 
-        public UserService(IUserRepository userRepository, IMapper mapper, UserManager<User> userManager)
+        public UserService(IUserRepository userRepository, IMapper mapper, UserManager<User> userManager, CarPoolingDbContext dbContext, IUserValidation userValidator, IdentityHelper identityHelper)
         {
             this.userRepository = userRepository;
             this.mapper = mapper;
             _userManager = userManager;
+            this.dbContext = dbContext;
+            this.userValidator = userValidator;
+            this.identityHelper = identityHelper;
         }
         public Task<User> GetByUsernameAuthAsync(string username)
         {
@@ -51,14 +58,31 @@ namespace Carpooling.BusinessLayer.Services
             //await _userManager.AddToRolesAsync(user, new List<string> { "Passenger" });
 
             var result = await this._userManager.CreateAsync(user, userRequest.Password);
-            await _userManager.AddToRoleAsync(user, "Passenger");
 
-            return mapper.Map<UserResponse>(result);
+            if (result.Succeeded)
+            {
+                await _userManager.AddToRoleAsync(user, "Passenger");
+            }
+            else
+            {
+                var error = result.Errors.FirstOrDefault();
+                throw new DublicateEntityException(error.Description);
+            }
+
+            UserResponse userResponse = new UserResponse(
+                userRequest.FirstName,
+                userRequest.LastName,
+                userRequest.Username,
+                userRequest.Email,
+                0);
+
+            return userResponse;
+            // return mapper.Map<UserResponse>(result);
         }
 
         public async Task<string> DeleteAsync(User loggedUser, string id)
         {
-            await userValidator.ValidateUserLoggedAndAdmin(loggedUser, id);
+            _ = await userValidator.ValidateUserLoggedAndAdmin(loggedUser, id);
             var userToDelete = await this.userRepository.GetByIdAsync(id);
 
             await this._userManager.DeleteAsync(userToDelete);
@@ -70,17 +94,42 @@ namespace Carpooling.BusinessLayer.Services
         {
             var result = await this.userRepository.GetAllAsync();
 
-            return result.Select(x => mapper.Map<UserResponse>(x));
+            return result.Select(x => new UserResponse(
+                x.FirstName,
+                x.LastName,
+                x.UserName,
+                x.Email,
+                x.AverageRating));
+
+            //return result.Select(x => mapper.Map<UserResponse>(x));
         }
 
         public async Task<UserResponse> GetByIdAsync(string id)
         {
-            return this.mapper.Map<UserResponse>(await this.userRepository.GetByIdAsync(id));
+            var user = await this.userRepository.GetByIdAsync(id);
+
+            return new UserResponse(
+             user.FirstName,
+             user.LastName,
+             user.UserName,
+             user.Email,
+             user.AverageRating);
+
+            // return this.mapper.Map<UserResponse>(await this.userRepository.GetByIdAsync(id));
         }
 
         public async Task<UserResponse> GetByUsernameAsync(string username)
         {
-            return this.mapper.Map<UserResponse>(await this.userRepository.GetByUsernameAsync(username));
+            var user = await this.userRepository.GetByUsernameAsync(username);
+
+            return new UserResponse(
+               user.FirstName,
+               user.LastName,
+               user.UserName,
+               user.Email,
+               user.AverageRating);
+
+            // return this.mapper.Map<UserResponse>(await this.userRepository.GetByUsernameAsync(username));
         }
 
         public async Task<IEnumerable<TravelResponse>> TravelHistoryAsync(User loggeduser, string userId)
@@ -93,10 +142,45 @@ namespace Carpooling.BusinessLayer.Services
 
         public async Task<UserResponse> UpdateAsync(User loggedUser, string id, UserUpdateDto userUpdateDto)
         {
+            string role = "";
             await userValidator.ValidateUserLoggedAndAdmin(loggedUser, id);
-            await this._userManager.UpdateAsync(this.mapper.Map<User>(userUpdateDto));
+            var userToUpdate = await this.userRepository.GetByIdAsync(id);
 
-            return this.mapper.Map<UserResponse>(this.userRepository.GetByIdAsync(id));
+            var userDataToUpdate = new User
+            {
+                FirstName = userUpdateDto.FirstName ?? userToUpdate.FirstName,
+                LastName = userUpdateDto.LastName ?? userToUpdate.LastName,
+                Email = userUpdateDto.Email ?? userToUpdate.Email
+            };
+
+            // Ако има предоставена нова парола, хеширане и записване.
+            if (!string.IsNullOrEmpty(userUpdateDto.Password))
+            {
+                var hashedPassword = _userManager.PasswordHasher.HashPassword(userDataToUpdate, userUpdateDto.Password);
+                userDataToUpdate.PasswordHash = hashedPassword;
+            }
+            
+            if (!string.IsNullOrEmpty(userUpdateDto.Role))
+            {
+                role = userUpdateDto.Role;
+            }
+
+            //if (!string.IsNullOrEmpty(userUpdateDto.Role))
+            //{
+            //    userDataToUpdate = await this.identityHelper.TryChangeRoleAsync(userDataToUpdate, userUpdateDto);
+            //}
+
+            var updatedUser = await this.userRepository.UpdateAsync(id, userDataToUpdate, role);
+
+            return new UserResponse(
+            updatedUser.FirstName,
+            updatedUser.LastName,
+            updatedUser.UserName,
+            updatedUser.Email,
+            updatedUser.AverageRating);
+
+            //await this._userManager.UpdateAsync(this.mapper.Map<User>(userUpdateDto));
+            //return this.mapper.Map<UserResponse>(this.userRepository.GetByIdAsync(id));
         }
         public async Task<string> BanUser(User loggedUser, BanOrUnBanDto userToBeBanned)
         {

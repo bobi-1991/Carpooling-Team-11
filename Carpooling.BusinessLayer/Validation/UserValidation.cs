@@ -27,16 +27,16 @@ namespace Carpooling.BusinessLayer.Validation
             this.userRepository = userRepository;
         }
 
-        public async Task<bool> ValidateUserLoggedAndAdmin(User loggedUser, string Id)
+        public async Task<bool> ValidateUserLoggedAndAdmin(User loggedUser, string id)
         {
             var role = await identityHelper.GetRole(loggedUser);
 
-            if (!loggedUser.Id.Equals(Id) && role != "Administrator")
+            if (!loggedUser.Id.Equals(id) && role != "Administrator")
             {
                 throw new EntityUnauthorizatedException("I'm sorry, but you cannot change other user's personal data.");
             }
 
-            //if (!loggedUser.Id.Equals(Id) && !loggedUser.IsAdmin)
+            //if (!loggedUser.Id.Equals(id) && !loggedUser.IsAdmin)
             //{
             //    throw new EntityUnauthorizatedException("I'm sorry, but you cannot change other user's personal data.");
             //}

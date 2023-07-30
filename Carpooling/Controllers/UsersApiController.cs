@@ -14,12 +14,12 @@ namespace Carpooling.Controllers
 {
     [ApiController]
     [Route("api/users")]
-    public class UserApiController : ControllerBase
+    public class UsersApiController : ControllerBase
     {
         private readonly IUserService userService;
         private readonly IAuthValidator authValidator;
 
-        public UserApiController(IUserService userService, IAuthValidator authValidator)
+        public UsersApiController(IUserService userService, IAuthValidator authValidator)
         {
             this.userService = userService;
             this.authValidator = authValidator;
@@ -40,10 +40,14 @@ namespace Carpooling.Controllers
             {
                 return Unauthorized(e.Message);
             }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById([FromHeader] string credentials, string id)
+        [HttpGet("id/{id}")]
+        public async Task<IActionResult> GetById([FromHeader] string credentials,[FromRoute] string id)
         {
             try
             {
@@ -76,6 +80,14 @@ namespace Carpooling.Controllers
             {
                 return StatusCode(StatusCodes.Status403Forbidden, e.Message);
             }
+            catch (DublicateEntityException e)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, e.Message);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         [HttpDelete("{id}")]
@@ -98,8 +110,8 @@ namespace Carpooling.Controllers
             }
         }
 
-        [HttpGet("{username}")]
-        public async Task<IActionResult> GetByUsernameAsync([FromHeader] string credentials, string username)
+        [HttpGet("username/{username}")]
+        public async Task<IActionResult> GetByUsernameAsync([FromHeader] string credentials,[FromRoute] string username)
         {
             try
             {
@@ -118,7 +130,7 @@ namespace Carpooling.Controllers
             }
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("travel-history/{id}")]
         public async Task<IActionResult> TravelHistoryAsync([FromHeader] string credentials, string id)
         {
             try
@@ -160,7 +172,7 @@ namespace Carpooling.Controllers
         }
 
         [HttpPut("ban")]
-        public async Task<IActionResult> Ban([FromHeader] string credentials, [FromBody] BanOrUnBanDto userToBeBanned)
+        public async Task<IActionResult> BanAsync([FromHeader] string credentials, [FromBody] BanOrUnBanDto userToBeBanned)
         {
             try
             {
@@ -180,10 +192,14 @@ namespace Carpooling.Controllers
             {
                 return NotFound(e.Message);
             }
+            catch (ArgumentException e)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, e.Message);
+            }
         }
 
         [HttpPut("unban")]
-        public async Task<IActionResult> UnBan([FromHeader] string credentials, [FromBody] BanOrUnBanDto userToBeUnBanned)
+        public async Task<IActionResult> UnBanAsync([FromHeader] string credentials, [FromBody] BanOrUnBanDto userToBeUnBanned)
         {
             try
             {
@@ -202,6 +218,10 @@ namespace Carpooling.Controllers
             catch (EntityNotFoundException e)
             {
                 return NotFound(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, e.Message);
             }
         }
 
