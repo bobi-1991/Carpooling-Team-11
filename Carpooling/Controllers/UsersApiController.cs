@@ -40,6 +40,10 @@ namespace Carpooling.Controllers
             {
                 return Unauthorized(e.Message);
             }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
         }
 
         [HttpGet("id/{id}")]
@@ -167,51 +171,59 @@ namespace Carpooling.Controllers
 
         }
 
-        //[HttpPut("ban")]
-        //public async Task<IActionResult> BanAsync([FromHeader] string credentials, [FromBody] BanOrUnBanDto userToBeBanned)
-        //{
-        //    try
-        //    {
-        //        User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-        //        var message = await this.userService.BanUser(loggedUser, userToBeBanned);
-        //        return Ok(message);
-        //    }
-        //    catch (EntityUnauthorizatedException e)
-        //    {
-        //        return Unauthorized(e.Message);
-        //    }
-        //    catch (ArgumentNullException e)
-        //    {
-        //        return StatusCode(StatusCodes.Status403Forbidden, e.Message);
-        //    }
-        //    catch (EntityNotFoundException e)
-        //    {
-        //        return NotFound(e.Message);
-        //    }
-        //}
+        [HttpPut("ban")]
+        public async Task<IActionResult> BanAsync([FromHeader] string credentials, [FromBody] BanOrUnBanDto userToBeBanned)
+        {
+            try
+            {
+                User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                var message = await this.userService.BanUser(loggedUser, userToBeBanned);
+                return Ok(message);
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (ArgumentNullException e)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, e.Message);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, e.Message);
+            }
+        }
 
-        //[HttpPut("unban")]
-        //public async Task<IActionResult> UnBanAsync([FromHeader] string credentials, [FromBody] BanOrUnBanDto userToBeUnBanned)
-        //{
-        //    try
-        //    {
-        //        User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-        //        var message = await this.userService.UnBanUser(loggedUser, userToBeUnBanned);
-        //        return StatusCode(StatusCodes.Status200OK, message);
-        //    }
-        //    catch (EntityUnauthorizatedException e)
-        //    {
-        //        return Unauthorized(e.Message);
-        //    }
-        //    catch (ArgumentNullException e)
-        //    {
-        //        return StatusCode(StatusCodes.Status403Forbidden, e.Message);
-        //    }
-        //    catch (EntityNotFoundException e)
-        //    {
-        //        return NotFound(e.Message);
-        //    }
-        //}
+        [HttpPut("unban")]
+        public async Task<IActionResult> UnBanAsync([FromHeader] string credentials, [FromBody] BanOrUnBanDto userToBeUnBanned)
+        {
+            try
+            {
+                User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                var message = await this.userService.UnBanUser(loggedUser, userToBeUnBanned);
+                return StatusCode(StatusCodes.Status200OK, message);
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (ArgumentNullException e)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, e.Message);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+            catch (ArgumentException e)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, e.Message);
+            }
+        }
 
     }
 }

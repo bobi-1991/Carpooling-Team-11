@@ -17,6 +17,7 @@ namespace CarPooling.Data.Repositories
         private readonly CarPoolingDbContext dbContext;
         private readonly UserManager<User> userManger;
 
+
         public UserRepository(CarPoolingDbContext dbContext, UserManager<User> userManger)
         {
             this.dbContext = dbContext;
@@ -118,10 +119,13 @@ namespace CarPooling.Data.Repositories
 
             await this.userManger.UpdateAsync(userToUpdate);
 
+            //TODO
+            //update role curently not working
             if (!string.IsNullOrEmpty(role))
             {
                 if (role == "Passenger" || role == "Driver")
                 {
+
                     await this.userManger.AddToRoleAsync(userToUpdate, role);
                 }
                 else

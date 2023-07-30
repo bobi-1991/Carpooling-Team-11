@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using CarPooling.Data.Exceptions;
 
 namespace Carpooling.BusinessLayer.Validation
 {
@@ -29,47 +29,28 @@ namespace Carpooling.BusinessLayer.Validation
             string username = credentialsArray[0];
             string password = credentialsArray[1];
 
-            var user = await this.userService.GetByUsernameAuthAsync(username);
+            try
+            {
+                var user = await this.userService.GetByUsernameAuthAsync(username);
 
-            if (user == null)
+                var hasher = new PasswordHasher<User>();
+
+                var result = hasher.VerifyHashedPassword(user, user.PasswordHash, password);
+
+                if (result == PasswordVerificationResult.Success)
+                {
+                    return user;
+                }
+                else
+                {
+                    throw new EntityUnauthorizatedException("Invalid credentials");
+                }
+            }
+            catch(EntityNotFoundException e)
             {
                 throw new EntityUnauthorizatedException("Invalid credentials");
             }
-
-            var hasher = new PasswordHasher<User>();
-
-            var result = hasher.VerifyHashedPassword(user, user.PasswordHash, password);
-
-            if (result == PasswordVerificationResult.Success)
-            {
-                return user;
-            }
-            else
-            {
-                throw new EntityUnauthorizatedException("Invalid credentials");
-            }
-
         }
-
-        //public async Task<bool> ValidateCredentialAsync(string credentials)
-        //{
-        //    string[] credentialsArray = credentials.Split(':');
-        //    string username = credentialsArray[0];
-        //    string password = credentialsArray[1];
-
-        //    var user = await this.userService.GetByUsernameAuthAsync(username);
-
-        //    if (user == null) return false;
-
-        //    var hasher = new PasswordHasher<User>();
-
-        //    var result = hasher.VerifyHashedPassword(user, user.PasswordHash, password);
-
-        //    if (result == PasswordVerificationResult.Success) return true;
-
-        //    return false;
-        //}
-
 
 
     }
