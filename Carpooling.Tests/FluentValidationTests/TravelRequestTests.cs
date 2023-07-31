@@ -1,11 +1,6 @@
 ﻿using Carpooling.Fluent_Validation;
 using Carpooling.Service.Dto_s.Requests;
 using FluentValidation.TestHelper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Carpooling.Tests.FluentValidationTests
 {
@@ -21,31 +16,6 @@ namespace Carpooling.Tests.FluentValidationTests
             validator = new TravelRequestValidator();
         }
 
-        //public TravelRequestValidator()
-        //{
-        //    RuleFor(x => x.CarId)
-        //        .NotEmpty()
-        //        .WithMessage("Required Id")
-        //        .GreaterThan(0)
-        //        .WithMessage("Cannot be negative");
-
-        //    RuleFor(x => x.StartLocationId)
-        //        .NotEmpty()
-        //        .WithMessage("Required Id")
-        //        .GreaterThan(0)
-        //        .WithMessage("Cannot be negative");
-
-        //    RuleFor(x => x.DestionationId)
-        //        .NotEmpty()
-        //        .WithMessage("Required Id")
-        //        .GreaterThan(0)
-        //        .WithMessage("Cannot be negative");
-
-        //    RuleFor(x => x.DriverId)
-        //        .NotEmpty()
-        //        .WithMessage("Required Id");
-        //}
-
         [TestMethod]
 
         public void TravelRequest_ShouldReturn_WhenAllValid()
@@ -58,7 +28,6 @@ namespace Carpooling.Tests.FluentValidationTests
                 DestionationId = 1,
                 DriverId = "123123123"
             };
-
 
             //Act
             var result = validator.TestValidate(model);

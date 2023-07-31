@@ -1,34 +1,33 @@
-﻿using Carpooling.BusinessLayer.Validation.Fluent_Validation;
-using Carpooling.Service.Dto_s.Requests;
+﻿using Carpooling.BusinessLayer.Dto_s.UpdateModels;
+using Carpooling.Fluent_Validation;
 using FluentValidation.TestHelper;
 
 namespace Carpooling.Tests.FluentValidationTests
 {
     [TestClass]
-    public class UserRequestTests
+    public class UserUpdateRequestTests
     {
-        private UserRequestValidator validator;
+        private UserUpdateRequestValidator validator;
 
         [TestInitialize]
 
         public void Initialize()
         {
-            validator = new UserRequestValidator();
+            validator = new UserUpdateRequestValidator();
         }
 
         [TestMethod]
 
-        public void UserRequest_ShouldReturn_WhenAllValid()
+        public void UserUpdateRequest_ShouldReturn_WhenAllValid()
         {
             //Arrange
-            var model = new UserRequest
+            var model = new UserUpdateDto()
             {
                 FirstName = new string('a', 20),
                 LastName = new string('a', 20),
-                Username = new string('a', 10),
                 Password = "Password2@",
                 Email = "abv@abv.bg",
-                AddressId = 1
+                Role = "Driver"
             };
 
             //Act
@@ -40,18 +39,17 @@ namespace Carpooling.Tests.FluentValidationTests
 
         [TestMethod]
 
-        public void UserRequest_ShouldThrow_WhenFirstNameEmpty()
+        public void UserUpdateRequest_ShouldThrow_WhenFirstNameEmpty()
         {
             string firstName = null;
 
-            var model = new UserRequest
+            var model = new UserUpdateDto()
             {
                 FirstName = firstName,
                 LastName = new string('a', 20),
-                Username = new string('a', 10),
                 Password = "Password2@",
                 Email = "abv@abv.bg",
-                AddressId = 1
+                Role = "Driver"
             };
 
             var result = validator.TestValidate(model);
@@ -66,18 +64,17 @@ namespace Carpooling.Tests.FluentValidationTests
 
         [TestMethod]
 
-        public void UserRequest_ShouldThrow_WhenLastNameEmpty()
+        public void UserUpdateRequest_ShouldThrow_WhenLastNameEmpty()
         {
             string lastName = null;
 
-            var model = new UserRequest
+            var model = new UserUpdateDto()
             {
-                FirstName = new string('a', 20),
+                FirstName = "Fitness",
                 LastName = lastName,
-                Username = new string('a', 10),
                 Password = "Password2@",
                 Email = "abv@abv.bg",
-                AddressId = 1
+                Role = "Driver"
             };
 
             var result = validator.TestValidate(model);
@@ -90,47 +87,19 @@ namespace Carpooling.Tests.FluentValidationTests
             Assert.IsTrue(msg.Any(x => x.ErrorMessage == "Last Name is required."));
         }
 
-
         [TestMethod]
 
-        public void UserRequest_ShouldThrow_WhenUsernameEmpty()
-        {
-            string username = null;
-
-            var model = new UserRequest
-            {
-                FirstName = new string('a', 20),
-                LastName = new string('a', 20),
-                Username = username,
-                Password = "Password2@",
-                Email = "abv@abv.bg",
-                AddressId = 1
-            };
-
-            var result = validator.TestValidate(model);
-
-            result.ShouldHaveValidationErrorFor(x => x.Username);
-
-            var msg = result.Errors;
-
-            Assert.AreEqual(1, msg.Count);
-            Assert.IsTrue(msg.Any(x => x.ErrorMessage == "Username is required."));
-        }
-
-        [TestMethod]
-
-        public void UserRequest_ShouldThrow_WhenPasswordEmpty()
+        public void UserUpdateRequest_ShouldThrow_WhenPasswordEmpty()
         {
             string password = null;
 
-            var model = new UserRequest
+            var model = new UserUpdateDto()
             {
                 FirstName = new string('a', 20),
                 LastName = new string('a', 20),
-                Username = new string('a', 10),
                 Password = password,
                 Email = "abv@abv.bg",
-                AddressId = 1
+                Role = "Driver"
             };
 
             var result = validator.TestValidate(model);
@@ -145,18 +114,17 @@ namespace Carpooling.Tests.FluentValidationTests
 
         [TestMethod]
 
-        public void UserRequest_ShouldThrow_WhenEmailEmpty()
+        public void UserUpdateRequest_ShouldThrow_WhenEmailEmpty()
         {
             string email = null;
 
-            var model = new UserRequest
+            var model = new UserUpdateDto()
             {
                 FirstName = new string('a', 20),
                 LastName = new string('a', 20),
-                Username = new string('a', 10),
                 Password = "Password2@",
                 Email = email,
-                AddressId = 1
+                Role = "Driver"
             };
 
             var result = validator.TestValidate(model);
@@ -170,22 +138,46 @@ namespace Carpooling.Tests.FluentValidationTests
         }
 
         [TestMethod]
+
+        public void UserUpdateRequest_ShouldThrow_WhenRoleEmpty()
+        {
+            string role = null;
+
+            var model = new UserUpdateDto()
+            {
+                FirstName = new string('a', 20),
+                LastName = new string('a', 20),
+                Password = "Password2@",
+                Email = "abv@abv.bg",
+                Role = role
+            };
+
+            var result = validator.TestValidate(model);
+
+            result.ShouldHaveValidationErrorFor(x => x.Role);
+
+            var msg = result.Errors;
+
+            Assert.AreEqual(1, msg.Count);
+            Assert.IsTrue(msg.Any(x => x.ErrorMessage == "Role is required."));
+        }
+
+        [TestMethod]
         [DataRow(1)]
         [DataRow(21)]
 
-        public void UserRequest_ShouldThrow_WhenFirstNameInvalid(int count)
+        public void UserUpdateRequest_ShouldThrow_WhenFirstNameInvalid(int count)
         {
             //Arrange
             var firstName = new string('a', count);
 
-            var model = new UserRequest()
+            var model = new UserUpdateDto()
             {
                 FirstName = firstName,
                 LastName = "Mladenov",
-                Username = "Mladenov123",
                 Password = "Passw0rd@",
                 Email = "abvbg@abv.bg",
-                AddressId = 1
+                Role = "Driver"
             };
 
             //Act
@@ -204,19 +196,18 @@ namespace Carpooling.Tests.FluentValidationTests
         [DataRow(1)]
         [DataRow(21)]
 
-        public void UserRequest_ShouldThrow_WhenLastNameInvalid(int count)
+        public void UserUpdateRequest_ShouldThrow_WhenLastNameInvalid(int count)
         {
             //Arrange
             var lastName = new string('a', count);
 
-            var model = new UserRequest()
+            var model = new UserUpdateDto()
             {
                 FirstName = "Strahil",
                 LastName = lastName,
-                Username = "Mladenov123",
                 Password = "Passw0rd@",
                 Email = "abvbg@abv.bg",
-                AddressId = 1
+                Role = "Driver"
             };
 
             //Act
@@ -232,49 +223,17 @@ namespace Carpooling.Tests.FluentValidationTests
         }
 
         [TestMethod]
-        [DataRow(1)]
-        [DataRow(21)]
 
-        public void UserRequest_ShouldThrow_WhenUsernameInvalid(int count)
+        public void UserUpdateRequest_ShouldThrow_WhenPasswordInvalid()
         {
             //Arrange
-            var username = new string('a', count);
-
-            var model = new UserRequest()
+            var model = new UserUpdateDto()
             {
                 FirstName = "Strahil",
                 LastName = "Mladenov",
-                Username = username,
-                Password = "Passw0rd@",
-                Email = "abvbg@abv.bg",
-                AddressId = 1
-            };
-
-            //Act
-            var result = validator.TestValidate(model);
-
-            //Assert
-            result.ShouldHaveValidationErrorFor(x => x.Username);
-
-            var msg = result.Errors;
-
-            Assert.AreEqual(1, msg.Count);
-            Assert.IsTrue(msg.Any(x => x.ErrorMessage == $"Username must be between 2 and 20 characters long. You entered {count} characters"));
-        }
-
-        [TestMethod]
-
-        public void UserRequest_ShouldThrow_WhenPasswordInvalid()
-        {
-            //Arrange
-            var model = new UserRequest()
-            {
-                FirstName = "Strahil",
-                LastName = "Mladenov",
-                Username = "Mladenov123",
                 Password = "Pass",
                 Email = "abv@abv.bg",
-                AddressId = 1
+                Role = "Driver"
             };
 
             //Act
@@ -291,17 +250,16 @@ namespace Carpooling.Tests.FluentValidationTests
 
         [TestMethod]
 
-        public void UserRequest_ShouldThrow_WhenPasswordInvalid2()
+        public void UserUpdateRequest_ShouldThrow_WhenPasswordInvalid2()
         {
             //Arrange
-            var model = new UserRequest()
+            var model = new UserUpdateDto()
             {
                 FirstName = "Strahil",
                 LastName = "Mladenov",
-                Username = "Mladenov123",
                 Password = "Password123",
                 Email = "abv@abv.bg",
-                AddressId = 1
+                Role = "Driver"
             };
 
             //Act
@@ -319,17 +277,16 @@ namespace Carpooling.Tests.FluentValidationTests
 
         [TestMethod]
 
-        public void UserRequest_ShouldThrow_WhenEmailInvalid()
+        public void UserUpdateRequest_ShouldThrow_WhenEmailInvalid()
         {
             //Arrange
-            var model = new UserRequest()
+            var model = new UserUpdateDto()
             {
                 FirstName = "Strahil",
                 LastName = "Mladenov",
-                Username = "Mladenov123",
                 Password = "Passw0rd@",
                 Email = "abv.bg",
-                AddressId = 1
+                Role = "Driver"
             };
 
             //Act
