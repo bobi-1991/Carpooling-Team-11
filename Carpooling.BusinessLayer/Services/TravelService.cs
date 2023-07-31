@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
+using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services.Contracts;
+using Carpooling.BusinessLayer.Validation.Contracts;
 using Carpooling.Service.Dto_s.Requests;
 using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Models;
@@ -18,13 +20,15 @@ namespace Carpooling.BusinessLayer.Services
         private readonly IMapper mapper;
         private readonly IAddressRepository addressRepository;
         private readonly ICarRepository carRepository;
+        private readonly ITravelValidator travelValidator;
 
-        public TravelService(ITravelRepository travelRepository, IMapper mapper, IAddressRepository addressRepository, ICarRepository carRepository)
+        public TravelService(ITravelRepository travelRepository, IMapper mapper, IAddressRepository addressRepository, ICarRepository carRepository, ITravelValidator travelValidator)
         {
             this.travelRepository = travelRepository;
             this.mapper = mapper;
             this.addressRepository = addressRepository;
             this.carRepository = carRepository;
+            this.travelValidator = travelValidator;
         }
 
         public async Task<IEnumerable<TravelResponse>> GetAllAsync()
@@ -38,20 +42,30 @@ namespace Carpooling.BusinessLayer.Services
             return  this.mapper.Map<TravelResponse>(await this.travelRepository.GetByIdAsync(travelId));
         }
 
-        public async Task<TravelResponse> CreateTravelAsync(TravelRequest travelRequest)
+        public async Task<TravelResponse> CreateTravelAsync(User loggedUser, TravelRequest travelRequest)
         {
+            await this.travelValidator.ValidateIsLoggedUserAreDriver(loggedUser,travelRequest.DriverId);
+
             var startLocation = await this.addressRepository.GetByIdAsync(travelRequest.StartLocationId);
             var destination = await this.addressRepository.GetByIdAsync(travelRequest.DestionationId);
             var car = await this.carRepository.GetByIdAsync(travelRequest.CarId);
 
             var travel = new Travel
             {
+                DriverId = travelRequest.DriverId,
                 DepartureTime = travelRequest.DepartureTime,
                 ArrivalTime = travelRequest.ArrivalTime,
                 StartLocation = startLocation,
+                IsCompleted = false,
                 EndLocation = destination,
                 Car = car
             };
+
+            if (!await this.travelValidator.ValidateIsNewTravelPossible(travel.DriverId, travel.DepartureTime, travel.ArrivalTime))
+            {
+                throw new UnauthorizedOperationException("This trip cannot be made because the driver has another trip at the time.");
+            }
+
 
             var createdTravel = await this.travelRepository.CreateTravelAsync(travel);
 
@@ -61,8 +75,8 @@ namespace Carpooling.BusinessLayer.Services
                 DestinationName = createdTravel.EndLocation.Details,
                 DepartureTime = createdTravel.DepartureTime,
                 ArrivalTime = createdTravel.ArrivalTime,
-               // AvaibleSeats = createdTravel.AvailableSlots,
-                IsComplete = (bool)createdTravel.IsCompleted,
+                AvaibleSeats = createdTravel.AvailableSlots,
+                IsComplete = false,
                 CarRegistration = createdTravel.Car.Registration
             };
 

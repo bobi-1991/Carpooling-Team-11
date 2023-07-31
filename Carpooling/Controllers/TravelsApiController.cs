@@ -92,7 +92,7 @@ namespace Carpooling.Controllers
             {
                 var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
 
-                var travelToCreate = await this.travelService.CreateTravelAsync(travelRequest);
+                var travelToCreate = await this.travelService.CreateTravelAsync(loggedUser, travelRequest);
                 return this.Ok(travelToCreate);
             }
             catch (EntityUnauthorizatedException e)
@@ -103,6 +103,11 @@ namespace Carpooling.Controllers
             {
                 return this.NotFound(ex.Message);
             }
+            catch (UnauthorizedOperationException ex)
+            {
+                return this.Forbid(ex.Message);
+            }
+         
             //catch (Exception ex)
             //{
             //    return StatusCode(500, ex.Message);

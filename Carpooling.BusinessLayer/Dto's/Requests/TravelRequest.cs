@@ -8,6 +8,7 @@ namespace Carpooling.Service.Dto_s.Requests
 {
     public class TravelRequest
     {
+        public string DriverId { get; set; }
         public DateTime DepartureTime { get; set; }
         public DateTime ArrivalTime { get; set; }
         public int StartLocationId { get; set; }

@@ -1,4 +1,5 @@
 ﻿using CarPooling.Data.Models.Abstract;
+using System.Runtime.CompilerServices;
 using System.Text.Json.Serialization;
 
 namespace CarPooling.Data.Models
@@ -33,9 +34,13 @@ namespace CarPooling.Data.Models
 
         //public List<User>? Passengers { get; set; } = new List<User>();
         //public List<Feedback>? Feedbacks { get; set; } = new List<Feedback>();
+
+        private readonly int availableSlots = 4;
         public Travel()
         {
+           AvailableSlots = this.availableSlots;
         }
+
 
         // Foreign keys with navigation properties
         public User? Driver { get; set; }
@@ -56,18 +61,10 @@ namespace CarPooling.Data.Models
         //public int? CarId { get; set; }
         public Car? Car { get; set; }
 
-        //public int AvailableSlots
-        //{
-        //    get
-        //    {
-        //        // Не позволяваме да имаме отрицателен брой свободни места
-        //        return Math.Max(0, AvailableSlots - Passengers.Count());
-        //    }
-        //    private set
-        //    {
-        //        AvailableSlots = value;
-        //    }
-        //}
+        public int AvailableSlots
+        {
+            get; set;
+        }
 
         public List<User>? Passengers = new List<User>();
     
@@ -78,4 +75,5 @@ namespace CarPooling.Data.Models
 
 
     }
+
 }

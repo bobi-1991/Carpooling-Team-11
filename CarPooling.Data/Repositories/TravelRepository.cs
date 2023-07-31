@@ -15,10 +15,12 @@ namespace CarPooling.Data.Repositories
     public class TravelRepository : ITravelRepository
     {
         private readonly CarPoolingDbContext dbContext;
+        private readonly IUserRepository userRepository;
 
-        public TravelRepository(CarPoolingDbContext dbContext)
+        public TravelRepository(CarPoolingDbContext dbContext, IUserRepository userRepository)
         {
             this.dbContext = dbContext;
+            this.userRepository = userRepository;
         }
         public async Task<IEnumerable<Travel>> GetAllAsync()
         {
@@ -72,6 +74,17 @@ namespace CarPooling.Data.Repositories
         public async Task<Travel> CreateTravelAsync(Travel travel)
         {
             await this.dbContext.Travels.AddAsync(travel);
+            travel.CreatedOn = DateTime.Now;
+            travel.UpdatedOn = DateTime.Now;
+            await this.dbContext.SaveChangesAsync();
+
+            var driver = await this.userRepository.GetByIdAsync(travel.DriverId);
+            driver.TravelHistory.Add(travel);
+
+            await this.dbContext.SaveChangesAsync();
+            return travel;
+
+
             await this.dbContext.SaveChangesAsync();
             return travel;
         }
