@@ -15,7 +15,8 @@ namespace Carpooling.BusinessLayer.Services.Contracts
         Task<TravelResponse> GetByIdAsync(int travelId);
         Task<TravelResponse> CreateTravelAsync(User loggedUser, TravelRequest travel);
         Task<TravelResponse> UpdateAsync(int travelId, Travel travel);
-        Task<TravelResponse> DeleteAsync(int travelId);
+        Task<string> DeleteAsync(User loggedUser, int travelId);
         Task<TravelResponse> AddUserToTravelAsync(string driveId, int travelId, string passengerId);
+        Task<IEnumerable<TravelResponse>> FilterTravelsAndSortAsync(string sortBy);
     }
 }

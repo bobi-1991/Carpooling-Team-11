@@ -3,8 +3,10 @@ using Carpooling.BusinessLayer.Helpers;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
 using Carpooling.Service.Dto_s.Requests;
+using CarPooling.Data.Data;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -19,19 +21,30 @@ namespace Carpooling.BusinessLayer.Validation
         private readonly IUserRepository userRepository;
         private readonly IdentityHelper identityHelper;
         private readonly ITravelRepository travelRepository;
+        private readonly CarPoolingDbContext dbContext;
 
 
-        public TravelValidator(IUserRepository userRepository, IdentityHelper identityHelper, ITravelRepository travelRepository)
+        public TravelValidator(IUserRepository userRepository, IdentityHelper identityHelper, ITravelRepository travelRepository, CarPoolingDbContext dbContext)
         {
             this.userRepository = userRepository;
             this.identityHelper = identityHelper;
             this.travelRepository = travelRepository;
+            this.dbContext = dbContext;
         }
 
         public async Task<bool> ValidateIsNewTravelPossible(string driveId, DateTime currentDeparture, DateTime currentArrival)
         {
-            var travelsHistoryOfTheDriver = await this.userRepository.TravelHistoryAsync(driveId);
-            var activeTravels = travelsHistoryOfTheDriver.Where(x => x.IsCompleted == false);
+            var travels = await this.travelRepository.GetAllAsync();
+
+         //   var travelsHistoryOfTheDriver = travels.Where(x => x.DriverId == driveId);
+            var activeTravels = await this.dbContext.Travels
+                  //.Include(x => x.DepartureTime)
+                  //.Include(x => x.ArrivalTime)
+                  .Include(x => x.Car)
+                  .Where(x => x.DriverId == driveId && !x.IsDeleted && x.IsCompleted == false)
+                  .ToListAsync();
+
+            //var activeTravels = travels.Where(x => x.DriverId == driveId).Where(x => !x.IsDeleted && x.IsCompleted == false);
 
             if (activeTravels.Any(t => t.DepartureTime <= currentArrival && t.ArrivalTime >= currentDeparture))
             {

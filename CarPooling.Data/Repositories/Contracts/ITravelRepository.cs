@@ -1,4 +1,6 @@
-﻿using CarPooling.Data.Models;
+﻿using CarPooling.Data.Exceptions;
+using CarPooling.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,8 +15,10 @@ namespace CarPooling.Data.Repositories.Contracts
         Task<IEnumerable<Travel>> GetAllAsync();
         Task<Travel> GetByIdAsync(int travelId);
         Task<Travel> UpdateAsync(int travelId, Travel travel);
-        Task<Travel> DeleteAsync(int travelId);
+        Task<string> DeleteAsync(int travelId);
         Task<Travel> AddUserToTravelAsync(string driveId, int travelId, string passengerId);
+        Task<IEnumerable<Travel>> FilterTravelsAndSortAsync(string sortBy);
+     
 
         //Task<TravelDTO> AddStopToTravelAsync();
     }

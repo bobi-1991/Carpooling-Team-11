@@ -64,7 +64,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     ArrivalTime = new DateTime(2023, 10, 13),
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now,
-                    AvailableSlots = 4,
+                    AvailableSeats = 4,
                     Passengers = new List<User> { passenger1, passenger2 },
                     IsCompleted = false,
                     Feedbacks = new List<Feedback> { new Feedback {PassengerId = passenger1.Id, Passenger = passenger1,  DriverId = driver.Id, Rating = 5, Comment = "It was fine." } }

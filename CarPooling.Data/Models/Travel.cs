@@ -38,7 +38,7 @@ namespace CarPooling.Data.Models
         private readonly int availableSlots = 4;
         public Travel()
         {
-           AvailableSlots = this.availableSlots;
+           AvailableSeats = this.AvailableSeats;
         }
 
 
@@ -61,7 +61,7 @@ namespace CarPooling.Data.Models
         //public int? CarId { get; set; }
         public Car? Car { get; set; }
 
-        public int AvailableSlots
+        public int AvailableSeats
         {
             get; set;
         }

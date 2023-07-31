@@ -12,7 +12,7 @@ namespace Carpooling.Service.Dto_s.Responses
         public string DestinationName { get; set; }
         public DateTime DepartureTime { get; set; }
         public DateTime ArrivalTime { get; set; }
-        public int AvaibleSeats { get; set; }
+        public int AvailableSeats { get; set; }
         public bool IsComplete { get; set; }
         public string CarRegistration { get; set; }
     }

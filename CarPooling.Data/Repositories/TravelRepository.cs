@@ -76,22 +76,28 @@ namespace CarPooling.Data.Repositories
             await this.dbContext.Travels.AddAsync(travel);
             travel.CreatedOn = DateTime.Now;
             travel.UpdatedOn = DateTime.Now;
-            await this.dbContext.SaveChangesAsync();
+
+           // await this.dbContext.SaveChangesAsync();
+
 
             var driver = await this.userRepository.GetByIdAsync(travel.DriverId);
             driver.TravelHistory.Add(travel);
-
-            await this.dbContext.SaveChangesAsync();
-            return travel;
-
+            dbContext.Update(driver);
 
             await this.dbContext.SaveChangesAsync();
             return travel;
         }
 
-        public Task<Travel> DeleteAsync(int travelId)
+        public async Task<string> DeleteAsync(int travelId)
         {
-            throw new NotImplementedException();
+           var travelToDelete = await this.GetByIdAsync(travelId);
+
+            travelToDelete.IsDeleted = true;
+            travelToDelete.DeletedOn = DateTime.Now;
+
+            await dbContext.SaveChangesAsync();
+
+            return "Travel successfully deleted.";
         }
 
 
@@ -126,6 +132,50 @@ namespace CarPooling.Data.Repositories
             // var response = new TravelDTO(travel);
 
             // return response;
+        }
+
+        public async Task<IEnumerable<Travel>> FilterTravelsAndSortAsync( string sortBy)
+        {
+            IQueryable<Travel> travels = dbContext.Travels
+                .Include(x=>x.StartLocation)
+                .Include(x=>x.EndLocation)
+                .Include(x=>x.Car)
+                .Where(c => c.IsDeleted == false);
+
+            switch (sortBy.ToLower())
+            {
+                case "create":
+                    travels = travels.OrderBy(t => t.CreatedOn);
+                    break;
+                case "startlocation":
+                    travels = travels.OrderBy(t => t.StartLocation);
+                    break;
+                case "endlocation":
+                    travels = travels.OrderBy(t => t.EndLocation);
+                    break;
+                case "departuretime":
+                    travels = travels.OrderBy(t => t.DepartureTime);
+                    break;
+                case "arrivaltime":
+                    travels = travels.OrderBy(t => t.ArrivalTime);
+                    break;
+                case "feedbacks":
+                    travels = travels.OrderByDescending(t => t.Feedbacks.Count());
+                    break;
+                case "slots":
+                    travels = travels.OrderByDescending(t => t.AvailableSeats);
+                    break;
+                default:
+                    travels = travels.OrderBy(travel => travel.Id);
+                    break;
+            }
+            if (travels.Count() > 0)
+            {
+                return await travels.ToListAsync();
+            }
+
+            throw new EmptyListException("No travels added yet!");
+
         }
 
 

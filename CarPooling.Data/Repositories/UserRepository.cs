@@ -59,7 +59,7 @@ namespace CarPooling.Data.Repositories
         public async Task<User> GetByIdAsync(string id)
         {
             var user = dbContext.Users
-             .Include(x=>x.TravelHistory)
+           //  .Include(x=>x.TravelHistory)
              .Where(x => !x.IsDeleted)
              .FirstOrDefault(x => x.Id == id);
 

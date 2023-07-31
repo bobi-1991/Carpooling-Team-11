@@ -6,6 +6,8 @@ using Carpooling.BusinessLayer.Validation.Contracts;
 using System.Net;
 using Carpooling.Service.Dto_s.Requests;
 using Carpooling.BusinessLayer.Exceptions;
+using Carpooling.BusinessLayer.Dto_s.Requests;
+using Carpooling.BusinessLayer.Services;
 
 namespace Carpooling.Controllers
 {
@@ -43,7 +45,7 @@ namespace Carpooling.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetTravelByIdAsync([FromHeader]string credentials, int id)
+        public async Task<IActionResult> GetTravelByIdAsync([FromHeader] string credentials, int id)
         {
             try
             {
@@ -84,10 +86,11 @@ namespace Carpooling.Controllers
         //    }
         //}
 
+        // must be fix travel history property
         [HttpPost("")]
         public async Task<IActionResult> CreateTravelAsync([FromHeader] string credentials, TravelRequest travelRequest)
         {
-           
+
             try
             {
                 var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
@@ -107,152 +110,52 @@ namespace Carpooling.Controllers
             {
                 return this.Forbid(ex.Message);
             }
-         
-            //catch (Exception ex)
-            //{
-            //    return StatusCode(500, ex.Message);
-            //}
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status400BadRequest, ex.Message);
+            }
+
         }
 
-        //[HttpDelete("{id}")]
-        //[SwaggerOperation(Summary = "Delete Travel",
-        //    Description = "Delete a specific Travel by Id Property")]
-        //public async Task<IActionResult> DeleteTravelAsync(int id)
-        //{
-        //    try
-        //    {
-        //        var travelToDelete = await this.travelService.DeleteOwnTravelAsync(id);
-        //        return this.Ok(travelToDelete);
-        //    }
-        //    catch (EntityNotFoundException ex)
-        //    {
-        //        return NotFound(ex.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, ex.Message);
-        //    }
-        //}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTravelAsync([FromHeader] string credentials, int id)
+        {
+            try
+            {
+                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                return this.Ok(await this.travelService.DeleteAsync(loggedUser, id));
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
-        //[HttpGet("/DepartureTime")]
-        //[SwaggerOperation(Summary = "Filter by DepartureTime",
-        //    Description = "Filter All Travels by DepartureTime property")]
-        //public async Task<IActionResult> GetByDepartureTimeAsync(DateTime dateTime)
-        //{
-        //    try
-        //    {
-        //        var travels = await this.travelService.GetByDepartureTimeAsync(dateTime);
-        //        return this.Ok(travels);
-        //    }
-        //    catch (EntityNotFoundException ex)
-        //    {
-        //        return NotFound(ex.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, ex.Message);
-        //    }
-        //}
-
-        //[HttpGet("/Destination")]
-        //[SwaggerOperation(Summary = "Filter by Destination",
-        //    Description = "Filter All Travels by Destination Property")]
-        //public async Task<IActionResult> GetTravelByDestinationAsync(int destinationLocationId)
-        //{
-        //    try
-        //    {
-        //        var travels = await this.travelService.GetByDestinationAsync(destinationLocationId);
-        //        return this.Ok(travels);
-        //    }
-        //    catch (EntityNotFoundException ex)
-        //    {
-        //        return NotFound(ex.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, ex.Message);
-        //    }
-        //}
-
-        //[HttpGet("/StartLocation")]
-        //[SwaggerOperation(Summary = "Filter by StartLocation",
-        //    Description = "Filter All Travels by StartLocation Property")]
-        //public async Task<IActionResult> GetByTravelByStartLocationAsync(int startlocationId)
-        //{
-        //    try
-        //    {
-        //        var travels = await this.travelService.GetByStartLocationAsync(startlocationId);
-        //        return this.Ok(travels);
-        //    }
-        //    catch (EntityNotFoundException ex)
-        //    {
-        //        return NotFound(ex.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, ex.Message);
-        //    }
-        //}
-
-        //[HttpGet("/AvailableSeats")]
-        //[SwaggerOperation(Summary = "Filter by AvailableSeats",
-        //    Description = "Filter All Travels by AvailableSeats")]
-        //public async Task<IActionResult> GetByAvailableSeatsAsync()
-        //{
-        //    try
-        //    {
-        //        var travels = await this.travelService.GetByAvailableSeatsAsync();
-        //        return this.Ok(travels);
-        //    }
-        //    catch (EntityNotFoundException ex)
-        //    {
-        //        return NotFound(ex.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, ex.Message);
-        //    }
-        //}
-
-        //[HttpGet("/Status")]
-        //[SwaggerOperation(Summary = "Filter by Status",
-        //    Description = "Filter All Travels by Status")]
-        //public async Task<IActionResult> GetByStatusAsync(Status status)
-        //{
-        //    try
-        //    {
-        //        var travels = await this.travelService.GetByStatusAsync(status);
-        //        return this.Ok(travels);
-        //    }
-        //    catch (EntityNotFoundException ex)
-        //    {
-        //        return NotFound(ex.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, ex.Message);
-        //    }
-        //}
-
-        //[HttpPost("/AddUserToTravel")]
-        //[SwaggerOperation(Summary = "Add User To Travel",
-        //    Description = "Add a specific User to a specific Travel")]
-        //public async Task<IActionResult> AddUserToTravelAsync([BindRequired] int ownerId, [BindRequired] int travelId, [BindRequired] int userId)
-        //{
-        //    try
-        //    {
-        //        var travel = await this.travelService.AddUserToTravelAsync(ownerId, travelId, userId);
-        //        return this.Ok(travel);
-        //    }
-        //    catch (EntityNotFoundException ex)
-        //    {
-        //        return NotFound(ex.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, ex.Message);
-        //    }
-        //}
+        [HttpGet("filter")]
+        public async Task<ActionResult> FilterTravelsAndSortAsync([FromHeader] string credentials,[FromQuery] string filter)
+        {
+            try
+            {
+                var loggerUser = await authValidator.ValidateCredentialAsync(credentials);
+                return Ok(await travelService.FilterTravelsAndSortAsync(filter));
+            }
+            catch (UnauthorizedOperationException e)
+            {
+                return StatusCode(StatusCodes.Status401Unauthorized, e.Message);
+            }
+            catch (EmptyListException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
     }
-
 }
+
