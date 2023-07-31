@@ -14,7 +14,6 @@ namespace Carpooling.BusinessLayer.Helpers
         public Mapper()
         {
             CreateMap<UserRequest, User>().ReverseMap();
-            CreateMap<TravelRequest, Travel>().ReverseMap();
             CreateMap<UserUpdateDto, User>().ReverseMap();
             CreateMap<Feedback, FeedbackDTO>().ReverseMap();
 

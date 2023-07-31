@@ -61,6 +61,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     StartLocation = startLocaion,
                     EndLocation = endLocation,
                     DepartureTime = new DateTime(2023, 10, 12),
+                    ArrivalTime = new DateTime(2023, 10, 13),
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now,
                     Passengers = new List<User> { passenger1, passenger2 },

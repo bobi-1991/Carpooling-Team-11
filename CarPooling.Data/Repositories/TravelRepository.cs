@@ -22,7 +22,6 @@ namespace CarPooling.Data.Repositories
         }
         public async Task<IEnumerable<Travel>> GetAllAsync()
         {
-            throw new NotImplementedException();
 
             //           public User? Driver { get; set; }
             //public string? DriverId { get; set; }
@@ -43,33 +42,38 @@ namespace CarPooling.Data.Repositories
             //public List<User>? Passengers { get; set; } = new List<User>();
             //public List<Feedback>? Feedbacks { get; set; } = new List<Feedback>();
 
-            //    var travels = await this.dbContext.Travels
-            //            .Include(x => x.Car)
-            //            .Include(x => x.IsCompleted)
-            //            .Include(x => x.StartLocation)
-            //            .Include(x => x.EndLocation)
-            //            .Where(x => x.Status.Id == 1 || x.StatusId == 2)
-            //            .Where(x => x.Car != null) // this is only temporary for the travels I made while trying to do the create travel method as car is null for them
-            //            .ToListAsync();
+            var result = await this.dbContext.Travels
+                    .Include(x => x.Car)
+                    .Include(x => x.StartLocation)
+                    .Include(x => x.EndLocation)
+                    .Where(x => x.IsCompleted == false)
+                    .ToListAsync();
 
-            //        if (travels == null || travels.Count() == 0)
-            //        {
-            //            throw new EntityNotFoundException("There are currently no travels.");
-            //}
-
-            //var response = travels.Select(x => new TravelDTO(x));
-
-            //        return response;
+            return result;
         }
 
         public async Task<Travel> GetByIdAsync(int travelId)
         {
-            throw new NotImplementedException();
+            var travel = await this.dbContext.Travels
+               .Include(x => x.Car)
+               .Include(x => x.StartLocation)
+               .Include(x => x.EndLocation)
+               .Where(x => x.IsCompleted == false)
+               .FirstOrDefaultAsync(x => x.Id == travelId);
+
+            if (travel == null)
+            {
+                throw new EntityNotFoundException($"Travel with Id: {travelId} does not exist.");
+            }
+
+            return travel;
         }
 
-        public Task<Travel> CreateTravelAsync(Travel travel)
+        public async Task<Travel> CreateTravelAsync(Travel travel)
         {
-            throw new NotImplementedException();
+            await this.dbContext.Travels.AddAsync(travel);
+            await this.dbContext.SaveChangesAsync();
+            return travel;
         }
 
         public Task<Travel> DeleteAsync(int travelId)
