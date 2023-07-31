@@ -11,7 +11,7 @@ namespace CarPooling.Data.Repositories.Contracts
     {
         Task<List<Car>> GetAllAsync();
         Task<Car> GetByIdAsync(int id);
-        Task<Car> GetByBrandAndModelAsync(string brandName, string model);
+        Task<Car> GetByBrandModelAndRegistrationAsync(string brandName, string model, string registration);
         Task<Car> CreateAsync(Car car);
         Task<Car> UpdateAsync(int id, Car car);
         Task<Car> DeleteAsync(int id);

@@ -11,7 +11,7 @@ namespace Carpooling.BusinessLayer.Services.Contracts
     {
         Task<List<Car>> GetAllAsync();
         Task<Car> GetByIdAsync(int id);
-        Task<Car> GetByBrandAndModelAsync(string brandName, string model);
+        Task<Car> GetByBrandModelAndRegistrationAsync(string brandName, string model, string registration);
         Task<Car> CreateAsync(Car car, User user);
         Task<Car> UpdateAsync(int id, Car car, User user);
         Task<Car> DeleteAsync(int id, User user);

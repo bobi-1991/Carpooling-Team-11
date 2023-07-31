@@ -90,13 +90,13 @@ namespace Carpooling.Controllers
 
         [HttpGet("cars/{brand}/{model}")]
 
-        public async Task<ActionResult<CarDTO>> GetCarByBrandAndModelAsync([FromHeader] string credentials, string brand, string model)
+        public async Task<ActionResult<CarDTO>> GetCarByBrandModelAndRegistrationAsync([FromHeader] string credentials, string brand, string model, string registration)
         {
             try
             {
                 var loggerUser = await _authValidator.ValidateCredentialAsync(credentials);
-                var car = _mapper.Map<CarDTO>(await _carService.GetByBrandAndModelAsync(brand, model));
-
+                var car = _mapper.Map<CarDTO>(await _carService.GetByBrandModelAndRegistrationAsync(brand, model, registration));
+                
                 return StatusCode(StatusCodes.Status200OK, car);
             }
             catch (UnauthorizedOperationException e)
