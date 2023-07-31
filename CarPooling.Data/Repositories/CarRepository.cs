@@ -22,7 +22,7 @@ namespace CarPooling.Data.Repositories
                 throw new DuplicateEntityException("Such car already exists!");
             }
             car.CreatedOn = DateTime.Now;
-            _context.Cars.Add(car);
+            await _context.Cars.AddAsync(car);
             await _context.SaveChangesAsync();
             return car;
         }
@@ -68,15 +68,19 @@ namespace CarPooling.Data.Repositories
 
         public async Task<List<Car>> GetAllAsync()
         {
+            if(_context.Cars.Count() == 0)
+            {
+                new EmptyListException("No cars added yet!");
+            }
             return await _context.Cars
                 .Where(c => c.IsDeleted == false)
                 .ToListAsync();
         }
 
-        public async Task<Car> GetByBrandAndModelAsync(string brandName, string model)
+        public async Task<Car> GetByBrandModelAndRegistrationAsync(string brandName, string model, string registration)
         {
             Car car = await _context.Cars
-                .Where(c => c.IsDeleted == false && c.Brand.Equals(brandName) && c.Model.Equals(model))
+                .Where(c => c.IsDeleted == false && c.Brand.Equals(brandName) && c.Model.Equals(model) && c.Registration.Equals(registration))
                 .FirstOrDefaultAsync();
 
             return car ?? throw new EntityNotFoundException("Not existing car with such brand and model!");

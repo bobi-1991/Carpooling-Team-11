@@ -23,7 +23,7 @@ namespace CarPooling.Data.Repositories
         {
             feedback.CreatedOn = DateTime.Now;
 
-            _context.Feedbacks.Add(feedback);
+            await _context.Feedbacks.AddAsync(feedback);
             await _context.SaveChangesAsync();
 
             return feedback;

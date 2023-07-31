@@ -25,7 +25,7 @@ namespace CarPooling.Data.Repositories
             if (existingCountry == null)
             {
                 country.CreatedOn = DateTime.Now;
-                _context.Countries.Add(country);
+                await _context.Countries.AddAsync(country);
                 await _context.SaveChangesAsync();
             }
             else if(existingCountry !=null && existingCountry.IsDeleted == true)
@@ -51,7 +51,7 @@ namespace CarPooling.Data.Repositories
 
         public async Task<List<Country>> FilterCountriesByNameAsync(string orderByName)
         {
-            IQueryable<Country> countries = _context.Countries.OrderBy(c => c.Name);
+            IQueryable<Country> countries = _context.Countries.OrderBy(c=>c.Name);
             return await countries.ToListAsync();
         }
 

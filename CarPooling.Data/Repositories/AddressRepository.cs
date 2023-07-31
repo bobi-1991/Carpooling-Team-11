@@ -21,7 +21,7 @@ namespace CarPooling.Data.Repositories
 
         public async Task<Address> CreateAsync(Address address)
         {
-            _context.Addresses.Add(address);
+            await _context.Addresses.AddAsync(address);
             address.CreatedOn = DateTime.Now;
             await _context.SaveChangesAsync();
             return address;
