@@ -1,5 +1,4 @@
 ﻿using Carpooling.Service.Dto_s.Requests;
-using CarPooling.Data.Models;
 using FluentValidation;
 
 namespace Carpooling.Fluent_Validation
