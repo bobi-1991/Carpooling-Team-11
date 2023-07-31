@@ -202,6 +202,9 @@ namespace CarPooling.Data.Migrations
                     b.Property<DateTime>("ArrivalTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("AvailableSlots")
+                        .HasColumnType("int");
+
                     b.Property<int?>("CarId")
                         .HasColumnType("int");
 
@@ -358,9 +361,6 @@ namespace CarPooling.Data.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("TravelId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
@@ -379,8 +379,6 @@ namespace CarPooling.Data.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("TravelId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -628,10 +626,6 @@ namespace CarPooling.Data.Migrations
                         .WithMany()
                         .HasForeignKey("AddressId");
 
-                    b.HasOne("CarPooling.Data.Models.Travel", null)
-                        .WithMany("Passengers")
-                        .HasForeignKey("TravelId");
-
                     b.Navigation("Address");
                 });
 
@@ -694,8 +688,6 @@ namespace CarPooling.Data.Migrations
             modelBuilder.Entity("CarPooling.Data.Models.Travel", b =>
                 {
                     b.Navigation("Feedbacks");
-
-                    b.Navigation("Passengers");
                 });
 
             modelBuilder.Entity("CarPooling.Data.Models.User", b =>

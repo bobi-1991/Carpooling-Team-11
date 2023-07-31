@@ -19,5 +19,6 @@ namespace Carpooling.BusinessLayer.Validation.Contracts
         Task<bool> ValidateUserNotBanned(User userToBeUnBanned);
 
 
+
     }
 }

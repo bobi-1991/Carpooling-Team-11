@@ -60,6 +60,7 @@ public class Program
         //Validators
         builder.Services.AddScoped<IUserValidation, UserValidation>();
         builder.Services.AddScoped<IAuthValidator, AuthValidator>();
+        builder.Services.AddScoped<ITravelValidator, TravelValidator>();
 
         //Add repositories to the container
         builder.Services.AddScoped<IUserRepository, UserRepository>();
