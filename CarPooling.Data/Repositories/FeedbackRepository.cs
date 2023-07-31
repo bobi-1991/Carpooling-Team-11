@@ -45,13 +45,6 @@ namespace CarPooling.Data.Repositories
         {
             return await _context.Feedbacks
                 .Where(c => c.IsDeleted == false)
-                .Include(f => f.Passenger)
-                .Include(f => f.Comment)
-                .Include(f => f.Rating)
-                .Include(f => f.Driver)
-                .Include(f => f.CreatedOn)
-                .Include(f => f.DeletedOn)
-                .Include(f => f.UpdatedOn)
                 .ToListAsync();
         }
 
@@ -59,13 +52,6 @@ namespace CarPooling.Data.Repositories
         {
             Feedback feedback = await _context.Feedbacks
                 .Where(c => c.IsDeleted == false)
-                .Include(f => f.Passenger)
-                .Include(f => f.Rating)
-                .Include(f => f.Comment)
-                .Include(f => f.Driver)
-                .Include(f => f.CreatedOn)
-                .Include(f => f.DeletedOn)
-                .Include(f => f.UpdatedOn)
                 .FirstOrDefaultAsync(f => f.Id == id);
 
             return feedback ?? throw new EntityNotFoundException($"Feedback not found with id: {id}!");

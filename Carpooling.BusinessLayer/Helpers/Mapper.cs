@@ -15,25 +15,24 @@ namespace Carpooling.BusinessLayer.Helpers
         {
             CreateMap<UserRequest, User>().ReverseMap();
             CreateMap<UserUpdateDto, User>().ReverseMap();
-            CreateMap<Feedback, FeedbackResponse>().ReverseMap();
-            CreateMap<Feedback, FeedbackRequest>().ReverseMap();
-            CreateMap<Address, AddressDTO>().ReverseMap()
-                .ForPath(a => a.Country.Name, opt => opt.MapFrom(c => c.Country));
-            CreateMap<Country, CountryDTO>().ReverseMap();
+            CreateMap<Feedback, FeedbackDTO>().ReverseMap();
+
+            CreateMap<Address, AddressDTO>()
+                .ForMember(a => a.Country, opt => opt.MapFrom(c => c.Country.Name))
+                .ReverseMap();
+            
             CreateMap<Car, CarDTO>().ReverseMap();
-
-
             CreateMap<Travel, TravelResponse>()
                 .ForMember(dest => dest.StartLocationName, opt => opt.MapFrom(src => src.StartLocation.City))
                 .ForMember(dest => dest.DestinationName, opt => opt.MapFrom(src => src.EndLocation.City))
                 .ForMember(dest => dest.AvaibleSeats, opt => opt.MapFrom(src => src.Car.AvailableSeats))
-                .ForMember(dest => dest.IsComplete, opt => opt.MapFrom(src => src.IsCompleted.HasValue ? src.IsCompleted.Value : false))
+                //.ForMember(dest => dest.IsComplete, opt => opt.MapFrom(src => src.IsCompleted.HasValue ? src.IsCompleted.Value : false))
                 .ForMember(dest => dest.CarRegistration, opt => opt.MapFrom(src => src.Car != null ? src.Car.Registration : string.Empty))
                 .ReverseMap();
 
-
-
-
+            CreateMap<Country, CountryDTO>()
+                .ForMember(c=>c.Country, c=>c.MapFrom(opt=>opt.Name))
+                .ReverseMap();
         }
     }
 }

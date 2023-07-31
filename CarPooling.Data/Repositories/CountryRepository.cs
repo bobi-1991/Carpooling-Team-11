@@ -21,13 +21,22 @@ namespace CarPooling.Data.Repositories
 
         public async Task<Country> CreateAsync(Country country)
         {
-            if (await _context.Countries.AnyAsync(c => c.Name.Equals(country.Name)))
+            var existingCountry = _context.Countries.FirstOrDefault(x=>x.Name == country.Name);
+            if (existingCountry == null)
             {
-                throw new DuplicateEntityException($"Country with this name: {country.Name} already exists!");
+                country.CreatedOn = DateTime.Now;
+                _context.Countries.Add(country);
+                await _context.SaveChangesAsync();
             }
-            country.CreatedOn = DateTime.Now;
-            _context.Countries.Add(country);
-            await _context.SaveChangesAsync();
+            else if(existingCountry !=null && existingCountry.IsDeleted == true)
+            {
+                existingCountry.IsDeleted = false; 
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                throw new DuplicateEntityException("Country already exists!");
+            }
             return country;
         }
 

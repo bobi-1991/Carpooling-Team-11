@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Carpooling.Service.Dto_s.Requests
+namespace Carpooling.Service.Dto_s.Responses
 {
-    public class FeedbackRequest
+    public class FeedbackDTO
     {
-        public string AuthorId { get; set; }
-        public string DriverId { get; set; }
+        public string AuthorUsername { get; set; }
+        public string DriverUsername { get; set; }
         public string Comment { get; set; }
         public int Rating { get; set; }
+        public int TravelID { get; set; }
     }
 }

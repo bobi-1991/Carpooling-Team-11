@@ -26,7 +26,7 @@ namespace Carpooling.Controllers
         }
         //Create Delete Update
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FeedbackResponse>>> GetAllFeedbacksAsync([FromHeader] string credentials)
+        public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetAllFeedbacksAsync([FromHeader] string credentials)
         {
             try
             {
@@ -43,12 +43,12 @@ namespace Carpooling.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<FeedbackResponse>> GetFeedbackByIdAsync([FromHeader] string credentials, int id)
+        public async Task<ActionResult<FeedbackDTO>> GetFeedbackByIdAsync([FromHeader] string credentials, int id)
         {
             try
             {
                 var loggerUser = await _authValidator.ValidateCredentialAsync(credentials);
-                var feedback = _mapper.Map<FeedbackResponse>(await _feedbackService.GetByIdAsync(id));
+                var feedback = _mapper.Map<FeedbackDTO>(await _feedbackService.GetByIdAsync(id));
                 return StatusCode(StatusCodes.Status200OK, feedback);
             }
             catch (UnauthorizedOperationException e)
@@ -61,7 +61,7 @@ namespace Carpooling.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<FeedbackRequest>> CreateFeedbackAsync([FromHeader] string credentials, [FromBody] FeedbackRequest feedbackDTO)
+        public async Task<ActionResult<FeedbackDTO>> CreateFeedbackAsync([FromHeader] string credentials, [FromBody] FeedbackDTO feedbackDTO)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace Carpooling.Controllers
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateFeedbackAsync(int id, [FromHeader] string credentials, [FromBody] FeedbackRequest feedbackDTO)
+        public async Task<IActionResult> UpdateFeedbackAsync(int id, [FromHeader] string credentials, [FromBody] FeedbackDTO feedbackDTO)
         {
             try
             {

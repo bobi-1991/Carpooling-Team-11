@@ -1,47 +1,43 @@
 ﻿using AutoMapper;
+using Carpooling.BusinessLayer.Dto_s.Requests;
 using Carpooling.BusinessLayer.Exceptions;
-using Carpooling.BusinessLayer.Services;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
-using Carpooling.Service.Dto_s.Requests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Carpooling.BusinessLayer.Dto_s.Requests;
 
 namespace Carpooling.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AddressApiController : ControllerBase
+    public class CountryApiController : ControllerBase
     {
-        private readonly IAddressService _addressService;
+        private readonly ICountryService _countryService;
         private readonly IAuthValidator _authValidator;
         private readonly IMapper _mapper;
-        public AddressApiController(IAddressService addressService, IAuthValidator authValidator, IMapper mapper)
+        public CountryApiController(ICountryService countryService, IAuthValidator authValidator, IMapper mapper)
         {
-            _addressService = addressService;
+            _countryService = countryService;
             _authValidator = authValidator;
             _mapper = mapper;
         }
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AddressDTO>>> GetAllAddressesAsync([FromHeader] string credentials)
+        public async Task<ActionResult<IEnumerable<CountryDTO>>> GetAllCountriesAsync([FromHeader] string credentials)
         {
             try
             {
                 var loggedUser = await _authValidator.ValidateCredentialAsync(credentials);
-                var addresses = await _addressService.GetAllAsync();
-
-                List<AddressDTO> addressDTOS = new List<AddressDTO>();
-                foreach (var address in addresses)
+                var countries = await _countryService.GetAllAsync();
+                List<CountryDTO> countryDTOS = new List<CountryDTO>();// _mapper.Map<CountryDTO>(countries);
+                foreach(var country in countries)
                 {
-                    var addressToMap = _mapper.Map<AddressDTO>(address);
-                    addressDTOS.Add(addressToMap);
+                    var countryToMap = _mapper.Map<CountryDTO>(country);
+                    countryDTOS.Add(countryToMap);
                 }
 
-
-                return StatusCode(StatusCodes.Status200OK, addressDTOS);
+                return StatusCode(StatusCodes.Status200OK, countryDTOS);
             }
             catch (UnauthorizedOperationException e)
             {
@@ -50,13 +46,13 @@ namespace Carpooling.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<AddressDTO>> GetAddressByIdAsync([FromHeader] string credentials, int id)
+        public async Task<ActionResult<CountryDTO>> GetCountryByIdAsync([FromHeader] string credentials, int id)
         {
             try
             {
                 var loggerUser = await _authValidator.ValidateCredentialAsync(credentials);
-                var address = _mapper.Map<AddressDTO>(await _addressService.GetByIdAsync(id));
-                return StatusCode(StatusCodes.Status200OK, address);
+                var country = _mapper.Map<CountryDTO>(await _countryService.GetByIdAsync(id));
+                return StatusCode(StatusCodes.Status200OK, country);
             }
             catch (UnauthorizedOperationException e)
             {
@@ -68,16 +64,16 @@ namespace Carpooling.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<AddressDTO>> CreateAddressAsync([FromHeader] string credentials, [FromBody] AddressDTO addressDTO)
+        public async Task<ActionResult<CountryDTO>> CreateCountryAsync([FromHeader] string credentials, [FromBody] CountryDTO countryDTO)
         {
             try
             {
                 var loggedUser = await _authValidator.ValidateCredentialAsync(credentials);
 
-                Address address = _mapper.Map<Address>(addressDTO);
-                Address addressToCreate = await _addressService.CreateAsync(address, loggedUser);
+                Country country = _mapper.Map<Country>(countryDTO);
+                Country countryToCreate = await _countryService.CreateAsync(country, loggedUser);
 
-                return StatusCode(StatusCodes.Status201Created, addressToCreate);
+                return StatusCode(StatusCodes.Status201Created, countryToCreate);
             }
             catch (UnauthorizedOperationException e)
             {
@@ -85,13 +81,13 @@ namespace Carpooling.Controllers
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAddressAsync(int id, [FromHeader] string credentials, [FromBody] AddressDTO addressDTO)
+        public async Task<IActionResult> UpdateCountryAsync(int id, [FromHeader] string credentials, [FromBody] CountryDTO countryDTO)
         {
             try
             {
                 var loggedUser = await _authValidator.ValidateCredentialAsync(credentials);
-                Address address = _mapper.Map<Address>(addressDTO);
-                Address addressToUpdate = await _addressService.UpdateAsync(id, loggedUser, address);
+                Country country = _mapper.Map<Country>(countryDTO);
+                Country countryToUpdate = await _countryService.UpdateAsync(id, country, loggedUser);
 
                 return NoContent();
             }
@@ -105,12 +101,12 @@ namespace Carpooling.Controllers
             }
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAddressAsync(int id, [FromHeader] string credentials)
+        public async Task<IActionResult> DeleteCountryAsync(int id, [FromHeader] string credentials)
         {
             try
             {
                 var loggedUser = await _authValidator.ValidateCredentialAsync(credentials);
-                await _addressService.DeleteAsync(id, loggedUser);
+                await _countryService.DeleteAsync(id, loggedUser);
                 return NoContent();
             }
             catch (UnauthorizedOperationException e)
