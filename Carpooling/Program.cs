@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.OpenApi.Models;
 using CarPooling.Data.Data;
-using Carpooling;
+using FluentValidation.AspNetCore;
 using CarPooling.Data.JsonManager;
 using CarPooling.Data.Models;
 using Carpooling.Infrastructure;
@@ -13,11 +13,12 @@ using CarPooling.Data.Repositories.Contracts;
 using CarPooling.Data.Repositories;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Services;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using FluentValidation;
 using Newtonsoft.Json;
 using CarPooling.Data.DatabaseSeeder;
 using Carpooling.BusinessLayer.Helpers;
 using CarPooling.BusinessLayer.Services;
+using Carpooling.IAssemblyMarker;
 
 public class Program
 {
@@ -61,6 +62,10 @@ public class Program
         builder.Services.AddScoped<IUserValidation, UserValidation>();
         builder.Services.AddScoped<IAuthValidator, AuthValidator>();
         builder.Services.AddScoped<ITravelValidator, TravelValidator>();
+
+        // Fluent Validation
+        builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
+        builder.Services.AddValidatorsFromAssemblyContaining<IAssemblyMarker>();
 
         //Add repositories to the container
         builder.Services.AddScoped<IUserRepository, UserRepository>();
