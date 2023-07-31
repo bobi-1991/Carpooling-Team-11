@@ -41,19 +41,16 @@ namespace CarPooling.Data.Repositories
         public async Task<List<Address>> GetAllAsync()
         {
             return await _context.Addresses
-                .Include(a => a.Details)
-                .Include(a => a.City)
-                .Include(a => a.Country)
+                .Where(a=>a.IsDeleted==false)
+                .Include(c=>c.Country)
                 .ToListAsync();
         }
 
         public async Task<Address> GetByIdAsync(int id)
         {
             Address address = await _context.Addresses
-                .Where(a => a.Id == id)
-                .Include(a => a.Details)
-                .Include(a => a.City)
-                .Include(a => a.Country)
+                .Where(a=>a.IsDeleted==false)
+                .Include(c=>c.Country)                
                 .FirstOrDefaultAsync();
 
             return address ?? throw new EntityNotFoundException($"Could not find an address with id: {id}!");

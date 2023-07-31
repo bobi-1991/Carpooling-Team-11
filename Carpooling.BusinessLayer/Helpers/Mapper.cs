@@ -16,12 +16,17 @@ namespace Carpooling.BusinessLayer.Helpers
             CreateMap<UserRequest, User>().ReverseMap();
             CreateMap<TravelRequest, Travel>().ReverseMap();
             CreateMap<UserUpdateDto, User>().ReverseMap();
-            CreateMap<Feedback, FeedbackResponse>().ReverseMap();
-            CreateMap<Feedback, FeedbackRequest>().ReverseMap();
-            CreateMap<Address, AddressDTO>().ReverseMap()
-                .ForMember(a => a.Country.Name, opt => opt.MapFrom(c => c.Country));
-            CreateMap<Country, CountryDTO>().ReverseMap();
+            CreateMap<Feedback, FeedbackDTO>().ReverseMap();
+
+            CreateMap<Address, AddressDTO>()
+                .ForMember(a => a.Country, opt => opt.MapFrom(c => c.Country.Name))
+                .ReverseMap();
+            
             CreateMap<Car, CarDTO>().ReverseMap();
+
+            CreateMap<Country, CountryDTO>()
+                .ForMember(c=>c.Country, c=>c.MapFrom(opt=>opt.Name))
+                .ReverseMap();
         }
     }
 }
