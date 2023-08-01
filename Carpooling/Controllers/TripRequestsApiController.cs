@@ -2,6 +2,7 @@
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
 using Carpooling.Service.Dto_s.Requests;
+using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -19,6 +20,50 @@ namespace Carpooling.Controllers
         {
             this.authValidator = authValidator;
             this.tripRequestService = tripRequestService;
+        }
+
+        [HttpGet()]
+        [Route("")]
+        public async Task<IActionResult> GetAllAsync([FromHeader] string credentials)
+        {
+            try
+            {
+                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                return this.Ok(await this.tripRequestService.GetAllAsync());
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpGet()]
+        [Route("{id}")]
+        public async Task<IActionResult> GetByIdAsync([FromHeader] string credentials, int id)
+        {
+            try
+            {
+                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                return this.Ok(await this.tripRequestService.GetByIdAsync(id));
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(500, ex.Message);
+            }
+
+
         }
 
         [HttpPost("")]
@@ -48,7 +93,32 @@ namespace Carpooling.Controllers
             }
         }
 
+        [HttpDelete("{id}")]     
+        public async Task<IActionResult> DeleteTravelRequest([FromHeader]string credentials, int id)
+        {
+            try
+            {
+                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                return this.Ok(await this.tripRequestService.DeleteAsync(loggedUser, id));
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
 
+        public Task<TripRequestResponse> GetByIdAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
 
     }
 }

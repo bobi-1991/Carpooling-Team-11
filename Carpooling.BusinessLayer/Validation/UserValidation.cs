@@ -36,11 +36,6 @@ namespace Carpooling.BusinessLayer.Validation
                 throw new EntityUnauthorizatedException("I'm sorry, but you cannot change other user's personal data.");
             }
 
-            //if (!loggedUser.Id.Equals(id) && !loggedUser.IsAdmin)
-            //{
-            //    throw new EntityUnauthorizatedException("I'm sorry, but you cannot change other user's personal data.");
-            //}
-
             return true;
         }
 

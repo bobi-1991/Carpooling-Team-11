@@ -18,6 +18,6 @@ namespace CarPooling.Data.Repositories.Contracts
         Task<TripRequest> GetByIdAsync(int id);
         Task<TripRequest> CreateAsync(string driverId, string pasengerId, int travelId);
         Task<TripRequest> UpdateTripRequestAsync(string userId, int tripRequestId, bool answer);
-        Task<string> DeleteAsync(string userId, int tripRequestId);
+        Task<string> DeleteAsync(int tripRequestId);
     }
 }
