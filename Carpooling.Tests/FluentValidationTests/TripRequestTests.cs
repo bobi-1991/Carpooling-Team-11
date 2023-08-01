@@ -23,9 +23,8 @@ namespace Carpooling.Tests.FluentValidationTests
             //Arrange
             var model = new TripRequestRequest()
             {
-                DriverId = "123123123",
-                TravelId = 1,
-                AuthorId = "123123123"
+                PassengerId = "123123123",
+                TravelId = 1
             };
 
 
@@ -36,47 +35,47 @@ namespace Carpooling.Tests.FluentValidationTests
             result.ShouldNotHaveAnyValidationErrors();
         }
 
+      //  [TestMethod]
+
+        //public void TripRequest_ShouldThrow_WhenDriverIdEmpty()
+        //{
+        //    //string driverId = null;
+
+        //    ////Arrange
+        //    //var model = new TripRequestRequest()
+        //    //{
+        //    //    DriverId = driverId,
+        //    //    TravelId = 1,
+        //    //    AuthorId = "123123123"
+        //    //};
+
+        //    //var result = validator.TestValidate(model);
+
+        //    //result.ShouldHaveValidationErrorFor(x => x.DriverId);
+
+        //    //var msg = result.Errors;
+
+        //    //Assert.AreEqual(1, msg.Count);
+        //    //Assert.IsTrue(msg.Any(x => x.ErrorMessage == "Required Id"));
+        //}
+
         [TestMethod]
 
-        public void TripRequest_ShouldThrow_WhenDriverIdEmpty()
+        public void TripRequest_ShouldThrow_WhenPassengerIdEmpty()
         {
-            string driverId = null;
+            string passengerId = null;
 
             //Arrange
             var model = new TripRequestRequest()
             {
-                DriverId = driverId,
+                // DriverId = "123123123",
                 TravelId = 1,
-                AuthorId = "123123123"
+                PassengerId = passengerId
             };
 
             var result = validator.TestValidate(model);
 
-            result.ShouldHaveValidationErrorFor(x => x.DriverId);
-
-            var msg = result.Errors;
-
-            Assert.AreEqual(1, msg.Count);
-            Assert.IsTrue(msg.Any(x => x.ErrorMessage == "Required Id"));
-        }
-
-        [TestMethod]
-
-        public void TripRequest_ShouldThrow_WhenAuthorIdEmpty()
-        {
-            string authorId = null;
-
-            //Arrange
-            var model = new TripRequestRequest()
-            {
-                DriverId = "123123123",
-                TravelId = 1,
-                AuthorId = authorId
-            };
-
-            var result = validator.TestValidate(model);
-
-            result.ShouldHaveValidationErrorFor(x => x.AuthorId);
+            result.ShouldHaveValidationErrorFor(x => x.PassengerId);
 
             var msg = result.Errors;
 
@@ -93,9 +92,9 @@ namespace Carpooling.Tests.FluentValidationTests
             //Arrange
             var model = new TripRequestRequest()
             {
-                DriverId = "123123123",
+             //   DriverId = "123123123",
                 TravelId = travelId,
-                AuthorId = "123123123"
+                PassengerId = "123123123"
             };
 
             var result = validator.TestValidate(model);
@@ -114,12 +113,12 @@ namespace Carpooling.Tests.FluentValidationTests
         {
             int travelId = -1;
 
-            //Arrange
+           // Arrange
             var model = new TripRequestRequest()
             {
-                DriverId = "123123123",
+                //DriverId = "123123123",
                 TravelId = travelId,
-                AuthorId = "123123123"
+                PassengerId = "123123123"
             };
 
             var result = validator.TestValidate(model);

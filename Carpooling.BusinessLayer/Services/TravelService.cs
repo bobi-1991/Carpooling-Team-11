@@ -51,6 +51,11 @@ namespace Carpooling.BusinessLayer.Services
         {
             await this.travelValidator.ValidateIsLoggedUserAreDriver(loggedUser, travelRequest.DriverId);
 
+            if (loggedUser.IsBlocked)
+            {
+                throw new UnauthorizedOperationException($"You can't create travel because you're banned.");
+            }
+
             var startLocation = await this.addressRepository.GetByIdAsync(travelRequest.StartLocationId);
             var destination = await this.addressRepository.GetByIdAsync(travelRequest.DestionationId);
             var car = await this.carRepository.GetByIdAsync(travelRequest.CarId);
@@ -102,22 +107,38 @@ namespace Carpooling.BusinessLayer.Services
             return await this.travelRepository.DeleteAsync(travelId);
         }
 
-
-
         public async Task<TravelResponse> UpdateAsync(User loggedUser, int travelId, TravelUpdateDto travelDataForUpdate)
         {
             var travelToUpdate = await this.travelRepository.GetByIdAsync(travelId);
-            await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, travelToUpdate.DriverId);
 
+            if (loggedUser.IsBlocked)
+            {
+              throw new  UnauthorizedOperationException($"You can't update the travel because you're banned.");
+            }
+
+            await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, travelToUpdate.DriverId);
 
             if (!await this.travelValidator.CheckIsUpdateDataAreValid(travelToUpdate, travelDataForUpdate))
             {
                 throw new UnauthorizedOperationException("Please put correct input data for update.");
             }
 
-            // TODO
+            var startLocation = await this.addressRepository.GetByIdAsync(travelDataForUpdate.StartLocationId);
+            var endLocation = await this.addressRepository.GetByIdAsync(travelDataForUpdate.DestionationId);
+            var car = await this.carRepository.GetByIdAsync(travelDataForUpdate.CarId);
 
-            var updatedTravel = await this.travelRepository.UpdateAsync(travelId, this.mapper.Map<Travel>(travelDataForUpdate));
+            var travelForUpdate = new Travel
+            {
+                DriverId = travelToUpdate.DriverId,
+                StartLocation = startLocation,
+                EndLocation = endLocation,
+                DepartureTime = travelDataForUpdate.DepartureTime,
+                ArrivalTime = travelDataForUpdate.ArrivalTime,
+                AvailableSeats = travelDataForUpdate.AvailableSeats,
+                Car = car
+            };
+
+            var updatedTravel = await this.travelRepository.UpdateAsync(travelId, travelForUpdate);
 
             var updatedTravelResponse = new TravelResponse
             {
@@ -126,6 +147,7 @@ namespace Carpooling.BusinessLayer.Services
                 DepartureTime = (DateTime)updatedTravel.DepartureTime,
                 ArrivalTime = (DateTime)updatedTravel.ArrivalTime,
                 IsComplete = (bool)updatedTravel.IsCompleted,
+                AvailableSeats = (int)updatedTravel.AvailableSeats,
                 CarRegistration = updatedTravel.Car.Registration
             };
 
@@ -133,10 +155,6 @@ namespace Carpooling.BusinessLayer.Services
             return updatedTravelResponse;
             //return this.mapper.Map<TravelResponse>(updatedTravel);
         }
-
-
-
-
 
         public async Task<TravelResponse> AddUserToTravelAsync(string driveId, int travelId, string passengerId)
         {

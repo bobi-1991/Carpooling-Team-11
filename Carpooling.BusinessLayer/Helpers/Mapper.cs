@@ -38,31 +38,6 @@ namespace Carpooling.BusinessLayer.Helpers
                 .ForMember(c=>c.Country, c=>c.MapFrom(opt=>opt.Name))
                 .ReverseMap();
 
-            //CreateMap<Travel, TravelUpdateDto>()
-            //   .ForMember(dest => dest.StartLocationId, opt => opt.MapFrom(src => src.StartLocation))
-            //   .ForMember(dest => dest.DestionationId, opt => opt.MapFrom(src => src.EndLocation))
-            //   .ForMember(dest => dest.AvailableSeats, opt => opt.MapFrom(src => src.AvailableSeats))
-            //   .ForMember(dest => dest.DepartureTime, opt => opt.MapFrom(src => src.DepartureTime))
-            //   .ForMember(dest => dest.ArrivalTime, opt => opt.MapFrom(src => src.ArrivalTime))
-            //   .ForMember(dest => dest.CarId, opt => opt.MapFrom(src => src.Car))
-            //   .ReverseMap();
-
-            CreateMap<Travel, TravelUpdateDto>()
-           .ForMember(dest => dest.StartLocationId, opt => opt.MapFrom(src => src.StartLocation.Id))
-           .ForMember(dest => dest.DestionationId, opt => opt.MapFrom(src => src.EndLocation.Id))
-           .ForMember(dest => dest.AvailableSeats, opt => opt.MapFrom(src => src.AvailableSeats))
-           .ForMember(dest => dest.DepartureTime, opt => opt.MapFrom(src => src.DepartureTime))
-           .ForMember(dest => dest.ArrivalTime, opt => opt.MapFrom(src => src.ArrivalTime))
-           .ForMember(dest => dest.CarId, opt => opt.MapFrom(src => src.Car.Id))
-           .ReverseMap();
-
-          //  CreateMap<TravelUpdateDto, Travel>()
-          //.ForPath(dest => dest.StartLocation.Id, opt => opt.MapFrom(src => src.StartLocationId))
-          //.ForPath(dest => dest.EndLocation.Id, opt => opt.MapFrom(src => src.DestionationId))
-          //.ForPath(dest => dest.AvailableSeats, opt => opt.MapFrom(src => src.AvailableSeats))
-          //.ForPath(dest => dest.DepartureTime, opt => opt.MapFrom(src => src.DepartureTime))
-          //.ForPath(dest => dest.ArrivalTime, opt => opt.MapFrom(src => src.ArrivalTime))
-          //.ForPath(dest => dest.Car.Id, opt => opt.MapFrom(src => src.CarId));
         }
     }
 }

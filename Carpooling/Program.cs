@@ -54,7 +54,7 @@ public class Program
         builder.Services.AddScoped<ICountryService, CountryService>();
         builder.Services.AddScoped<IFeedbackService, FeedbackService>();
         builder.Services.AddScoped<ITravelService, TravelService>();
-        builder.Services.AddScoped<ITripRequestService, TripReqeustService>();
+        builder.Services.AddScoped<ITripRequestService, TripRequestService>();
 
         //Add identity services
         builder.Services.AddScoped<UserManager<User>>();
@@ -63,6 +63,7 @@ public class Program
         builder.Services.AddScoped<IUserValidation, UserValidation>();
         builder.Services.AddScoped<IAuthValidator, AuthValidator>();
         builder.Services.AddScoped<ITravelValidator, TravelValidator>();
+        builder.Services.AddScoped<ITripRequestValidator, TripRequestValidator>();
 
         // Fluent Validation
         builder.Services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();

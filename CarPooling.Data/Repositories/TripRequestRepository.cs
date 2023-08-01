@@ -27,46 +27,36 @@ namespace CarPooling.Data.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<TripRequest>> GetAllDriverRequestsAsync()
+        {
+            throw new NotImplementedException();
+        }
+        public async Task<IEnumerable<TripRequest>> GetAllPassengerRequestsAsync()
+        { 
+            throw new NotImplementedException();
+        }
+
+
         public async Task<TripRequest> GetByIdAsync(int id)
         {
             return dbContext.TripRequests
              .Where(x => !x.IsDeleted)
              .FirstOrDefault(x => x.Id == id);
         }
-        public async Task<TripRequest> CreateAsync(string passengerId, string driverId, int travelId)
+        public async Task<TripRequest> CreateAsync(string driverId, string passengerId, int travelId)
         {
-            throw new NotImplementedException();
+            var tripRequest = new TripRequest(passengerId,travelId);
 
-            //var user = GetByIdAsync(passengerId);
-            //if (user == null)
-            //{
-            //    throw new EntityNotFoundException($"User with Id: {userId} does not exist");
-            //}
+            var driver = this.dbContext.Users.FirstOrDefault(x => x.Id == driverId);
+            var passenger = this.dbContext.Users.FirstOrDefault(x => x.Id == passengerId);
 
-            //var recipient = GetFullUserAsync(recipientId).Result;
-            //if (recipient == null)
-            //{
-            //    throw new EntityNotFoundException($"User with Id: {userId} does not exist");
-            //}
+            passenger.PassengerTripRequests.Add(tripRequest);
+            driver.DriverTripRequests.Add(tripRequest);
 
-            //// User only has 1 current travel, travel history, but cant plan future travels until current is complete
-            //if (recipient.TravelId != travelId)
-            //{
-            //    throw new EntityNotFoundException($"User with Id: {recipientId} does not have a Travel with Id: {travelId}");
-            //}
+            await this.dbContext.TripRequests.AddAsync(tripRequest);
+            await dbContext.SaveChangesAsync();
 
-            //var request = new Request(userId, recipientId, travelId);
-            //request.Author = user;
-            //request.Recipient = recipient;
-
-            //user.AuthorRequests.Add(request);
-            //recipient.RecipientRequests.Add(request);
-
-            //await this.Db.Requests.AddAsync(request);
-
-            //await Db.SaveChangesAsync();
-
-            //return new RequestDTO(request);
+            return (tripRequest);
         }
         public async Task<TripRequest> UpdateTripRequestAsync(string userId, int tripRequestId, bool answer)
         {

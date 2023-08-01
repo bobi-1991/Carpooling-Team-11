@@ -13,13 +13,10 @@ namespace Carpooling.Fluent_Validation
                 .GreaterThan(0)
                 .WithMessage("Cannot be negative");
 
-            RuleFor(x => x.DriverId)
+            RuleFor(x => x.PassengerId)
                 .NotEmpty()
                 .WithMessage("Required Id");
 
-            RuleFor(x => x.AuthorId)
-                .NotEmpty()
-                .WithMessage("Required Id");
         }
     }
 }

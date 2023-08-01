@@ -8,8 +8,8 @@ namespace Carpooling.Service.Dto_s.Requests
 {
     public class TripRequestRequest
     {
-        public string AuthorId { get; set; }
-        public string DriverId { get; set; }
+        public string PassengerId { get; set; }
         public int TravelId { get; set; }
+
     }
 }
