@@ -42,7 +42,7 @@ namespace Carpooling.Tests.AddressTests
             var sut = new CountryService(repositoryMock.Object);
 
             //Act
-            var result = await sut.UpdateAsync(countryToUpdate.Id, updatedCountry, user);
+            var result = await sut.UpdateAsync(It.IsAny<int>(), updatedCountry, user);
 
             //Assert
             Assert.AreEqual(updatedCountry, result);
@@ -55,14 +55,14 @@ namespace Carpooling.Tests.AddressTests
             var country = TestHelpers.TestHelper.GetTestCountryTwo();
 
             var countryRepositoryMock = new Mock<ICountryRepository>();
-            countryRepositoryMock.Setup(repo => repo.GetByIdAsync(country.Id)).ReturnsAsync(country);
+            countryRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(country);
 
             var countryService = new CountryService(countryRepositoryMock.Object);
 
             // Act and Assert
             Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(async () =>
             {
-                await countryService.UpdateAsync(country.Id, country, user);
+                await countryService.UpdateAsync(It.IsAny<int>(), country, user);
             });
         }
     }

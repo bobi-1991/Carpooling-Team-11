@@ -73,31 +73,31 @@ namespace Carpooling.Controllers
 
 
         // Shoud be tested
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTravelAsync([FromHeader] string credentials,[FromRoute] int id, TravelUpdateDto travelDataForUpdate)
-        {
-            try
-            {
-                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                return this.Ok(await this.travelService.UpdateAsync(loggedUser,id, travelDataForUpdate));
-            }
-            catch (EntityUnauthorizatedException e)
-            {
-                return Unauthorized(e.Message);
-            }
-            catch (EntityNotFoundException ex)
-            {
-                return this.NotFound(ex.Message);
-            }
-            catch (UnauthorizedOperationException e)
-            {
-                return this.Unauthorized(e.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
-        }
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> UpdateTravelAsync([FromHeader] string credentials,[FromRoute] int id, TravelUpdateDto travelDataForUpdate)
+        //{
+        //    try
+        //    {
+        //        var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+        //        return this.Ok(await this.travelService.UpdateAsync(id, travelDataForUpdate));
+        //    }
+        //    catch (EntityUnauthorizatedException e)
+        //    {
+        //        return Unauthorized(e.Message);
+        //    }
+        //    catch (EntityNotFoundException ex)
+        //    {
+        //        return this.NotFound(ex.Message);
+        //    }
+        //    catch (UnauthorizedOperationException e)
+        //    {
+        //        return this.Unauthorized(e.Message);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return StatusCode(500, ex.Message);
+        //    }
+        //}
 
         [HttpPost("")]
         public async Task<IActionResult> CreateTravelAsync([FromHeader] string credentials, TravelRequest travelRequest)

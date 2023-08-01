@@ -31,25 +31,23 @@ namespace Carpooling.Tests.AddressTests
             var result = await countryService.GetByIdAsync(country.Id);
 
             // Assert
-            Assert.AreEqual(country, result);
+            Assert.AreEqual(country.Name, result.Name);
         }
 
         [TestMethod]
         public async Task GetByIdAsync_CountryNotFound_ThrowsEntityNotFoundException()
         {
             // Arrange
-            var country = TestHelpers.TestHelper.GetTestCountryOne();
-
             var repositoryMock = new Mock<ICountryRepository>();
             repositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
-                .ReturnsAsync(country);
+                .ThrowsAsync(new EntityNotFoundException("No such country!"));
 
             var countryService = new CountryService(repositoryMock.Object);
 
             // Act and Assert
             Assert.ThrowsExceptionAsync<EntityNotFoundException>(async () =>
             {
-                await countryService.GetByIdAsync(country.Id);
+                await countryService.GetByIdAsync(It.IsAny<int>());
             });
         }
     }

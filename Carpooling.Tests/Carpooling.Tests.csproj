@@ -23,9 +23,4 @@
     <ProjectReference Include="..\Carpooling\Carpooling.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CarTests\" />
-    <Folder Include="FeedbackTests\" />
-  </ItemGroup>
-
 </Project>

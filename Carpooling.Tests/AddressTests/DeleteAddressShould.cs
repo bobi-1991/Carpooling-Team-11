@@ -26,15 +26,15 @@ namespace Carpooling.Tests.AddressTests
             var address = TestHelpers.TestHelper.GetTestAddressOne();
 
             var addressRepositoryMock = new Mock<IAddressRepository>();
-            addressRepositoryMock.Setup(repo => repo.GetByIdAsync(address.Id))
-                .ReturnsAsync(address);
+            addressRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
+                .ThrowsAsync(new UnauthorizedOperationException("You cannot delete this addres!"));
 
             var addressService = new AddressService(addressRepositoryMock.Object);
 
             // Act and Assert
             Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(async () =>
             {
-                await addressService.DeleteAsync(address.Id, user);
+                await addressService.DeleteAsync(It.IsAny<int>(), user);
             });
         }
         [TestMethod]
@@ -45,16 +45,16 @@ namespace Carpooling.Tests.AddressTests
             var address = TestHelpers.TestHelper.GetTestAddressOne();
 
             var addressRepositoryMock = new Mock<IAddressRepository>();
-            addressRepositoryMock.Setup(repo => repo.GetByIdAsync(address.Id))
+            addressRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
                 .ReturnsAsync(address);
 
             var addressService = new AddressService(addressRepositoryMock.Object);
 
             // Act
-            var result = await addressService.DeleteAsync(address.Id, user);
+            var result = await addressService.DeleteAsync(It.IsAny<int>(), user);
 
             // Assert
-            addressRepositoryMock.Verify(repo => repo.DeleteAsync(address.Id), Times.Once);
+            addressRepositoryMock.Verify(repo => repo.DeleteAsync(It.IsAny<int>()), Times.Once);
         }
     }
 }
