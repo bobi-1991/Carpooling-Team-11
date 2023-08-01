@@ -45,14 +45,14 @@ namespace CarPooling.Data.Repositories
 
             switch (sortBy)
             {
-                case "create":
-                    cars = cars.OrderBy(c => c.CreatedOn);
+                case "date":
+                    cars = cars.OrderBy(c => c.CreatedOn).ThenBy(cars=>cars.Brand);
                     break;
                 case "brand":
-                    cars = cars.OrderBy(cars => cars.Brand);
+                    cars = cars.OrderBy(cars => cars.Brand).ThenBy(cars=>cars.Model).ThenBy(cars=>cars.CreatedOn);
                     break;
                 case "model":
-                    cars = cars.OrderBy(cars => cars.Model);
+                    cars = cars.OrderBy(cars => cars.Model).ThenBy(cars=>cars.Brand).ThenBy(cars => cars.CreatedOn);
                     break;
                 default:
                     cars = cars.OrderBy(cars => cars.Id);
@@ -62,8 +62,7 @@ namespace CarPooling.Data.Repositories
             {
                 return await cars.ToListAsync();
             }
-            throw new EmptyListException("No cars added yet!");
-            
+            throw new EmptyListException("No cars added yet!");          
         }
 
         public async Task<List<Car>> GetAllAsync()
@@ -105,7 +104,7 @@ namespace CarPooling.Data.Repositories
             carToUpdate.CanSmoke = car.CanSmoke;
             carToUpdate.Brand = car.Brand;
             carToUpdate.Model = car.Model;
-            carToUpdate.UpdatedOn = car.UpdatedOn;
+            carToUpdate.UpdatedOn = DateTime.Now;
 
             _context.Update(carToUpdate);
             await _context.SaveChangesAsync();

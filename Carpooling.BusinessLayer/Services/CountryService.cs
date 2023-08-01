@@ -30,7 +30,7 @@ namespace CarPooling.BusinessLayer.Services
 
             if (user.IsBlocked)
             {
-                throw new UnauthorizedAccessException("You do not have permission to delete this country!");
+                throw new UnauthorizedOperationException("You do not have permission to delete this country!");
             }
 
             countryToDelete = await _countryRepository.DeleteAsync(id);
