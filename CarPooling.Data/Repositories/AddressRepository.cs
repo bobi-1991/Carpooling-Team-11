@@ -45,17 +45,17 @@ namespace CarPooling.Data.Repositories
                 throw new EmptyListException("No addresses yet!");
             }
             return await _context.Addresses
-                .Where(a=>a.IsDeleted==false)
-                .Include(c=>c.Country)
+                .Where(a => a.IsDeleted == false)
+                .Include(c => c.Country)
                 .ToListAsync();
         }
 
         public async Task<Address> GetByIdAsync(int id)
         {
             Address address = await _context.Addresses
-                .Where(a=>a.IsDeleted==false)
-                .Include(c=>c.Country)                
-                .FirstOrDefaultAsync();
+                .Where(a => a.IsDeleted == false)
+                .Include(c => c.Country)
+                .FirstOrDefaultAsync(x => x.Id == id);
 
             return address ?? throw new EntityNotFoundException($"Could not find an address with id: {id}!");
         }

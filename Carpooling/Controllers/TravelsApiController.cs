@@ -8,6 +8,7 @@ using Carpooling.Service.Dto_s.Requests;
 using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Dto_s.Requests;
 using Carpooling.BusinessLayer.Services;
+using Carpooling.BusinessLayer.Dto_s.UpdateModels;
 
 namespace Carpooling.Controllers
 {
@@ -42,6 +43,8 @@ namespace Carpooling.Controllers
             {
                 return this.StatusCode(500, ex.Message);
             }
+          
+        
         }
 
         [HttpGet("{id}")]
@@ -67,26 +70,35 @@ namespace Carpooling.Controllers
             }
         }
 
-        //[HttpPut("")]
 
-        //public async Task<IActionResult> UpdateTravelAsync([BindRequired] int travelId, DateTime departureTime, DateTime arrivalTime, int availableSeats, bool breaks, int startLocationId, int destinationLocationId, int carId, int statusId)
-        //{
-        //    try
-        //    {
-        //        var travelToUpdate = await this.travelService.UpdateAsync(travelId, departureTime, arrivalTime, availableSeats, breaks, startLocationId, destinationLocationId, carId, statusId);
-        //        return this.Ok(travelToUpdate);
-        //    }
-        //    catch (EntityNotFoundException ex)
-        //    {
-        //        return NotFound(ex.Message);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return StatusCode(500, ex.Message);
-        //    }
-        //}
 
-        // must be fix travel history property
+        // Shoud be tested
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateTravelAsync([FromHeader] string credentials,[FromRoute] int id, TravelUpdateDto travelDataForUpdate)
+        {
+            try
+            {
+                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                return this.Ok(await this.travelService.UpdateAsync(loggedUser,id, travelDataForUpdate));
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return this.NotFound(ex.Message);
+            }
+            catch (UnauthorizedOperationException e)
+            {
+                return this.Unauthorized(e.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
         [HttpPost("")]
         public async Task<IActionResult> CreateTravelAsync([FromHeader] string credentials, TravelRequest travelRequest)
         {

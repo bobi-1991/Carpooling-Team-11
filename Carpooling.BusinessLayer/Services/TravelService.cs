@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Carpooling.BusinessLayer.Dto_s.UpdateModels;
 using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
@@ -43,12 +44,12 @@ namespace Carpooling.BusinessLayer.Services
         }
         public async Task<TravelResponse> GetByIdAsync(int travelId)
         {
-            return  this.mapper.Map<TravelResponse>(await this.travelRepository.GetByIdAsync(travelId));
+            return this.mapper.Map<TravelResponse>(await this.travelRepository.GetByIdAsync(travelId));
         }
 
         public async Task<TravelResponse> CreateTravelAsync(User loggedUser, TravelRequest travelRequest)
         {
-            await this.travelValidator.ValidateIsLoggedUserAreDriver(loggedUser,travelRequest.DriverId);
+            await this.travelValidator.ValidateIsLoggedUserAreDriver(loggedUser, travelRequest.DriverId);
 
             var startLocation = await this.addressRepository.GetByIdAsync(travelRequest.StartLocationId);
             var destination = await this.addressRepository.GetByIdAsync(travelRequest.DestionationId);
@@ -66,7 +67,7 @@ namespace Carpooling.BusinessLayer.Services
                 Car = car
             };
 
-            if (!await this.travelValidator.ValidateIsNewTravelPossible(travel.DriverId, travel.DepartureTime, travel.ArrivalTime))
+            if (!await this.travelValidator.ValidateIsNewTravelPossible(travel.DriverId, (DateTime)travel.DepartureTime, (DateTime)travel.ArrivalTime))
             {
                 throw new ArgumentException("This trip cannot be made because the driver has another trip at the time.");
             }
@@ -78,16 +79,16 @@ namespace Carpooling.BusinessLayer.Services
             {
                 StartLocationName = createdTravel.StartLocation.Details,
                 DestinationName = createdTravel.EndLocation.Details,
-                DepartureTime = createdTravel.DepartureTime,
-                ArrivalTime = createdTravel.ArrivalTime,
-                AvailableSeats = createdTravel.AvailableSeats,
+                DepartureTime = (DateTime)createdTravel.DepartureTime,
+                ArrivalTime = (DateTime)createdTravel.ArrivalTime,
+                AvailableSeats = (int)createdTravel.AvailableSeats,
                 IsComplete = false,
                 CarRegistration = createdTravel.Car.Registration
             };
 
 
-        //return this.mapper.Map<TravelResponse>(await this.travelRepository.CreateTravelAsync(this.mapper.Map<Travel>(travelRequest)));
-    }
+            //return this.mapper.Map<TravelResponse>(await this.travelRepository.CreateTravelAsync(this.mapper.Map<Travel>(travelRequest)));
+        }
 
         public async Task<string> DeleteAsync(User loggedUser, int travelId)
         {
@@ -103,10 +104,40 @@ namespace Carpooling.BusinessLayer.Services
 
 
 
-        public async Task<TravelResponse> UpdateAsync(int travelId, Travel travel)
+        public async Task<TravelResponse> UpdateAsync(User loggedUser, int travelId, TravelUpdateDto travelDataForUpdate)
         {
-            throw new NotImplementedException();
+            var travelToUpdate = await this.travelRepository.GetByIdAsync(travelId);
+            await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, travelToUpdate.DriverId);
+
+
+            if (!await this.travelValidator.CheckIsUpdateDataAreValid(travelToUpdate, travelDataForUpdate))
+            {
+                throw new UnauthorizedOperationException("Please put correct input data for update.");
+            }
+
+            // TODO
+
+            var updatedTravel = await this.travelRepository.UpdateAsync(travelId, this.mapper.Map<Travel>(travelDataForUpdate));
+
+            var updatedTravelResponse = new TravelResponse
+            {
+                StartLocationName = updatedTravel.StartLocation.City,
+                DestinationName = updatedTravel.EndLocation.City,
+                DepartureTime = (DateTime)updatedTravel.DepartureTime,
+                ArrivalTime = (DateTime)updatedTravel.ArrivalTime,
+                IsComplete = (bool)updatedTravel.IsCompleted,
+                CarRegistration = updatedTravel.Car.Registration
+            };
+
+
+            return updatedTravelResponse;
+            //return this.mapper.Map<TravelResponse>(updatedTravel);
         }
+
+
+
+
+
         public async Task<TravelResponse> AddUserToTravelAsync(string driveId, int travelId, string passengerId)
         {
             throw new NotImplementedException();
@@ -120,14 +151,14 @@ namespace Carpooling.BusinessLayer.Services
             {
                 StartLocationName = x.StartLocation.Details,
                 DestinationName = x.EndLocation.Details,
-                DepartureTime = x.DepartureTime,
-                ArrivalTime = x.ArrivalTime,
-                AvailableSeats = x.AvailableSeats,
+                DepartureTime = (DateTime)x.DepartureTime,
+                ArrivalTime = (DateTime)x.ArrivalTime,
+                AvailableSeats = (int)x.AvailableSeats,
                 IsComplete = (bool)x.IsCompleted,
                 CarRegistration = x.Car.Registration
             });
             return travelResponses;
-           // return travels.Select(x => this.mapper.Map<TravelResponse>(x));
+            // return travels.Select(x => this.mapper.Map<TravelResponse>(x));
         }
     }
 }

@@ -8,6 +8,15 @@ namespace CarPooling.Data.Models
         public TripRequest()
         { }
 
+        public TripRequest(string authorId, int travelId)
+          : base()
+        {
+            this.PassengerId = authorId;
+            this.TravelId = travelId;
+            this.Status = TripRequestEnum.Pending;
+
+        }
+
         public TripRequestEnum Status { get; set; } // Pending, Approved, Declined
 
 

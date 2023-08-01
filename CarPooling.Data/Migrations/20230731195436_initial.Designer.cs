@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarPooling.Data.Migrations
 {
     [DbContext(typeof(CarPoolingDbContext))]
-    [Migration("20230731164632_Inial")]
-    partial class Inial
+    [Migration("20230731195436_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -204,7 +204,7 @@ namespace CarPooling.Data.Migrations
                     b.Property<DateTime>("ArrivalTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("AvailableSlots")
+                    b.Property<int>("AvailableSeats")
                         .HasColumnType("int");
 
                     b.Property<int?>("CarId")

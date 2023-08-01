@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -59,8 +60,11 @@ namespace CarPooling.Data.Repositories
             var travel = await this.dbContext.Travels
                .Include(x => x.Car)
                .Include(x => x.StartLocation)
+                  .ThenInclude(x=>x.Country)
                .Include(x => x.EndLocation)
+                    .ThenInclude(x => x.Country)
                .Where(x => x.IsCompleted == false)
+               .Where(x => !x.IsDeleted)
                .FirstOrDefaultAsync(x => x.Id == travelId);
 
             if (travel == null)
@@ -77,7 +81,7 @@ namespace CarPooling.Data.Repositories
             travel.CreatedOn = DateTime.Now;
             travel.UpdatedOn = DateTime.Now;
 
-           // await this.dbContext.SaveChangesAsync();
+            // await this.dbContext.SaveChangesAsync();
 
 
             var driver = await this.userRepository.GetByIdAsync(travel.DriverId);
@@ -90,7 +94,7 @@ namespace CarPooling.Data.Repositories
 
         public async Task<string> DeleteAsync(int travelId)
         {
-           var travelToDelete = await this.GetByIdAsync(travelId);
+            var travelToDelete = await this.GetByIdAsync(travelId);
 
             travelToDelete.IsDeleted = true;
             travelToDelete.DeletedOn = DateTime.Now;
@@ -102,9 +106,22 @@ namespace CarPooling.Data.Repositories
 
 
 
-        public Task<Travel> UpdateAsync(int travelId, Travel travel)
+        public async Task<Travel> UpdateAsync(int travelId, Travel travelDataForUpdate)
         {
-            throw new NotImplementedException();
+            var travelToUpdate = await this.GetByIdAsync(travelId);
+
+            travelToUpdate.DriverId = travelDataForUpdate.DriverId ?? travelToUpdate.DriverId;
+            travelToUpdate.DepartureTime = travelDataForUpdate.DepartureTime ?? travelToUpdate.DepartureTime;
+            travelToUpdate.ArrivalTime = travelDataForUpdate.ArrivalTime ?? travelToUpdate.ArrivalTime;
+            travelToUpdate.StartLocation = travelDataForUpdate.StartLocation ?? travelToUpdate.StartLocation;
+            travelToUpdate.EndLocation = travelDataForUpdate.EndLocation ?? travelToUpdate.EndLocation;
+            travelToUpdate.AvailableSeats = travelDataForUpdate.AvailableSeats ?? travelToUpdate.AvailableSeats;
+            travelToUpdate.Car = travelDataForUpdate.Car ?? travelToUpdate.Car;
+
+            dbContext.Update(travelToUpdate);
+            await dbContext.SaveChangesAsync();
+
+            return travelToUpdate;
         }
         public async Task<Travel> AddUserToTravelAsync(string driverId, int travelId, string passengerId)
         {
@@ -134,12 +151,12 @@ namespace CarPooling.Data.Repositories
             // return response;
         }
 
-        public async Task<IEnumerable<Travel>> FilterTravelsAndSortAsync( string sortBy)
+        public async Task<IEnumerable<Travel>> FilterTravelsAndSortAsync(string sortBy)
         {
             IQueryable<Travel> travels = dbContext.Travels
-                .Include(x=>x.StartLocation)
-                .Include(x=>x.EndLocation)
-                .Include(x=>x.Car)
+                .Include(x => x.StartLocation)
+                .Include(x => x.EndLocation)
+                .Include(x => x.Car)
                 .Where(c => c.IsDeleted == false);
 
             switch (sortBy.ToLower())
