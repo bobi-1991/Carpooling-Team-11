@@ -54,6 +54,7 @@ public class Program
         builder.Services.AddScoped<ICountryService, CountryService>();
         builder.Services.AddScoped<IFeedbackService, FeedbackService>();
         builder.Services.AddScoped<ITravelService, TravelService>();
+        builder.Services.AddScoped<ITripRequestService, TripReqeustService>();
 
         //Add identity services
         builder.Services.AddScoped<UserManager<User>>();

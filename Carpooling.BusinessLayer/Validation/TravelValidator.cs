@@ -1,9 +1,11 @@
-﻿using Carpooling.BusinessLayer.Exceptions;
+﻿using Carpooling.BusinessLayer.Dto_s.UpdateModels;
+using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Helpers;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
 using Carpooling.Service.Dto_s.Requests;
 using CarPooling.Data.Data;
+using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
@@ -22,21 +24,25 @@ namespace Carpooling.BusinessLayer.Validation
         private readonly IdentityHelper identityHelper;
         private readonly ITravelRepository travelRepository;
         private readonly CarPoolingDbContext dbContext;
+        private readonly IAddressRepository addressRepository;
+        private readonly ICarRepository carRepository;
 
 
-        public TravelValidator(IUserRepository userRepository, IdentityHelper identityHelper, ITravelRepository travelRepository, CarPoolingDbContext dbContext)
+        public TravelValidator(IUserRepository userRepository, IdentityHelper identityHelper, ITravelRepository travelRepository, CarPoolingDbContext dbContext, IAddressRepository addressRepository, ICarRepository carRepository)
         {
             this.userRepository = userRepository;
             this.identityHelper = identityHelper;
             this.travelRepository = travelRepository;
             this.dbContext = dbContext;
+            this.addressRepository = addressRepository;
+            this.carRepository = carRepository;
         }
 
         public async Task<bool> ValidateIsNewTravelPossible(string driveId, DateTime currentDeparture, DateTime currentArrival)
         {
             var travels = await this.travelRepository.GetAllAsync();
 
-         //   var travelsHistoryOfTheDriver = travels.Where(x => x.DriverId == driveId);
+            //   var travelsHistoryOfTheDriver = travels.Where(x => x.DriverId == driveId);
             var activeTravels = await this.dbContext.Travels
                   //.Include(x => x.DepartureTime)
                   //.Include(x => x.ArrivalTime)
@@ -53,7 +59,7 @@ namespace Carpooling.BusinessLayer.Validation
 
             return true;
         }
-       public async Task<bool> ValidateIsLoggedUserAreDriver(User loggedUser, string driverId)
+        public async Task<bool> ValidateIsLoggedUserAreDriver(User loggedUser, string driverId)
         {
             var role = await identityHelper.GetRole(loggedUser);
 
@@ -68,6 +74,35 @@ namespace Carpooling.BusinessLayer.Validation
             }
 
             return true;
+        }
+        public async Task<bool> CheckIsUpdateDataAreValid(Travel travelToUpdate, TravelUpdateDto travelDataForUpdate)
+        {
+            var currentDepartureTime = travelDataForUpdate.DepartureTime;
+            var currentArrivalTime = travelDataForUpdate.ArrivalTime;
+
+            if (!await this.ValidateIsNewTravelPossible(travelToUpdate.DriverId, currentDepartureTime, currentArrivalTime))
+            {
+                return false;
+            }
+
+            try
+            {
+                _ = await this.addressRepository.GetByIdAsync(travelDataForUpdate.StartLocationId);
+                _ = await this.addressRepository.GetByIdAsync(travelDataForUpdate.DestionationId);
+                _ = await this.carRepository.GetByIdAsync(travelDataForUpdate.CarId);
+            }
+            catch (EntityNotFoundException)
+            {
+                return false;
+            }
+
+            if (travelDataForUpdate.AvailableSeats < 0 || travelDataForUpdate.AvailableSeats > 4)
+            {
+                return false;
+            }
+
+            return true;
+
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using Carpooling.Service.Dto_s.Requests;
+﻿using Carpooling.BusinessLayer.Dto_s.UpdateModels;
+using Carpooling.Service.Dto_s.Requests;
 using CarPooling.Data.Models;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace Carpooling.BusinessLayer.Validation.Contracts
     {
         Task<bool> ValidateIsNewTravelPossible(string driverId, DateTime currentDeparture,DateTime currentArrival);
         Task<bool> ValidateIsLoggedUserAreDriver(User loggedUser,string driverId);
+        Task<bool> CheckIsUpdateDataAreValid(Travel travelToUpdate, TravelUpdateDto travelDataForUpdate);
 
     }
 }

@@ -35,10 +35,10 @@ namespace CarPooling.Data.Models
         //public List<User>? Passengers { get; set; } = new List<User>();
         //public List<Feedback>? Feedbacks { get; set; } = new List<Feedback>();
 
-        private readonly int availableSlots = 4;
+        private readonly int availableSeats = 4;
         public Travel()
         {
-           AvailableSeats = this.AvailableSeats;
+           AvailableSeats = this.availableSeats;
         }
 
 
@@ -52,8 +52,8 @@ namespace CarPooling.Data.Models
         //public int? EndLocationId { get; set; }
         public Address? EndLocation { get; set; }
 
-        public DateTime DepartureTime { get; set; }
-        public DateTime ArrivalTime { get; set; }
+        public DateTime? DepartureTime { get; set; }
+        public DateTime? ArrivalTime { get; set; }
 
 
         public bool? IsCompleted { get; set; }
@@ -61,7 +61,7 @@ namespace CarPooling.Data.Models
         //public int? CarId { get; set; }
         public Car? Car { get; set; }
 
-        public int AvailableSeats
+        public int? AvailableSeats
         {
             get; set;
         }
