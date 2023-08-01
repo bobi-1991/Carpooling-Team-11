@@ -105,7 +105,7 @@ namespace CarPooling.Data.Repositories
             carToUpdate.CanSmoke = car.CanSmoke;
             carToUpdate.Brand = car.Brand;
             carToUpdate.Model = car.Model;
-            carToUpdate.UpdatedOn = car.UpdatedOn;
+            carToUpdate.UpdatedOn = DateTime.Now;
 
             _context.Update(carToUpdate);
             await _context.SaveChangesAsync();

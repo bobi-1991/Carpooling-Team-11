@@ -40,6 +40,10 @@ namespace CarPooling.Data.Repositories
 
         public async Task<List<Address>> GetAllAsync()
         {
+            if (_context.Addresses.Count() == 0)
+            {
+                throw new EmptyListException("No addresses yet!");
+            }
             return await _context.Addresses
                 .Where(a=>a.IsDeleted==false)
                 .Include(c=>c.Country)

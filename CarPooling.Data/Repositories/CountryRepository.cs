@@ -57,6 +57,10 @@ namespace CarPooling.Data.Repositories
 
         public async Task<List<Country>> GetAllAsync()
         {
+            if(_context.Countries.Count() == 0)
+            {
+                throw new EmptyListException("No countries yet!");
+            }
             return await _context.Countries
                 .Where(c => c.IsDeleted == false)
                 .ToListAsync();
