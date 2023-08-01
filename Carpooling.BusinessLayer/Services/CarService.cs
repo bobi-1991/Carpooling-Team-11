@@ -26,9 +26,10 @@ namespace Carpooling.BusinessLayer.Services
 
         public async Task<Car> CreateAsync(Car car, User user)
         {
-            if (user.IsBlocked)
+            var roles = await _userManager.GetRolesAsync(user);
+            if (user.IsBlocked && !roles.Contains("Driver") && !roles.Contains("Administrator"))
             {
-                throw new UnauthorizedOperationException("Only non-banned users can create cars!");
+                throw new UnauthorizedOperationException("Only non-banned users with role driver can create cars!");
             }
             car.Driver = user;
             car.DriverId = user.Id;
@@ -41,7 +42,7 @@ namespace Carpooling.BusinessLayer.Services
             var roles = await _userManager.GetRolesAsync(user);
             Car carToDelete = await GetByIdAsync(id);
 
-            if (carToDelete.DriverId != user.Id && user.IsBlocked && roles.Contains("Administrator"))
+            if (carToDelete.DriverId != user.Id && user.IsBlocked && !roles.Contains("Administrator"))
             {
                 throw new UnauthorizedOperationException("You cannot delete the car!");
             }
@@ -75,7 +76,7 @@ namespace Carpooling.BusinessLayer.Services
             var roles = await _userManager.GetRolesAsync(user);
             Car carToUpdate = await GetByIdAsync(id);
 
-            if (carToUpdate.DriverId != user.Id && user.IsBlocked && roles.Contains("Administrator"))
+            if (carToUpdate.DriverId != user.Id && user.IsBlocked == true && !roles.Contains("Administrator"))
             {
                 throw new UnauthorizedOperationException("You cannot edit the car!");
             }

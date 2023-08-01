@@ -23,7 +23,6 @@ namespace Carpooling.Tests.AddressTests
             var address = TestHelpers.TestHelper.GetTestAddressOne();
 
             var addressRepositoryMock = new Mock<IAddressRepository>();
-
             var addressService = new AddressService(addressRepositoryMock.Object);
 
             // Act and Assert

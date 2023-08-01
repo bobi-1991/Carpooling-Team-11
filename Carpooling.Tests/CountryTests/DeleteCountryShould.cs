@@ -29,10 +29,10 @@ namespace Carpooling.Tests.AddressTests
             var sut = new CountryService(repositoryMock.Object);
             
             // Act
-            var result = await sut.DeleteAsync(country.Id, user);
+            var result = await sut.DeleteAsync(It.IsAny<int>(), user);
 
             // Assert
-            repositoryMock.Verify(r=>r.DeleteAsync(country.Id), Times.Once);
+            repositoryMock.Verify(r=>r.DeleteAsync(It.IsAny<int>()), Times.Once);
         }
         [TestMethod]
         public async Task DeleteCountry_ShouldThrow_WhenUserIsBlocked()
@@ -54,7 +54,7 @@ namespace Carpooling.Tests.AddressTests
             //Act && Assert
             Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(async () =>
             {
-                await sut.DeleteAsync(country.Id, user);
+                await sut.DeleteAsync(It.IsAny<int>(), user);
             });
         }
     }

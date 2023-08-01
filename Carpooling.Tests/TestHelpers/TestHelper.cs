@@ -56,6 +56,7 @@ namespace Carpooling.Tests.TestHelpers
         {
             User user = new User
             {
+                Id = "TestUserOneId",
                 FirstName = "Test User One",
                 LastName = "Test User One",
                 Email = "testOne@gmail.com",
@@ -136,6 +137,7 @@ namespace Carpooling.Tests.TestHelpers
             {
                 Driver = new User
                 {
+                    Id="TestUserOneId",
                     FirstName = "Test User One",
                     LastName = "Test User One",
                     Email = "testOne@gmail.com",
@@ -184,6 +186,7 @@ namespace Carpooling.Tests.TestHelpers
             {
                  new Car
                  {
+                        Id=1,
                         Driver = new User
                         {
                             FirstName = "Test User One",
@@ -194,13 +197,84 @@ namespace Carpooling.Tests.TestHelpers
                         },
                         AvailableSeats = 4,
                         Color = "G-Class",
-                        Model = "Q5",
+                        Model = "A25",
                         Brand = "Mercedes",
                         TotalSeats = 4,
                         CanSmoke = false,
                         Registration = "CB6542KH",
                         IsDeleted = false,
-                        CreatedOn = DateTime.Now,
+                        CreatedOn = new DateTime(2023, 8, 15),
+                        UpdatedOn = DateTime.Now
+                 },
+                 new Car
+                 {
+                     Id=2,
+                    Driver = new User
+                    {
+                        FirstName = "Test User One",
+                        LastName = "Test User One",
+                        Email = "testOne@gmail.com",
+                        UserName = "testOne@gmail.com",
+                        IsBlocked = false
+                    },
+                     AvailableSeats = 4,
+                     Color = "Red",
+                     Model = "B5",
+                     Brand = "Audi",
+                     TotalSeats = 4,
+                     CanSmoke = false,
+                     Registration = "CB3753XM",
+                     IsDeleted = false,
+                     CreatedOn = new DateTime(2023, 8, 13),
+                     UpdatedOn = DateTime.Now
+                 },
+                 new Car
+                 {
+                     Id=3,
+                     Driver = new User
+                     {
+                         FirstName = "Test User One",
+                         LastName = "Test User One",
+                         Email = "testOne@gmail.com",
+                         UserName = "testOne@gmail.com",
+                         IsBlocked = false
+                     },
+                     AvailableSeats = 4,
+                     Color = "G-Class",
+                     Model = "C5",
+                     Brand = "Mercedes",
+                     TotalSeats = 4,
+                     CanSmoke = false,
+                     Registration = "CB3334CC",
+                     IsDeleted = false,
+                     CreatedOn = new DateTime(2023, 8, 14),
+                     UpdatedOn = DateTime.Now
+                 }
+            };
+        }
+        public static List<Car> GetTestCarsFilteredByCreateTime()
+        {
+            return new List<Car>
+            {
+                 new Car
+                 {
+                        Driver = new User
+                        {
+                            FirstName = "Test User One",
+                            LastName = "Test User One",
+                            Email = "testOne@gmail.com",
+                            UserName = "testOne@gmail.com",
+                            IsBlocked = false
+                        },
+                        AvailableSeats = 4,
+                        Color = "G-Class",
+                        Model = "A25",
+                        Brand = "Mercedes",
+                        TotalSeats = 4,
+                        CanSmoke = false,
+                        Registration = "CB6542KH",
+                        IsDeleted = false,
+                        CreatedOn = new DateTime(2023, 8, 15),
                         UpdatedOn = DateTime.Now
                  },
                  new Car
@@ -215,13 +289,13 @@ namespace Carpooling.Tests.TestHelpers
                      },
                      AvailableSeats = 4,
                      Color = "G-Class",
-                     Model = "Q5",
+                     Model = "C5",
                      Brand = "Mercedes",
                      TotalSeats = 4,
                      CanSmoke = false,
                      Registration = "CB3334CC",
                      IsDeleted = false,
-                     CreatedOn = DateTime.Now,
+                     CreatedOn = new DateTime(2023, 8, 14),
                      UpdatedOn = DateTime.Now
                  },
                  new Car
@@ -236,7 +310,55 @@ namespace Carpooling.Tests.TestHelpers
                     },
                      AvailableSeats = 4,
                      Color = "Red",
-                     Model = "Q5",
+                     Model = "B5",
+                     Brand = "Audi",
+                     TotalSeats = 4,
+                     CanSmoke = false,
+                     Registration = "CB3753XM",
+                     IsDeleted = false,
+                     CreatedOn = new DateTime(2023, 8, 13),
+                     UpdatedOn = DateTime.Now
+                 }
+            };
+        }
+        public static List<Car> GetTestCarsFilteredByModel()
+        {
+            return new List<Car>
+            {
+                 new Car
+                 {
+                        Driver = new User
+                        {
+                            FirstName = "Test User One",
+                            LastName = "Test User One",
+                            Email = "testOne@gmail.com",
+                            UserName = "testOne@gmail.com",
+                            IsBlocked = false
+                        },
+                        AvailableSeats = 4,
+                        Color = "G-Class",
+                        Model = "A25",
+                        Brand = "Mercedes",
+                        TotalSeats = 4,
+                        CanSmoke = false,
+                        Registration = "CB6542KH",
+                        IsDeleted = false,
+                        CreatedOn = DateTime.Now,
+                        UpdatedOn = DateTime.Now
+                 },
+                  new Car
+                 {
+                    Driver = new User
+                    {
+                        FirstName = "Test User One",
+                        LastName = "Test User One",
+                        Email = "testOne@gmail.com",
+                        UserName = "testOne@gmail.com",
+                        IsBlocked = false
+                    },
+                     AvailableSeats = 4,
+                     Color = "Red",
+                     Model = "B5",
                      Brand = "Audi",
                      TotalSeats = 4,
                      CanSmoke = false,
@@ -244,9 +366,102 @@ namespace Carpooling.Tests.TestHelpers
                      IsDeleted = false,
                      CreatedOn = DateTime.Now,
                      UpdatedOn = DateTime.Now
+                 },
+                 new Car
+                 {
+                     Driver = new User
+                     {
+                         FirstName = "Test User One",
+                         LastName = "Test User One",
+                         Email = "testOne@gmail.com",
+                         UserName = "testOne@gmail.com",
+                         IsBlocked = false
+                     },
+                     AvailableSeats = 4,
+                     Color = "G-Class",
+                     Model = "C5",
+                     Brand = "Mercedes",
+                     TotalSeats = 4,
+                     CanSmoke = false,
+                     Registration = "CB3334CC",
+                     IsDeleted = false,
+                     CreatedOn = DateTime.Now,
+                     UpdatedOn = DateTime.Now
                  }
+                
             };
         }
+        public static List<Car> GetTestCarsFilteredByBrand()
+        {
+            return new List<Car>
+            {
+                 new Car
+                 {
+                    Driver = new User
+                    {
+                        FirstName = "Test User One",
+                        LastName = "Test User One",
+                        Email = "testOne@gmail.com",
+                        UserName = "testOne@gmail.com",
+                        IsBlocked = false
+                    },
+                     AvailableSeats = 4,
+                     Color = "Red",
+                     Model = "B5",
+                     Brand = "Audi",
+                     TotalSeats = 4,
+                     CanSmoke = false,
+                     Registration = "CB3753XM",
+                     IsDeleted = false,
+                     CreatedOn = new DateTime(2023, 8, 14),
+                     UpdatedOn = DateTime.Now
+                 },
+                 new Car
+                 {
+                        Driver = new User
+                        {
+                            FirstName = "Test User One",
+                            LastName = "Test User One",
+                            Email = "testOne@gmail.com",
+                            UserName = "testOne@gmail.com",
+                            IsBlocked = false
+                        },
+                        AvailableSeats = 4,
+                        Color = "G-Class",
+                        Model = "A25",
+                        Brand = "Mercedes",
+                        TotalSeats = 4,
+                        CanSmoke = false,
+                        Registration = "CB6542KH",
+                        IsDeleted = false,
+                        CreatedOn = new DateTime(2023, 8, 15),
+                        UpdatedOn = DateTime.Now
+                 },  
+                 new Car
+                 {
+                     Driver = new User
+                     {
+                         FirstName = "Test User One",
+                         LastName = "Test User One",
+                         Email = "testOne@gmail.com",
+                         UserName = "testOne@gmail.com",
+                         IsBlocked = false
+                     },
+                     AvailableSeats = 4,
+                     Color = "G-Class",
+                     Model = "C5",
+                     Brand = "Mercedes",
+                     TotalSeats = 4,
+                     CanSmoke = false,
+                     Registration = "CB3334CC",
+                     IsDeleted = false,
+                     CreatedOn = new DateTime(2023, 8, 13),
+                     UpdatedOn = DateTime.Now
+                 }
+
+            };
+        }
+
 
         public static Address GetTestAddressOne()
         {
