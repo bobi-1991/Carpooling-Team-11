@@ -1,7 +1,5 @@
 ﻿using Carpooling.BusinessLayer.Dto_s.UpdateModels;
-using Carpooling.Service.Dto_s.Requests;
 using FluentValidation;
-using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Carpooling.Fluent_Validation
 {

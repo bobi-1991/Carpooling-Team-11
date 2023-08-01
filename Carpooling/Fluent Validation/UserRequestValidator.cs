@@ -1,9 +1,4 @@
 ﻿using Carpooling.Service.Dto_s.Requests;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FluentValidation;
 
 namespace Carpooling.BusinessLayer.Validation.Fluent_Validation

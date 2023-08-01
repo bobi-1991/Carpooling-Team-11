@@ -20,16 +20,18 @@ namespace Carpooling.Fluent_Validation
                 .WithMessage("Property cannot be empty");
 
             RuleFor(x => x.AvailableSeats)
-                .NotEmpty()
-                .WithMessage("Property cannot be empty")
                 .GreaterThan(-1)
-                .LessThan(5);
+                .WithMessage("Seats cannot be negative")
+                .LessThan(5)
+                .WithMessage("Seats cannot be more than 4");
 
             RuleFor(x => x.TotalSeats)
                 .NotEmpty()
                 .WithMessage("Property cannot be empty")
                 .GreaterThan(0)
-                .LessThan(5);
+                .WithMessage("Seats cannot be negative")
+                .LessThan(6)
+                .WithMessage("Seats cannot be more than 5");
 
             RuleFor(x => x.Registration)
                 .NotEmpty()
