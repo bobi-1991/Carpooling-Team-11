@@ -1,15 +1,8 @@
 ﻿using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services.Contracts;
-using CarPooling.Data.Constants;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Carpooling.BusinessLayer.Services
 {
@@ -43,7 +36,12 @@ namespace Carpooling.BusinessLayer.Services
             Feedback feedbackToDelete = await GetByIdAsync(id);
             var roles = await _userManager.GetRolesAsync(user);
 
-            if (user.IsBlocked && feedbackToDelete.PassengerId != user.Id && roles.Contains("Administrator"))
+            if (user.IsBlocked)
+            {
+                throw new UnauthorizedOperationException("You do not have permission to delete this feedback!");
+            }
+
+            if (feedbackToDelete.PassengerId != user.Id && !roles.Contains("Administrator"))
             {
                 throw new UnauthorizedOperationException("You do not have permission to delete this feedback!");
             }
@@ -67,9 +65,14 @@ namespace Carpooling.BusinessLayer.Services
             Feedback feedbackToUpdate = await GetByIdAsync(id);
             var roles = await _userManager.GetRolesAsync(user);
 
-            if (user.IsBlocked && feedbackToUpdate.PassengerId != user.Id && roles.Contains("Administrator"))
+            if (user.IsBlocked)
             {
-                throw new UnauthorizedOperationException("You do not have permission to update this feedback!");
+                throw new UnauthorizedOperationException("You do not have permission to delete this feedback!");
+            }
+
+            if (feedbackToUpdate.PassengerId != user.Id && !roles.Contains("Administrator"))
+            {
+                throw new UnauthorizedOperationException("You do not have permission to delete this feedback!");
             }
 
             feedbackToUpdate = await _feedbackRepository.UpdateAsync(id, feedback);
