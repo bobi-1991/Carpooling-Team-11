@@ -72,7 +72,7 @@ namespace Carpooling.Tests.TravelTests
 
             // Act & Assert
 
-            Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(async () =>
+            await Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(async () =>
             {
                 await travelService.CreateTravelAsync(loggedUser, travelRequest);
             });           
@@ -114,7 +114,7 @@ namespace Carpooling.Tests.TravelTests
                 travelValidatorMock.Object, userValidationMock.Object);
 
             // Act & Assert
-            Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+            await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
             {
                 await travelService.CreateTravelAsync(loggedUser, travelRequest);
             });

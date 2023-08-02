@@ -52,7 +52,7 @@ namespace Carpooling.Tests.AddressTests
             var sut = new CountryService(repositoryMock.Object);
 
             //Act && Assert
-            Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(async () =>
+            await Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(async () =>
             {
                 await sut.DeleteAsync(It.IsAny<int>(), user);
             });

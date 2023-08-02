@@ -57,7 +57,7 @@ namespace Carpooling.Tests.CarTests
             var carService = new CarService(carRepositoryMock.Object, userManagerMock.Object);
 
             // Act and Assert
-            Assert.ThrowsExceptionAsync<EmptyListException>(async () =>
+            await Assert.ThrowsExceptionAsync<EmptyListException>(async () =>
             {
                 await carService.GetAllAsync();
             });

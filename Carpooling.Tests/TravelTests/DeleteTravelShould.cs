@@ -81,7 +81,7 @@ namespace Carpooling.Tests.TravelTests
                 travelValidatorMock.Object, userValidationMock.Object);
 
             // Act & Assert
-            Assert.ThrowsExceptionAsync<EntityNotFoundException>(async () =>
+            await Assert.ThrowsExceptionAsync<EntityNotFoundException>(async () =>
             {
                 await travelService.DeleteAsync(loggedUser, It.IsAny<int>());
             });

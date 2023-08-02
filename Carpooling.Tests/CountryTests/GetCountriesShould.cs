@@ -29,7 +29,7 @@ namespace Carpooling.Tests.AddressTests
             var countryService = new CountryService(repositoryMock.Object);
 
             // Act and Assert
-            Assert.ThrowsExceptionAsync<EmptyListException>(async () =>
+            await Assert.ThrowsExceptionAsync<EmptyListException>(async () =>
             {
                 await countryService.GetAllAsync();
             });
