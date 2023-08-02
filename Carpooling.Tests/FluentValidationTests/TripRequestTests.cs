@@ -35,30 +35,6 @@ namespace Carpooling.Tests.FluentValidationTests
             result.ShouldNotHaveAnyValidationErrors();
         }
 
-      //  [TestMethod]
-
-        //public void TripRequest_ShouldThrow_WhenDriverIdEmpty()
-        //{
-        //    //string driverId = null;
-
-        //    ////Arrange
-        //    //var model = new TripRequestRequest()
-        //    //{
-        //    //    DriverId = driverId,
-        //    //    TravelId = 1,
-        //    //    AuthorId = "123123123"
-        //    //};
-
-        //    //var result = validator.TestValidate(model);
-
-        //    //result.ShouldHaveValidationErrorFor(x => x.DriverId);
-
-        //    //var msg = result.Errors;
-
-        //    //Assert.AreEqual(1, msg.Count);
-        //    //Assert.IsTrue(msg.Any(x => x.ErrorMessage == "Required Id"));
-        //}
-
         [TestMethod]
 
         public void TripRequest_ShouldThrow_WhenPassengerIdEmpty()
@@ -68,7 +44,6 @@ namespace Carpooling.Tests.FluentValidationTests
             //Arrange
             var model = new TripRequestRequest()
             {
-                // DriverId = "123123123",
                 TravelId = 1,
                 PassengerId = passengerId
             };
@@ -92,7 +67,6 @@ namespace Carpooling.Tests.FluentValidationTests
             //Arrange
             var model = new TripRequestRequest()
             {
-             //   DriverId = "123123123",
                 TravelId = travelId,
                 PassengerId = "123123123"
             };
@@ -116,7 +90,6 @@ namespace Carpooling.Tests.FluentValidationTests
            // Arrange
             var model = new TripRequestRequest()
             {
-                //DriverId = "123123123",
                 TravelId = travelId,
                 PassengerId = "123123123"
             };

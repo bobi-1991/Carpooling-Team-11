@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,9 +23,15 @@ namespace CarPooling.Data.Repositories
 
         public async Task<IEnumerable<TripRequest>> GetAllAsync()
         {
-            return await dbContext.TripRequests
+            var tripRequests = await dbContext.TripRequests
                 .Where(x => !x.IsDeleted)
+                .Include(x => x.Travel)
+                     .ThenInclude(x => x.StartLocation)
+                .Include(x => x.Passenger)
+                     .ThenInclude(x => x.Address)
                 .ToListAsync();
+
+            return tripRequests;
         }
 
         public async Task<IEnumerable<TripRequest>> GetAllDriverRequestsAsync()
@@ -32,20 +39,31 @@ namespace CarPooling.Data.Repositories
             throw new NotImplementedException();
         }
         public async Task<IEnumerable<TripRequest>> GetAllPassengerRequestsAsync()
-        { 
+        {
             throw new NotImplementedException();
         }
 
 
         public async Task<TripRequest> GetByIdAsync(int id)
         {
-            return dbContext.TripRequests
-             .Where(x => !x.IsDeleted)
-             .FirstOrDefault(x => x.Id == id);
+            var tripRequest = await dbContext.TripRequests
+              .Where(x => !x.IsDeleted)
+              .Include(x => x.Travel)
+                   .ThenInclude(x => x.StartLocation)
+              .Include(x => x.Passenger)
+                   .ThenInclude(x => x.Address)
+              .FirstOrDefaultAsync(x => x.Id == id) ?? throw new EntityNotFoundException($"Trip request with id:{id} not found.");
+
+            return tripRequest;
+
+
+            //return dbContext.TripRequests
+            // .Where(x => !x.IsDeleted)
+            // .FirstOrDefault(x => x.Id == id);
         }
         public async Task<TripRequest> CreateAsync(string driverId, string passengerId, int travelId)
         {
-            var tripRequest = new TripRequest(passengerId,travelId);
+            var tripRequest = new TripRequest(passengerId, travelId);
 
             var driver = this.dbContext.Users.FirstOrDefault(x => x.Id == driverId);
             var passenger = this.dbContext.Users.FirstOrDefault(x => x.Id == passengerId);
@@ -63,11 +81,11 @@ namespace CarPooling.Data.Repositories
             var TripToUpdate = await this.dbContext.TripRequests
             .Include(x => x.Passenger)
             .Include(x => x.Travel)
-             .ThenInclude(x=>x.Driver)
+             .ThenInclude(x => x.Driver)
             .FirstOrDefaultAsync(x => x.Id == tripRequestId
             && x.PassengerId == userId);
 
-            
+
             // In validator class?
             if (TripToUpdate == null)
             {
@@ -87,23 +105,14 @@ namespace CarPooling.Data.Repositories
             return TripToUpdate;
         }
 
-        public async Task<string> DeleteAsync(string userId, int tripRequestId)
+        public async Task<string> DeleteAsync(int tripRequestId)
         {
-            var tripRequestToDelete = await this.dbContext.TripRequests
-                .Include(x => x.Passenger)
-                .Include(x => x.Travel)
-                   .ThenInclude(x=>x.Driver)
-                .FirstOrDefaultAsync(x => x.Id == tripRequestId
-                && x.PassengerId == userId);
 
-            // In validator class?
-            if (tripRequestToDelete == null)
-            {
-                throw new EntityNotFoundException($"User with Id: {userId} has not post a trip request with Id: {tripRequestId}");
-            }
+            var tripRequestToDelete = await this.dbContext.TripRequests
+                .FirstOrDefaultAsync(x => x.Id == tripRequestId);
+
 
             tripRequestToDelete.IsDeleted = true;
-
             await this.dbContext.SaveChangesAsync();
 
             return "Trip request successfully deleted";

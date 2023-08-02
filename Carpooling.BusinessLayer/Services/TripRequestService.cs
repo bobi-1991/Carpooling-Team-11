@@ -8,6 +8,7 @@ using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,7 @@ namespace Carpooling.BusinessLayer.Services
     public class TripRequestService : ITripRequestService
     {
         private readonly ITravelRepository travelRepository;
-        // private readonly IMapper mapper;
+         private readonly IMapper mapper;
         //  private readonly IAddressRepository addressRepository;
         //  private readonly ICarRepository carRepository;
         //  private readonly ITravelValidator travelValidator;
@@ -35,9 +36,16 @@ namespace Carpooling.BusinessLayer.Services
             this.tripRequestValidator = tripRequestValidator;
         }
 
-        public Task<IEnumerable<TripRequestResponse>> GetAllAsync()
+        public async Task<IEnumerable<TripRequestResponse>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var tripRequests = await this.tripRequestRepository.GetAllAsync();
+
+            return tripRequests.Select(x => new TripRequestResponse(
+                x.Passenger.UserName,
+                x.Travel.StartLocation.Details,
+                x.Travel.EndLocation.Details,(DateTime)
+                x.Travel.DepartureTime,
+                x.Status.ToString()));
         }
 
         public Task<IEnumerable<TripRequestResponse>> GetAllDriverRequestsAsync()
@@ -50,9 +58,16 @@ namespace Carpooling.BusinessLayer.Services
             throw new NotImplementedException();
         }
 
-        public Task<TripRequestResponse> GetByIdAsync(int id)
+        public async Task<TripRequestResponse> GetByIdAsync(int id)
         {
-            throw new NotImplementedException();
+            var tripRequest = await this.tripRequestRepository.GetByIdAsync(id);
+
+            return new TripRequestResponse(
+                tripRequest.Passenger.UserName,
+                tripRequest.Travel.StartLocation.Details,
+                tripRequest.Travel.EndLocation.Details,
+                (DateTime)tripRequest.Travel.DepartureTime,
+                tripRequest.Status.ToString());
         }
 
 
@@ -73,14 +88,12 @@ namespace Carpooling.BusinessLayer.Services
 
             var trip = await this.tripRequestRepository.CreateAsync(driverId, passenger.Id, travel.Id);
 
-            return new TripRequestResponse
-            {
-                PassengerUsername = passenger.UserName,
-                StartLocationDetails = travel.StartLocation.Details,
-                EndLocationDetails = travel.EndLocation.Details,
-                DepartureTime = (DateTime)travel.DepartureTime,
-                Status = trip.Status.ToString()
-            };
+            return new TripRequestResponse(
+                passenger.UserName,
+                travel.StartLocation.Details,
+                travel.EndLocation.Details,
+                (DateTime)travel.DepartureTime,
+                trip.Status.ToString());
         }
 
 
@@ -89,9 +102,12 @@ namespace Carpooling.BusinessLayer.Services
             throw new NotImplementedException();
         }
 
-        public Task<string> DeleteAsync(User loggedUser, int tripRequestId)
+        public async Task<string> DeleteAsync(User loggedUser, int tripRequestId)
         {
-            throw new NotImplementedException();
+            var tripRequest = await this.tripRequestRepository.GetByIdAsync(tripRequestId);
+            await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, tripRequest.PassengerId);
+
+            return await this.tripRequestRepository.DeleteAsync(tripRequestId);   
         }
     }
 }
