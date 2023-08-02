@@ -1,22 +1,15 @@
 ﻿using AutoMapper;
 using Carpooling.BusinessLayer.Dto_s.AdminModels;
+using Carpooling.BusinessLayer.Dto_s.UpdateModels;
 using Carpooling.BusinessLayer.Helpers;
 using Carpooling.BusinessLayer.Services;
-using Carpooling.BusinessLayer.Validation;
 using Carpooling.BusinessLayer.Validation.Contracts;
 using Carpooling.Service.Dto_s.Requests;
-using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Data;
-using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Carpooling.Tests.UserServiceTests
 {
@@ -49,9 +42,7 @@ namespace Carpooling.Tests.UserServiceTests
 
             SetupUserValidatorMock();
 
-            userManagerMock
-                .Setup(x => x.DeleteAsync(It.IsAny<User>()));
-
+            SetupUserManagerMock();
 
             sut = new UserService(userRepositoryMock.Object,
                  userMapperMock.Object,
@@ -61,6 +52,17 @@ namespace Carpooling.Tests.UserServiceTests
                  identityHelperMock.Object);
         }
 
+        private void SetupUserManagerMock()
+        {
+            userManagerMock
+                .Setup(x => x.DeleteAsync(It.IsAny<User>()));
+
+            userManagerMock
+                .Setup(x => x.CreateAsync(It.IsAny<User>(), It.IsAny<string>()));
+
+            userManagerMock
+                .Setup(x => x.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()));
+        }
         private void SetupUserRepositoryMock()
         {
             userRepositoryMock
@@ -78,6 +80,14 @@ namespace Carpooling.Tests.UserServiceTests
             userRepositoryMock
                 .Setup(x => x.BanUser(It.IsAny<User>()))
                 .Returns(Task.FromResult("User successfully banned"));
+
+            userRepositoryMock
+                .Setup(x => x.TravelHistoryAsync(It.IsAny<string>()))
+                .ReturnsAsync(new List<Travel>());
+            
+            userRepositoryMock
+                .Setup(x => x.GetAllAsync())
+                .ReturnsAsync(new List<User>());
         }
         private void SetupUserValidatorMock()
         {
@@ -220,6 +230,129 @@ namespace Carpooling.Tests.UserServiceTests
             StringAssert.Contains(result, "User successfully banned");
         }
 
+        [TestMethod]
 
+        public async Task TravelHistoryAsync_ShouldInvoke()
+        {
+            //Act
+            var result = await sut.TravelHistoryAsync(new User(), "123");
+
+            //Verify
+            userValidatorMock.Verify(x => x.ValidateUserLoggedAndAdmin(It.IsAny<User>(), "123"), Times.Once);
+
+            userRepositoryMock.Verify(x => x.TravelHistoryAsync("123"), Times.Once);
+        }
+
+        [TestMethod]
+
+        public async Task GetByIdAsync_ShouldInvoke()
+        {
+            //Act
+            var result = await sut.GetByIdAsync("123");
+
+            //Verify
+            userRepositoryMock.Verify(x => x.GetByIdAsync("123"), Times.Once);
+        }
+
+        [TestMethod]
+
+        public async Task GetByUsernameAsync_ShouldInvoke()
+        {
+            //Act
+            var result = await sut.GetByUsernameAsync("Trendafil");
+
+            //Verify
+            userRepositoryMock.Verify(x => x.GetByUsernameAsync("Trendafil"), Times.Once);
+        }
+
+        [TestMethod]
+
+        public async Task GetAllAsync_ShouldInvoke()
+        {
+            //Act
+            var result = await sut.GetAllAsync();
+
+            //Verify
+            userRepositoryMock.Verify(x => x.GetAllAsync(), Times.Once);
+        }
+
+        [TestMethod]
+
+        public async Task RegisterAsync_ShouldInvoke()
+        {
+            //Arrange
+            var user = new User() { Email = "abv@abv.bg", UserName = "TestTest" };
+            var password = "Password2@";
+            
+            userManagerMock
+                .Setup(x => x.CreateAsync(user, password))
+                .ReturnsAsync(new IdentityResult() { });
+
+            //Act
+            var result = await sut.RegisterAsync(new UserRequest() { Password = "Password2@", Email = "abv@abv.bg"});
+
+            //Verify
+            userManagerMock.Verify(x => x.CreateAsync(user, password), Times.Once);
+
+            userManagerMock.Verify(x => x.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Once);
+        }
+
+        //public async Task<UserResponse> UpdateAsync(User loggedUser, string id, UserUpdateDto userUpdateDto)
+        //{
+        //    await userValidator.ValidateUserLoggedAndAdmin(loggedUser, id);
+        //    var userToUpdate = await this.userRepository.GetByIdAsync(id);
+
+        //    var userDataToUpdate = new User
+        //    {
+        //        FirstName = userUpdateDto.FirstName ?? userToUpdate.FirstName,
+        //        LastName = userUpdateDto.LastName ?? userToUpdate.LastName,
+        //        Email = userUpdateDto.Email ?? userToUpdate.Email
+        //    };
+
+        //    // Ако има предоставена нова парола, хеширане и записване.
+        //    if (!string.IsNullOrEmpty(userUpdateDto.Password))
+        //    {
+        //        var hashedPassword = _userManager.PasswordHasher.HashPassword(userDataToUpdate, userUpdateDto.Password);
+        //        userDataToUpdate.PasswordHash = hashedPassword;
+        //    }
+
+        //    var updatedUser = await this.userRepository.UpdateAsync(id, userDataToUpdate);
+
+        //    if (!string.IsNullOrEmpty(userUpdateDto.Role))
+        //    {
+        //        await this.identityHelper.ChangeRole(loggedUser, updatedUser, userUpdateDto.Role);
+        //    }
+
+        //    return new UserResponse(
+        //    updatedUser.FirstName,
+        //    updatedUser.LastName,
+        //    updatedUser.UserName,
+        //    updatedUser.Email,
+        //    updatedUser.AverageRating);
+
+        //    //await this._userManager.UpdateAsync(this.mapper.Map<User>(userUpdateDto));
+        //    //return this.mapper.Map<UserResponse>(this.userRepository.GetByIdAsync(id));
+        //}
+
+        [TestMethod]
+
+        public async Task UpdateAsync_ShouldInvoke()
+        {
+            userRepositoryMock
+                .Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<User>()))
+                .Returns(Task.FromResult(new User()));
+                
+            //Act
+            var result = await sut.UpdateAsync(new User(), "123", new UserUpdateDto());
+
+            //Verify
+            //    await userValidator.ValidateUserLoggedAndAdmin(loggedUser, id);
+            //    var userToUpdate = await this.userRepository.GetByIdAsync(id);
+            userValidatorMock.Verify(x => x.ValidateUserLoggedAndAdmin(It.IsAny<User>(), "123"), Times.Once);
+
+            userRepositoryMock.Verify(x => x.GetByIdAsync("123"), Times.Once);
+
+            userRepositoryMock.Verify(x => x.UpdateAsync("123", It.IsAny<User>()), Times.Once);
+        }
     }
 }
