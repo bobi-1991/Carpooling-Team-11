@@ -346,8 +346,6 @@ namespace Carpooling.Tests.UserServiceTests
             var result = await sut.UpdateAsync(new User(), "123", new UserUpdateDto());
 
             //Verify
-            //    await userValidator.ValidateUserLoggedAndAdmin(loggedUser, id);
-            //    var userToUpdate = await this.userRepository.GetByIdAsync(id);
             userValidatorMock.Verify(x => x.ValidateUserLoggedAndAdmin(It.IsAny<User>(), "123"), Times.Once);
 
             userRepositoryMock.Verify(x => x.GetByIdAsync("123"), Times.Once);
