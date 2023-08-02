@@ -89,10 +89,7 @@ namespace Carpooling.BusinessLayer.Services
                 AvailableSeats = (int)createdTravel.AvailableSeats,
                 IsComplete = false,
                 CarRegistration = createdTravel.Car.Registration
-            };
-
-
-            //return this.mapper.Map<TravelResponse>(await this.travelRepository.CreateTravelAsync(this.mapper.Map<Travel>(travelRequest)));
+            };      
         }
 
         public async Task<string> DeleteAsync(User loggedUser, int travelId)
@@ -153,7 +150,6 @@ namespace Carpooling.BusinessLayer.Services
 
 
             return updatedTravelResponse;
-            //return this.mapper.Map<TravelResponse>(updatedTravel);
         }
 
         public async Task<TravelResponse> AddUserToTravelAsync(string driveId, int travelId, string passengerId)
@@ -176,7 +172,6 @@ namespace Carpooling.BusinessLayer.Services
                 CarRegistration = x.Car.Registration
             });
             return travelResponses;
-            // return travels.Select(x => this.mapper.Map<TravelResponse>(x));
         }
     }
 }

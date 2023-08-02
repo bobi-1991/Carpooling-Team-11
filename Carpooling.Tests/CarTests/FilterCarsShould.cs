@@ -73,6 +73,7 @@ namespace Carpooling.Tests.CarTests
             var result = sut.FilterCarsAndSortAsync("model");
 
             //Assert
+            Assert.AreEqual(result, expectedCars);
             repositoryMock.Verify(repo => repo.FilterCarsAndSortAsync("model"), Times.Once);
 
         }
@@ -97,6 +98,7 @@ namespace Carpooling.Tests.CarTests
             var result = sut.FilterCarsAndSortAsync("date");
 
             //Assert
+            Assert.AreEqual(result, expectedCars);
             repositoryMock.Verify(repo => repo.FilterCarsAndSortAsync("date"), Times.Once);
 
         }
@@ -121,6 +123,7 @@ namespace Carpooling.Tests.CarTests
             var result = sut.FilterCarsAndSortAsync("id");
 
             //Assert
+            Assert.AreEqual(result, expectedCars);
             repositoryMock.Verify(repo => repo.FilterCarsAndSortAsync("id"), Times.Once);
         }
         [TestMethod]

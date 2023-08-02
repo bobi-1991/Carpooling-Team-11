@@ -135,6 +135,7 @@ namespace Carpooling.Tests.TestHelpers
         {
             return new Car
             {
+                Id=2,
                 Driver = new User
                 {
                     Id="TestUserOneId",

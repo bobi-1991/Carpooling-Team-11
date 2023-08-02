@@ -35,7 +35,7 @@ namespace Carpooling.Tests.CarTests
             var car = TestHelpers.TestHelper.GetTestCarOne();
 
             userManagerMock.Setup(um => um.GetRolesAsync(user))
-                .ReturnsAsync(new List<string> { "Driver", "Administrator" });
+                .ReturnsAsync(new List<string> { "Driver" });
 
             var carRepositoryMock = new Mock<ICarRepository>();
             carRepositoryMock.Setup(repo => repo.CreateAsync(car))
@@ -51,10 +51,33 @@ namespace Carpooling.Tests.CarTests
             Assert.AreEqual(user, car.Driver);
         }
         [TestMethod]
-        public async Task CreateAsync_UserIsBlockedWithoutDriverOrAdminRole_ThrowsUnauthorizedOperationException()
+        public async Task CreateAsync_UserIsNotBlockedWithAdminRole_ReturnsCreatedCar()
         {
             // Arrange
             var user = TestHelpers.TestHelper.GetTestUserOne();
+            var car = TestHelpers.TestHelper.GetTestCarOne();
+
+            userManagerMock.Setup(um => um.GetRolesAsync(user))
+                .ReturnsAsync(new List<string> { "Administrator" });
+
+            var carRepositoryMock = new Mock<ICarRepository>();
+            carRepositoryMock.Setup(repo => repo.CreateAsync(car))
+                .ReturnsAsync(car);
+
+            var carService = new CarService(carRepositoryMock.Object, userManagerMock.Object);
+
+            // Act
+            var result = await carService.CreateAsync(car, user);
+
+            // Assert
+            Assert.AreEqual(car, result);
+            Assert.AreEqual(user, car.Driver);
+        }
+        [TestMethod]
+        public async Task CreateAsync_UserIsBlockedWithoutDriverOrAdminRole_ThrowsUnauthorizedOperationException()
+        {
+            // Arrange
+            var user = TestHelpers.TestHelper.GetTestUserFourBlocked();
             var car = TestHelpers.TestHelper.GetTestCarOne();
 
             userManagerMock.Setup(um => um.GetRolesAsync(user))
