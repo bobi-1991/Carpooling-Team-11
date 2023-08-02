@@ -91,7 +91,7 @@ namespace Carpooling.Tests.TravelTests
                 userValidationMock.Object);
 
             // Act & Assert
-            Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(async () =>
+            await Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(async () =>
             {
                 await travelService.UpdateAsync(loggedUser, It.IsAny<int>(), It.IsAny<TravelUpdateDto>());
             });

@@ -96,7 +96,7 @@ namespace Carpooling.Tests.CarTests
             var carService = new CarService(carRepositoryMock.Object, userManagerMock.Object);
 
             // Act and Assert
-            Assert.ThrowsExceptionAsync<EntityNotFoundException>(async () =>
+            await Assert.ThrowsExceptionAsync<EntityNotFoundException>(async () =>
             {
                 await carService.DeleteAsync(It.IsAny<int>(), user);
             });

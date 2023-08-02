@@ -87,7 +87,7 @@ namespace Carpooling.Tests.CarTests
             var carService = new CarService(carRepositoryMock.Object, userManagerMock.Object);
 
             // Act and Assert
-            Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(async () =>
+            await Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(async () =>
             {
                 await carService.CreateAsync(car, user);
             });
