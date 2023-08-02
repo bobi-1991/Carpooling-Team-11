@@ -50,15 +50,22 @@ namespace Carpooling.BusinessLayer.Services
         public async Task<TravelResponse> CreateTravelAsync(User loggedUser, TravelRequest travelRequest)
         {
             await this.travelValidator.ValidateIsLoggedUserAreDriver(loggedUser, travelRequest.DriverId);
+          //  var driverCar = loggedUser.Cars.FirstOrDefault();
+            
+            var car = await this.carRepository.GetByIdAsync(travelRequest.CarId);
 
             if (loggedUser.IsBlocked)
             {
                 throw new UnauthorizedOperationException($"You can't create travel because you're banned.");
             }
 
+            if (!loggedUser.Cars.Any(x => x.Id == travelRequest.CarId))
+            {
+                throw new EntityUnauthorizatedException("The driver cannot operate a car that is not owned by them.");
+            }
+
             var startLocation = await this.addressRepository.GetByIdAsync(travelRequest.StartLocationId);
             var destination = await this.addressRepository.GetByIdAsync(travelRequest.DestionationId);
-            var car = await this.carRepository.GetByIdAsync(travelRequest.CarId);
 
             var travel = new Travel
             {

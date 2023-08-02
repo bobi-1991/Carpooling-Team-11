@@ -25,26 +25,6 @@ namespace CarPooling.Data.Repositories
         }
         public async Task<IEnumerable<Travel>> GetAllAsync()
         {
-
-            //           public User? Driver { get; set; }
-            //public string? DriverId { get; set; }
-
-            ////public int? StartLocationId { get; set; }
-            //public Address? StartLocation { get; set; }
-
-            ////public int? EndLocationId { get; set; }
-            //public Address? EndLocation { get; set; }
-
-            //public DateTime DepartureTime { get; set; }
-
-            //public bool? IsCompleted { get; set; }
-
-            ////public int? CarId { get; set; }
-            //public Car? Car { get; set; }
-
-            //public List<User>? Passengers { get; set; } = new List<User>();
-            //public List<Feedback>? Feedbacks { get; set; } = new List<Feedback>();
-
             var result = await this.dbContext.Travels
                     .Include(x => x.Car)
                     .Include(x => x.StartLocation)
@@ -123,33 +103,50 @@ namespace CarPooling.Data.Repositories
 
             return travelToUpdate;
         }
-        public async Task<Travel> AddUserToTravelAsync(string driverId, int travelId, string passengerId)
+        public async Task AddUserToTravelAsync(int travelId, string passengerId)
         {
-            throw new NotImplementedException();
-            // var travel = await this.dbContext.Travels
-            //.Include(x => x.Car)
-            //.Include(x => x.Status)
-            //.Include(x => x.Destination)
-            //.Include(x => x.StartLocation)
-            //.Include(x => x.Passenger)
-            //.Where(x => x.Status.Id == 1 || x.StatusId == 2)
-            //.FirstOrDefaultAsync(x => x.Id == travelId);
 
+            var travel = await this.dbContext.Travels
+           .Include(x => x.Car)
+           .Include(x => x.StartLocation)
+           .Include(x => x.EndLocation)
+          // .Include(x => x.Passengers)
+           .FirstOrDefaultAsync(x => x.Id == travelId);
 
-            // var user = await this.dbContext.Users
-            //   .Include(x => x.Travel)
-            //   .FirstOrDefaultAsync(x => x.Id == userId);
+            var passenger = await this.dbContext.Users
+              .FirstOrDefaultAsync(x => x.Id == passengerId);
 
+            travel.Passengers.Add(passenger);
+            travel.AvailableSeats--;
+          //  passenger.TravelHistory.Add(travel);
 
-            // travel.Passenger.Add(user);
-            // travel.AvailableSeat--;
-            // user.Travel = travel;
-            // user.TravelHistory.Add(travel);
+           await  this.dbContext.SaveChangesAsync();
 
-            // var response = new TravelDTO(travel);
-
-            // return response;
         }
+
+        public async Task RemoveUserToTravelAsync(int travelId, string passengerId)
+        {
+            var travel = await this.dbContext.Travels
+             .Include(x => x.Car)
+             .Include(x => x.StartLocation)
+             .Include(x => x.EndLocation)
+       //      .Include(x => x.Passengers)
+             .FirstOrDefaultAsync(x => x.Id == travelId);
+
+            var passenger = await this.dbContext.Users
+              .FirstOrDefaultAsync(x => x.Id == passengerId);
+
+            if (!(travel.Car.AvailableSeats == travel.AvailableSeats))
+            {
+                travel.Passengers.Remove(passenger);
+                travel.AvailableSeats++;
+                passenger.TravelHistory.Remove(travel);
+            }
+
+            await this.dbContext.SaveChangesAsync();
+        }
+
+
 
         public async Task<IEnumerable<Travel>> FilterTravelsAndSortAsync(string sortBy)
         {

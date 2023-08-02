@@ -199,10 +199,10 @@ namespace CarPooling.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("ArrivalTime")
+                    b.Property<DateTime?>("ArrivalTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("AvailableSeats")
+                    b.Property<int?>("AvailableSeats")
                         .HasColumnType("int");
 
                     b.Property<int?>("CarId")
@@ -214,7 +214,7 @@ namespace CarPooling.Data.Migrations
                     b.Property<DateTime>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DepartureTime")
+                    b.Property<DateTime?>("DepartureTime")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DriverId")
