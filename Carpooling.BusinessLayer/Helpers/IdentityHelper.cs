@@ -1,20 +1,12 @@
-﻿using Carpooling.BusinessLayer.Dto_s.UpdateModels;
-using Carpooling.BusinessLayer.Validation;
-using Carpooling.Service.Dto_s.Responses;
-using CarPooling.Data.Data;
+﻿using CarPooling.Data.Data;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Carpooling.BusinessLayer.Helpers
 {
-    public class IdentityHelper
+    public class IdentityHelper : IIdentityHelper
     {
         private UserManager<User> userManager;
         private CarPoolingDbContext dbContext;
