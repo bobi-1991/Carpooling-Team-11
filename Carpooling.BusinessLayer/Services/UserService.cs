@@ -28,13 +28,10 @@ namespace Carpooling.BusinessLayer.Services
         private readonly IMapper mapper;
         private readonly IUserValidation userValidator;
         private readonly CarPoolingDbContext dbContext;
-        private readonly IdentityHelper identityHelper;
-
-
+        private readonly IIdentityHelper identityHelper;
         private readonly UserManager<User> _userManager;
 
-
-        public UserService(IUserRepository userRepository, IMapper mapper, UserManager<User> userManager, CarPoolingDbContext dbContext, IUserValidation userValidator, IdentityHelper identityHelper)
+        public UserService(IUserRepository userRepository, IMapper mapper, UserManager<User> userManager, CarPoolingDbContext dbContext, IUserValidation userValidator, IIdentityHelper identityHelper)
         {
             this.userRepository = userRepository;
             this.mapper = mapper;
