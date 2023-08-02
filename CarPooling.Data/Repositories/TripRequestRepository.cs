@@ -23,6 +23,10 @@ namespace CarPooling.Data.Repositories
 
         public async Task<IEnumerable<TripRequest>> GetAllAsync()
         {
+            if (dbContext.TripRequests.Count() == 0)
+            {
+                throw new EmptyListException("No requests yet!");
+            }
             var tripRequests = await dbContext.TripRequests
                 .Where(x => !x.IsDeleted)
                 .Include(x => x.Travel)

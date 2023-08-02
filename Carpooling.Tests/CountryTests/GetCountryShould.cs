@@ -45,7 +45,7 @@ namespace Carpooling.Tests.AddressTests
             var countryService = new CountryService(repositoryMock.Object);
 
             // Act and Assert
-            Assert.ThrowsExceptionAsync<EntityNotFoundException>(async () =>
+            await Assert.ThrowsExceptionAsync<EntityNotFoundException>(async () =>
             {
                 await countryService.GetByIdAsync(It.IsAny<int>());
             });

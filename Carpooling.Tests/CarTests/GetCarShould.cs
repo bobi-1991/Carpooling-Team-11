@@ -60,7 +60,7 @@ namespace Carpooling.Tests.CarTests
             var carService = new CarService(carRepositoryMock.Object, userManagerMock.Object);
 
             // Act and Assert
-            Assert.ThrowsExceptionAsync<EntityNotFoundException>(async () =>
+            await Assert.ThrowsExceptionAsync<EntityNotFoundException>(async () =>
             {
                 await carService.GetByIdAsync(It.IsAny<int>());
             });
@@ -99,7 +99,7 @@ namespace Carpooling.Tests.CarTests
             var carService = new CarService(carRepositoryMock.Object,userManagerMock.Object);
 
             // Act & Assert
-            Assert.ThrowsExceptionAsync<EntityNotFoundException>(async () =>
+            await Assert.ThrowsExceptionAsync<EntityNotFoundException>(async () =>
             {
             await carService.GetByBrandModelAndRegistrationAsync(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>());
             }); 

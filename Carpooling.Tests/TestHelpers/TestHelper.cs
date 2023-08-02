@@ -56,7 +56,7 @@ namespace Carpooling.Tests.TestHelpers
         {
             User user = new User
             {
-                Id = "TestUserOneId",
+                Id = "1",
                 FirstName = "Test User One",
                 LastName = "Test User One",
                 Email = "testOne@gmail.com",
@@ -70,6 +70,7 @@ namespace Carpooling.Tests.TestHelpers
         {
             User user = new User
             {
+                Id="2",
                 FirstName = "Test User Two",
                 LastName = "Test User Two",
                 Email = "testTwo@gmail.com",
@@ -135,6 +136,7 @@ namespace Carpooling.Tests.TestHelpers
         {
             return new Car
             {
+                Id=2,
                 Driver = new User
                 {
                     Id="TestUserOneId",
