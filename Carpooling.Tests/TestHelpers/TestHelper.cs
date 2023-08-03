@@ -61,9 +61,9 @@ namespace Carpooling.Tests.TestHelpers
                 LastName = "Test User One",
                 Email = "testOne@gmail.com",
                 UserName = "testOne@gmail.com",
-                IsBlocked = false
+                IsBlocked = false,
+                Cars = new List<Car> { GetTestCarThree() }
             };
-            //_userManager.AddToRoleAsync(user, "Administrator").GetAwaiter().GetResult();
             return user;
         }
         public static User GetTestUserTwo()
@@ -75,9 +75,9 @@ namespace Carpooling.Tests.TestHelpers
                 LastName = "Test User Two",
                 Email = "testTwo@gmail.com",
                 UserName = "testTwo@gmail.com",
-                IsBlocked = false
+                IsBlocked = false,
+                
             };
-            //_userManager.AddToRoleAsync(user, "Driver").GetAwaiter().GetResult();
             return user;
         }
         public static User GetTestUserThreeSoftDeleted()
@@ -162,8 +162,10 @@ namespace Carpooling.Tests.TestHelpers
         {
             return new Car
             {
+                Id=3,
                 Driver = new User
                 {
+                    Id="1",
                     FirstName = "Test User One",
                     LastName = "Test User One",
                     Email = "testOne@gmail.com",

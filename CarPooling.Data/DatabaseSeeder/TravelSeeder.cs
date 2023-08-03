@@ -74,22 +74,24 @@ namespace CarPooling.Data.DatabaseSeeder
                 //// Foreign keys with navigation properties
                 //public string DriverId { get; set; }
                 //public User Driver { get; set; }
-                if (!_context.Cars.Any(x=>x.Registration == car.Registration))
+                if (_context.Cars.Count() == 0)
                 {
-                    _context.Cars.Add(car);    
-                    _context.SaveChanges();
+                    if (!_context.Cars.Any(x => x.Registration == car.Registration))
+                    {
+                        _context.Cars.Add(car);
+                        _context.SaveChanges();
+                    }
+                    if (!_context.Cars.Any(x => x.Registration == car2.Registration))
+                    {
+                        _context.Cars.Add(car2);
+                        _context.SaveChanges();
+                    }
+                    if (!_context.Cars.Any(x => x.Registration == car3.Registration))
+                    {
+                        _context.Cars.Add(car3);
+                        _context.SaveChanges();
+                    }
                 }
-                if (!_context.Cars.Any(x => x.Registration == car2.Registration))
-                {
-                    _context.Cars.Add(car2);
-                    _context.SaveChanges();
-                }
-                if (!_context.Cars.Any(x => x.Registration == car3.Registration))
-                {
-                    _context.Cars.Add(car3);
-                    _context.SaveChanges();
-                }
-
                 var startLocaion = _context.Addresses.FirstOrDefault(a => a.Id == 1);
                 var endLocation = _context.Addresses.FirstOrDefault(a => a.Id == 1);
 
