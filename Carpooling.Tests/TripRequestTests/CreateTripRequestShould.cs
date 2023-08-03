@@ -20,6 +20,29 @@ namespace Carpooling.Tests.TripRequestTests
     [TestClass]
     public class CreateTripRequestShould
     {
+        private Mock<ITripRequestRepository> tripRequestRepositoryMock;
+        private Mock<IUserValidation> userValidationMock;
+        private Mock<ITravelRepository> travelRepositoryMock;
+        private Mock<IUserRepository> userRepositoryMock;
+        private Mock<ITripRequestValidator> tripRequestValidatorMock;
+        private TripRequestService tripRequestService;
+
+        [TestInitialize]
+        public void Initialize()
+        {
+            tripRequestRepositoryMock = new Mock<ITripRequestRepository>();
+            userValidationMock = new Mock<IUserValidation>();
+            travelRepositoryMock = new Mock<ITravelRepository>();
+            userRepositoryMock = new Mock<IUserRepository>();
+            tripRequestValidatorMock = new Mock<ITripRequestValidator>();
+
+            tripRequestService = new TripRequestService(
+                tripRequestRepositoryMock.Object,
+                userValidationMock.Object,
+                travelRepositoryMock.Object,
+                userRepositoryMock.Object,
+                tripRequestValidatorMock.Object);
+        }
         [TestMethod]
         public async Task CreateAsync_ValidRequest_ReturnsCreatedTripRequest()
         {
@@ -37,6 +60,7 @@ namespace Carpooling.Tests.TripRequestTests
             {
                 Id = 1,
                 Driver = TestHelpers.TestHelper.GetTestUserOne(),
+                DriverId = "1",
                 StartLocation = TestHelpers.TestHelper.GetTestAddressOne(),
                 EndLocation = TestHelpers.TestHelper.GetTestAddressTwo(),
                 Car = TestHelpers.TestHelper.GetTestCarTwo(),
@@ -47,28 +71,24 @@ namespace Carpooling.Tests.TripRequestTests
             var tripRequest = new TripRequest
             {
                 Passenger = passenger,
+                Driver= TestHelpers.TestHelper.GetTestUserOne(),
+                DriverId= "1",
                 Travel = travel,
                 Status = TripRequestEnum.Pending
             };
 
-            var userRepositoryMock = new Mock<IUserRepository>();
             userRepositoryMock.Setup(repo => repo.GetByIdAsync(passenger.Id))
                 .ReturnsAsync(passenger);
 
-            var travelRepositoryMock = new Mock<ITravelRepository>();
             travelRepositoryMock.Setup(repo => repo.GetByIdAsync(travelId)).ReturnsAsync(travel);
-
-            var tripRequestRepositoryMock = new Mock<ITripRequestRepository>();
             tripRequestRepositoryMock.Setup(repo => repo.CreateAsync(travel.DriverId, passenger.Id, travelId))
                 .ReturnsAsync(tripRequest);
 
-            var tripRequestValidatorMock = new Mock<ITripRequestValidator>();
             tripRequestValidatorMock.Setup(validator => validator.ValidateIfPassengerAlreadyCreateTripRequest(tripRequestRequest))
                 .ReturnsAsync(false);
-            var userValidationMock = new Mock<IUserValidation>();
             userValidationMock.Setup(validator => validator.ValidateUserNotBanned(loggedUser))
                 .ReturnsAsync(true);
-            var tripRequestService = new TripRequestService(
+            tripRequestService = new TripRequestService(
                 tripRequestRepositoryMock.Object,
                 userValidationMock.Object, 
                 travelRepositoryMock.Object,
@@ -86,6 +106,7 @@ namespace Carpooling.Tests.TripRequestTests
             Assert.AreEqual(travel.DepartureTime, result.DepartureTime);
             Assert.AreEqual(tripRequest.Status.ToString(), result.Status);
         }
+       
         [TestMethod]
         public async Task CreateAsync_PassengerIsBlocked_ThrowsUnauthorizedOperationException()
         {

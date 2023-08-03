@@ -40,6 +40,7 @@ namespace Carpooling.Tests.TripRequestTests
             {
                 Id = 1,
                 Passenger = TestHelpers.TestHelper.GetTestUserTwo(),
+                Driver = TestHelpers.TestHelper.GetTestUserOne(),
                 Travel = new Travel
                 {
                     StartLocation = TestHelpers.TestHelper.GetTestAddressThree(),
@@ -53,6 +54,7 @@ namespace Carpooling.Tests.TripRequestTests
             {
                 Id = 2,
                 Passenger = TestHelpers.TestHelper.GetTestUserOne(),
+                 Driver = TestHelpers.TestHelper.GetTestUserOne(),
                 Travel = new Travel
                 {
                     StartLocation = TestHelpers.TestHelper.GetTestAddressOne(),

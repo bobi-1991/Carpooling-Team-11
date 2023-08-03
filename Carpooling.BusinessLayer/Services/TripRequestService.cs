@@ -157,22 +157,6 @@ namespace Carpooling.BusinessLayer.Services
                x.Travel.EndLocation.Details, (DateTime)
                x.Travel.DepartureTime,
                x.Status.ToString()));
-            // var tripRequests = await this.tripRequestRepository.GetAllAsync();
-
-            //var requests = await this.Db.Requests
-            //    .Include(x => x.Author)
-            //    .Include(x => x.Recipient)
-            //    .Where(x => x.AuthorId == userId)
-            //    .ToListAsync();
-
-            //if (requests == null || requests.Count() == 0)
-            //{
-            //    throw new EntityNotFoundException($"User with Id: {userId} does not have any author requests");
-            //}
-
-            //var requestAsDTO = requests.Select(x => new RequestDTO(x));
-
-            //return requestAsDTO;
         }
     }
 }
