@@ -21,14 +21,14 @@ namespace Carpooling.BusinessLayer.Validation
     public class TravelValidator : ITravelValidator
     {
         private readonly IUserRepository userRepository;
-        private readonly IdentityHelper identityHelper;
+        private readonly IIdentityHelper identityHelper;
         private readonly ITravelRepository travelRepository;
         private readonly CarPoolingDbContext dbContext;
         private readonly IAddressRepository addressRepository;
         private readonly ICarRepository carRepository;
 
 
-        public TravelValidator(IUserRepository userRepository, IdentityHelper identityHelper, ITravelRepository travelRepository, CarPoolingDbContext dbContext, IAddressRepository addressRepository, ICarRepository carRepository)
+        public TravelValidator(IUserRepository userRepository, IIdentityHelper identityHelper, ITravelRepository travelRepository, CarPoolingDbContext dbContext, IAddressRepository addressRepository, ICarRepository carRepository)
         {
             this.userRepository = userRepository;
             this.identityHelper = identityHelper;

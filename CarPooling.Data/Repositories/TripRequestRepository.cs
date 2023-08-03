@@ -23,10 +23,10 @@ namespace CarPooling.Data.Repositories
 
         public async Task<IEnumerable<TripRequest>> GetAllAsync()
         {
-            if (dbContext.TripRequests.Count() == 0)
-            {
-                throw new EmptyListException("No requests yet!");
-            }
+            //if (dbContext.TripRequests.Count() == 0)
+            //{
+            //    throw new EmptyListException("No requests yet!");
+            //}
             var tripRequests = await dbContext.TripRequests
                 .Where(x => !x.IsDeleted)
                 .Include(x => x.Travel)
@@ -60,10 +60,6 @@ namespace CarPooling.Data.Repositories
 
             return tripRequest;
 
-
-            //return dbContext.TripRequests
-            // .Where(x => !x.IsDeleted)
-            // .FirstOrDefault(x => x.Id == id);
         }
         public async Task<TripRequest> CreateAsync(string driverId, string passengerId, int travelId)
         {
@@ -91,7 +87,6 @@ namespace CarPooling.Data.Repositories
                 tripRequestToUpdate.Status = TripRequestEnum.Declined;
             }
 
-            //maybe should comment this line below
             this.dbContext.Update(tripRequestToUpdate);
             await this.dbContext.SaveChangesAsync();
            
@@ -110,6 +105,48 @@ namespace CarPooling.Data.Repositories
             await this.dbContext.SaveChangesAsync();
 
             return "Trip request successfully deleted";
+        }
+        public async Task<IEnumerable<TripRequest>> SeeAllHisDriverRequestsAsync(string userId)
+        {
+            var tripRequests = await dbContext.TripRequests
+                     .Where(x => !x.IsDeleted)
+                     .Include(x => x.Travel)
+                     .Include(x=>x.Driver)
+                     .Include(x => x.Travel)
+                          .ThenInclude(x => x.StartLocation)
+                     .Include(x => x.Passenger)
+                          .ThenInclude(x => x.Address)
+                     .Where(x=>x.DriverId == userId)
+                     .ToListAsync();
+
+
+            if (tripRequests == null || tripRequests.Count() == 0)
+            {
+                throw new EntityNotFoundException($"Driver with Id: {userId} does not have any recipient requests");
+            }
+
+            return tripRequests;
+        }
+        public async Task<IEnumerable<TripRequest>> SeeAllHisPassengerRequestsAsync(string passengerId)
+        {
+            var tripRequests = await dbContext.TripRequests
+                   .Where(x => !x.IsDeleted)
+                   .Include(x => x.Travel)
+                   .Include(x => x.Driver)
+                   .Include(x => x.Travel)
+                        .ThenInclude(x => x.StartLocation)
+                   .Include(x => x.Passenger)
+                        .ThenInclude(x => x.Address)
+                   .Where(x => x.PassengerId == passengerId)
+                   .ToListAsync();
+
+
+            if (tripRequests == null || tripRequests.Count() == 0)
+            {
+                throw new EntityNotFoundException($"Passenger with Id: {passengerId} does not have any recipient requests");
+            }
+
+            return tripRequests;
         }
     }
 }

@@ -43,7 +43,7 @@ public class Program
         //Helpers
         builder.Services.AddScoped<IJsonManager, JsonManager>();
         builder.Services.AddAutoMapper(typeof(Carpooling.BusinessLayer.Helpers.Mapper));
-        builder.Services.AddScoped<IdentityHelper>();
+        builder.Services.AddScoped<IIdentityHelper,IdentityHelper>();
 
 
         // Add services to the container

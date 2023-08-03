@@ -17,10 +17,10 @@ namespace Carpooling.BusinessLayer.Validation
     public class UserValidation : IUserValidation
     {
         private readonly UserManager<User> userManager;
-        private readonly IdentityHelper identityHelper;
+        private readonly IIdentityHelper identityHelper;
         private readonly IUserRepository userRepository;
 
-        public UserValidation(UserManager<User> userManager, IdentityHelper identityHelper, IUserRepository userRepository)
+        public UserValidation(UserManager<User> userManager, IIdentityHelper identityHelper, IUserRepository userRepository)
         {
             this.userManager = userManager;
             this.identityHelper = identityHelper;

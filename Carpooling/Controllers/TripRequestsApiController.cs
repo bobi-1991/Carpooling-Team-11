@@ -85,10 +85,10 @@ namespace Carpooling.Controllers
             {
                 return NotFound(ex.Message);
             }
-            catch (Exception ex)
-            {
-                return this.StatusCode(500, ex.Message);
-            }
+            //catch (Exception ex)
+            //{
+            //    return this.StatusCode(500, ex.Message);
+            //}
         }
 
         [HttpDelete("{id}")]     
@@ -134,13 +134,63 @@ namespace Carpooling.Controllers
             {
                 return NotFound(ex.Message);
             }
-            //catch (Exception ex)
-            //{
-            //    return NotFound(ex.Message);
-            //}
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
+        [HttpGet("driver/{id}")]
+        public async Task<IActionResult> GetAllHisDriverRequestsAsync([FromHeader] string credentials, string id)
+        {
+            try
+            {
+                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                return this.Ok(await this.tripRequestService.SeeAllHisDriverRequestsAsync(loggedUser, id));
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
 
+        [HttpGet("passenger/{id}")]
+        public async Task<IActionResult> GetAllHisPassengerRequests([FromHeader] string credentials, string id)
+        {
+            try
+            {
+                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                return this.Ok(await this.tripRequestService.SeeAllHisPassengerRequestsAsync(loggedUser, id));
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
 
 
 

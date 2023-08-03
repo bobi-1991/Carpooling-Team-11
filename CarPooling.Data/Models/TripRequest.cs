@@ -24,6 +24,9 @@ namespace CarPooling.Data.Models
         public User Passenger { get; set; }
         public string PassengerId { get; set; }
 
+        public User Driver { get; set; }
+        public string DriverId { get; set; }
+
         public Travel Travel { get; set; }
         public int TravelId { get; set; }
     }

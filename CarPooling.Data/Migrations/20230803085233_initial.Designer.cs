@@ -4,6 +4,7 @@ using CarPooling.Data.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarPooling.Data.Migrations
 {
     [DbContext(typeof(CarPoolingDbContext))]
-    partial class CarPoolingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230803085233_initial")]
+    partial class initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -262,10 +264,6 @@ namespace CarPooling.Data.Migrations
                     b.Property<DateTime>("DeletedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DriverId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
@@ -282,13 +280,16 @@ namespace CarPooling.Data.Migrations
                     b.Property<DateTime>("UpdatedOn")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasIndex("DriverId");
+                    b.HasKey("Id");
 
                     b.HasIndex("PassengerId");
 
                     b.HasIndex("TravelId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("TripRequests");
                 });
@@ -600,12 +601,6 @@ namespace CarPooling.Data.Migrations
 
             modelBuilder.Entity("CarPooling.Data.Models.TripRequest", b =>
                 {
-                    b.HasOne("CarPooling.Data.Models.User", "Driver")
-                        .WithMany("DriverTripRequests")
-                        .HasForeignKey("DriverId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("CarPooling.Data.Models.User", "Passenger")
                         .WithMany("PassengerTripRequests")
                         .HasForeignKey("PassengerId")
@@ -618,7 +613,9 @@ namespace CarPooling.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Driver");
+                    b.HasOne("CarPooling.Data.Models.User", null)
+                        .WithMany("DriverTripRequests")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Passenger");
 

@@ -4,6 +4,7 @@ using Carpooling.BusinessLayer.Validation.Contracts;
 using Carpooling.Service.Dto_s.Requests;
 using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Exceptions;
+using CarPooling.Data.Migrations;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
 using System;
@@ -42,6 +43,7 @@ namespace Carpooling.BusinessLayer.Services
 
             return tripRequests.Select(x => new TripRequestResponse(
                 x.Passenger.UserName,
+                x.Driver.UserName,
                 x.Travel.StartLocation.Details,
                 x.Travel.EndLocation.Details,(DateTime)
                 x.Travel.DepartureTime,
@@ -64,6 +66,7 @@ namespace Carpooling.BusinessLayer.Services
 
             return new TripRequestResponse(
                 tripRequest.Passenger.UserName,
+                tripRequest.Driver.UserName,
                 tripRequest.Travel.StartLocation.Details,
                 tripRequest.Travel.EndLocation.Details,
                 (DateTime)tripRequest.Travel.DepartureTime,
@@ -90,6 +93,7 @@ namespace Carpooling.BusinessLayer.Services
 
             return new TripRequestResponse(
                 passenger.UserName,
+                trip.Driver.UserName,
                 travel.StartLocation.Details,
                 travel.EndLocation.Details,
                 (DateTime)travel.DepartureTime,
@@ -129,6 +133,53 @@ namespace Carpooling.BusinessLayer.Services
 
             return await this.tripRequestRepository.EditRequestAsync(tripRequestToUpdate, currentAnswer);
 
+        }
+        public async Task<IEnumerable<TripRequestResponse>> SeeAllHisDriverRequestsAsync(User loggedUser, string driverId)
+        {
+            await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, driverId);
+
+
+            var tripRequests = await this.tripRequestRepository.SeeAllHisDriverRequestsAsync(driverId);
+
+            return tripRequests.Select(x => new TripRequestResponse(
+               x.Passenger.UserName,
+               x.Driver.UserName,
+               x.Travel.StartLocation.Details,
+               x.Travel.EndLocation.Details, (DateTime)
+               x.Travel.DepartureTime,
+               x.Status.ToString()));
+        }
+
+        public async Task<IEnumerable<TripRequestResponse>> SeeAllHisPassengerRequestsAsync(User loggedUser, string passengerId)
+        {
+            await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, passengerId);
+
+
+            var tripRequests = await this.tripRequestRepository.SeeAllHisPassengerRequestsAsync(passengerId);
+
+            return tripRequests.Select(x => new TripRequestResponse(
+               x.Passenger.UserName,
+               x.Driver.UserName,
+               x.Travel.StartLocation.Details,
+               x.Travel.EndLocation.Details, (DateTime)
+               x.Travel.DepartureTime,
+               x.Status.ToString()));
+            // var tripRequests = await this.tripRequestRepository.GetAllAsync();
+
+            //var requests = await this.Db.Requests
+            //    .Include(x => x.Author)
+            //    .Include(x => x.Recipient)
+            //    .Where(x => x.AuthorId == userId)
+            //    .ToListAsync();
+
+            //if (requests == null || requests.Count() == 0)
+            //{
+            //    throw new EntityNotFoundException($"User with Id: {userId} does not have any author requests");
+            //}
+
+            //var requestAsDTO = requests.Select(x => new RequestDTO(x));
+
+            //return requestAsDTO;
         }
     }
 }
