@@ -82,7 +82,8 @@ namespace Carpooling.BusinessLayer.Services
                 x.LastName,
                 x.UserName,
                 x.Email,
-                x.AverageRating));
+                x.AverageRating
+                ));
 
             //return result.Select(x => mapper.Map<UserResponse>(x));
         }

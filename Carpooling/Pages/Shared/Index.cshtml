@@ -1,0 +1,37 @@
+﻿@model Carpooling.Models.UsersListViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+@*<div class="text-center">
+    <h1 class="display-10">Welcome</h1>
+    <p>This is a Test Paragraph</a>.</p>
+</div>*@
+
+
+<div>
+    <table>
+        <tr>
+            <th>User</th>
+            <th>Rating</th>
+        </tr>
+
+        @foreach (var user in Model.Users)
+        {
+            @if (user.AverageRating >= 4.5m)
+            {
+                <tr>
+                    <td>
+                        @user.Username
+                    </td>
+                    <td>
+                        @user.AverageRating
+                    </td>
+                </tr>
+
+            }
+        }
+
+    </table>
+
+</div>
