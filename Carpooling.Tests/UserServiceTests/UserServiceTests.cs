@@ -283,11 +283,16 @@ namespace Carpooling.Tests.UserServiceTests
             //Arrange
             var user = new User() { Email = "abv@abv.bg", UserName = "TestTest" };
             var password = "Password2@";
-            
+
+            userMapperMock
+                .Setup(x => x.Map<User>(It.IsAny<UserRequest>()))
+                .Returns(user);
+
             userManagerMock
                 .Setup(x => x.CreateAsync(user, password))
-                .ReturnsAsync(new IdentityResult() { });
+                .ReturnsAsync(IdentityResult.Success);
 
+            var result2 = new IdentityResult();
             //Act
             var result = await sut.RegisterAsync(new UserRequest() { Password = "Password2@", Email = "abv@abv.bg"});
 
@@ -297,42 +302,78 @@ namespace Carpooling.Tests.UserServiceTests
             userManagerMock.Verify(x => x.AddToRoleAsync(It.IsAny<User>(), It.IsAny<string>()), Times.Once);
         }
 
-        //public async Task<UserResponse> UpdateAsync(User loggedUser, string id, UserUpdateDto userUpdateDto)
+        [TestMethod]
+        public async Task RegisterAsync_ShouldThrow()
+        {
+            //Arrange
+            var user = new User() { Email = "abv@abv.bg", UserName = "TestTest" };
+            var password = "Password2@";
+
+            userMapperMock
+                .Setup(x => x.Map<User>(It.IsAny<UserRequest>()))
+                .Returns(user);
+
+            userManagerMock
+                .Setup(x => x.CreateAsync(user, password))
+                .ReturnsAsync(new IdentityResult());
+            
+            //Verify
+            var exception = await Assert.ThrowsExceptionAsync<NullReferenceException>(
+                () => sut.RegisterAsync(new UserRequest() { Password = "Password2@", Email = "abv@abv.bg" }));
+        }
+
+        [TestMethod]
+
+        public async Task UpdateAsync_WhenRoleExists_ShouldInvokeChangeRole()
+        {
+            userRepositoryMock
+                .Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<User>()))
+                .Returns(Task.FromResult(new User()));
+
+            identityHelperMock
+                .Setup(x => x.ChangeRole(It.IsAny<User>(), It.IsAny<User>(), It.IsAny<string>()));
+
+            //Act
+            var result = await sut.UpdateAsync(new User(), "123", new UserUpdateDto() { Role = "Driver" });
+
+            //Verify
+            userValidatorMock.Verify(x => x.ValidateUserLoggedAndAdmin(It.IsAny<User>(), "123"), Times.Once);
+
+            userRepositoryMock.Verify(x => x.GetByIdAsync("123"), Times.Once);
+
+            userRepositoryMock.Verify(x => x.UpdateAsync("123", It.IsAny<User>()), Times.Once);
+
+            identityHelperMock.Verify(x => x.ChangeRole(It.IsAny<User>(), It.IsAny<User>(), It.IsAny<string>()), Times.Once);
+
+        }
+
+        //[TestMethod]
+
+        //public async Task UpdateAsync_WhenPasswordExists_ShouldHash()
         //{
-        //    await userValidator.ValidateUserLoggedAndAdmin(loggedUser, id);
-        //    var userToUpdate = await this.userRepository.GetByIdAsync(id);
+        //    userRepositoryMock
+        //        .Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<User>()))
+        //        .Returns(Task.FromResult(new User()));
 
-        //    var userDataToUpdate = new User
-        //    {
-        //        FirstName = userUpdateDto.FirstName ?? userToUpdate.FirstName,
-        //        LastName = userUpdateDto.LastName ?? userToUpdate.LastName,
-        //        Email = userUpdateDto.Email ?? userToUpdate.Email
-        //    };
+        //    //var hashedPassword = _userManager.PasswordHasher.HashPassword(userDataToUpdate, userUpdateDto.Password);
 
-        //    // Ако има предоставена нова парола, хеширане и записване.
-        //    if (!string.IsNullOrEmpty(userUpdateDto.Password))
-        //    {
-        //        var hashedPassword = _userManager.PasswordHasher.HashPassword(userDataToUpdate, userUpdateDto.Password);
-        //        userDataToUpdate.PasswordHash = hashedPassword;
-        //    }
+        //    userManagerMock
+        //        .Setup(x => x.PasswordHasher.HashPassword(It.IsAny<User>(), It.IsAny<string>()))
+        //        .Returns(It.IsAny<string>());
 
-        //    var updatedUser = await this.userRepository.UpdateAsync(id, userDataToUpdate);
+        //    //Act
+        //    var result = await sut.UpdateAsync(new User(), "123", new UserUpdateDto() { Password = "Password2@"});
 
-        //    if (!string.IsNullOrEmpty(userUpdateDto.Role))
-        //    {
-        //        await this.identityHelper.ChangeRole(loggedUser, updatedUser, userUpdateDto.Role);
-        //    }
+        //    //Verify
+        //    userValidatorMock.Verify(x => x.ValidateUserLoggedAndAdmin(It.IsAny<User>(), "123"), Times.Once);
 
-        //    return new UserResponse(
-        //    updatedUser.FirstName,
-        //    updatedUser.LastName,
-        //    updatedUser.UserName,
-        //    updatedUser.Email,
-        //    updatedUser.AverageRating);
+        //    userRepositoryMock.Verify(x => x.GetByIdAsync("123"), Times.Once);
 
-        //    //await this._userManager.UpdateAsync(this.mapper.Map<User>(userUpdateDto));
-        //    //return this.mapper.Map<UserResponse>(this.userRepository.GetByIdAsync(id));
+        //    userManagerMock.Verify(x => x.PasswordHasher.HashPassword(It.IsAny<User>(), "123"), Times.Once);
+
+        //    userRepositoryMock.Verify(x => x.UpdateAsync("123", It.IsAny<User>()), Times.Once);
         //}
+
 
         [TestMethod]
 

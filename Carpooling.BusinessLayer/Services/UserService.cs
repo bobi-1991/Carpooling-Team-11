@@ -9,16 +9,8 @@ using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Data;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
-using CarPooling.Data.Repositories;
 using CarPooling.Data.Repositories.Contracts;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Carpooling.BusinessLayer.Services
 {
