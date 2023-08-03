@@ -47,7 +47,7 @@ public class Program
 
 
         // Add services to the container
-        builder.Services.AddRazorPages();
+      //  builder.Services.AddRazorPages();
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ICarService, CarService>();
         builder.Services.AddScoped<IAddressService, AddressService>();

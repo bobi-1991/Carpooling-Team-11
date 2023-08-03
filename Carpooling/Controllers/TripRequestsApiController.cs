@@ -85,10 +85,10 @@ namespace Carpooling.Controllers
             {
                 return NotFound(ex.Message);
             }
-            //catch (Exception ex)
-            //{
-            //    return this.StatusCode(500, ex.Message);
-            //}
+            catch (Exception ex)
+            {
+                return this.StatusCode(500, ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]     
