@@ -62,8 +62,6 @@ namespace Carpooling.Controllers
             {
                 return this.StatusCode(500, ex.Message);
             }
-
-
         }
 
         [HttpPost("")]
@@ -94,7 +92,7 @@ namespace Carpooling.Controllers
         }
 
         [HttpDelete("{id}")]     
-        public async Task<IActionResult> DeleteTravelRequest([FromHeader]string credentials, int id)
+        public async Task<IActionResult> DeleteTripRequest([FromHeader]string credentials, int id)
         {
             try
             {
@@ -115,10 +113,36 @@ namespace Carpooling.Controllers
             }
         }
 
-        public Task<TripRequestResponse> GetByIdAsync(int id)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> RespondToTripRequest([FromHeader]string credentials,int id,[FromBody]  string answer)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                return this.Ok(await this.tripRequestService.EditRequestAsync(loggedUser, id ,answer));
+               
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (UnauthorizedAccessException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            //catch (Exception ex)
+            //{
+            //    return NotFound(ex.Message);
+            //}
         }
+
+
+
+
 
     }
 }

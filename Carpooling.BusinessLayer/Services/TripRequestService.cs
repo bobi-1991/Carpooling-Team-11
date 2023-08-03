@@ -96,18 +96,39 @@ namespace Carpooling.BusinessLayer.Services
                 trip.Status.ToString());
         }
 
-
-        public Task<TripRequestResponse> UpdateTripRequestAsync(User loggedUser, int tripRequestId, bool answer)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<string> DeleteAsync(User loggedUser, int tripRequestId)
         {
             var tripRequest = await this.tripRequestRepository.GetByIdAsync(tripRequestId);
             await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, tripRequest.PassengerId);
 
             return await this.tripRequestRepository.DeleteAsync(tripRequestId);   
+        }
+
+        public async Task<string> EditRequestAsync(User loggedUser,int tripId,  string answer)
+        {
+            var tripRequestToUpdate = await this.tripRequestRepository.GetByIdAsync(tripId);
+            var driverId = tripRequestToUpdate.Travel.DriverId;
+            var travel = await this.travelRepository.GetByIdAsync(tripRequestToUpdate.TravelId);
+
+            await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, driverId);
+
+            var currentAnswer = await this.tripRequestValidator.ValidateStatusOfTripRequest(tripRequestToUpdate,answer);
+
+            if (currentAnswer.Equals("approve") && travel.AvailableSeats > 0)
+            {
+              await this.travelRepository.AddUserToTravelAsync(travel.Id, tripRequestToUpdate.PassengerId);
+            }
+            else if (currentAnswer.Equals("approve") && travel.AvailableSeats == 0)
+            {
+                return "I'm sorry, but there are no seats available for this trip";
+            }
+            else if (currentAnswer.Equals("decline"))
+            {
+                await this.travelRepository.RemoveUserToTravelAsync(travel.Id, tripRequestToUpdate.PassengerId);
+            }
+
+            return await this.tripRequestRepository.EditRequestAsync(tripRequestToUpdate, currentAnswer);
+
         }
     }
 }

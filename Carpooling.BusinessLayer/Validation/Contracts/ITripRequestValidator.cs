@@ -11,7 +11,7 @@ namespace Carpooling.BusinessLayer.Validation.Contracts
     public interface ITripRequestValidator
     {
         Task<bool> ValidateIfPassengerAlreadyCreateTripRequest(TripRequestRequest tripRequest);
+        Task<string> ValidateStatusOfTripRequest(TripRequest tripRequest, string answer);
 
-        
     }
 }

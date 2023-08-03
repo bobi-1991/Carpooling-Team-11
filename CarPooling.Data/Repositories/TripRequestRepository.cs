@@ -80,33 +80,23 @@ namespace CarPooling.Data.Repositories
 
             return (tripRequest);
         }
-        public async Task<TripRequest> UpdateTripRequestAsync(string userId, int tripRequestId, bool answer)
+        public async Task<string> EditRequestAsync(TripRequest tripRequestToUpdate, string answer)
         {
-            var TripToUpdate = await this.dbContext.TripRequests
-            .Include(x => x.Passenger)
-            .Include(x => x.Travel)
-             .ThenInclude(x => x.Driver)
-            .FirstOrDefaultAsync(x => x.Id == tripRequestId
-            && x.PassengerId == userId);
-
-
-            // In validator class?
-            if (TripToUpdate == null)
+            if (answer == "approve")
             {
-                throw new EntityNotFoundException($"User with Id: {userId} has not post a trip request with Id: {tripRequestId}");
-            }
-
-            if (answer == false)
-            {
-                TripToUpdate.Status = TripRequestEnum.Declined;
+                tripRequestToUpdate.Status = TripRequestEnum.Approved;
             }
             else
-            {
-                TripToUpdate.Status = TripRequestEnum.Approved;
+            { 
+                tripRequestToUpdate.Status = TripRequestEnum.Declined;
             }
 
-            await dbContext.SaveChangesAsync();
-            return TripToUpdate;
+            //maybe should comment this line below
+            this.dbContext.Update(tripRequestToUpdate);
+            await this.dbContext.SaveChangesAsync();
+           
+
+            return "Status successfully changed.";
         }
 
         public async Task<string> DeleteAsync(int tripRequestId)

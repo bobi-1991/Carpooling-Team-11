@@ -3,6 +3,7 @@ using CarPooling.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,9 +17,10 @@ namespace CarPooling.Data.Repositories.Contracts
         Task<Travel> GetByIdAsync(int travelId);
         Task<Travel> UpdateAsync(int travelId, Travel travel);
         Task<string> DeleteAsync(int travelId);
-        Task<Travel> AddUserToTravelAsync(string driveId, int travelId, string passengerId);
         Task<IEnumerable<Travel>> FilterTravelsAndSortAsync(string sortBy);
-     
+        Task AddUserToTravelAsync(int travelId, string passengerId);
+        Task RemoveUserToTravelAsync(int travelId, string passengerId);
+
 
         //Task<TravelDTO> AddStopToTravelAsync();
     }

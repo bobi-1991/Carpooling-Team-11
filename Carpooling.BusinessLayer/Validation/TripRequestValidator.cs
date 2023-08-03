@@ -2,6 +2,7 @@
 using Carpooling.Service.Dto_s.Requests;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
+using CarPooling.Data.Models.Enums;
 using CarPooling.Data.Repositories;
 using CarPooling.Data.Repositories.Contracts;
 using System;
@@ -33,5 +34,46 @@ namespace Carpooling.BusinessLayer.Validation
 
             return false;
         }
+        public async Task<string> ValidateStatusOfTripRequest(TripRequest tripRequest, string answer)
+        {
+            if (tripRequest.Status.ToString().ToLower() == "pending")
+            {
+                if (answer == "decline")
+                {
+                    return "decline";
+                }
+                else
+                {
+                    return "approve";
+                }
+            }
+
+            if (tripRequest.Status.ToString().ToLower() == "declined")
+            {
+                if (answer == "decline")
+                {
+                    throw new UnauthorizedAccessException("This trip request already is declined.");
+                }
+                else if(answer == "approve")
+                {
+                    return "approve";
+                }
+            }
+
+            else if(tripRequest.Status.ToString().ToLower() == "approved")
+            {
+                if (answer == "decline")
+                {
+                    return "decline";
+                }
+                else
+                {
+                    throw new UnauthorizedAccessException("This trip request already is approved.");
+                }
+            }
+
+            throw new EntityNotFoundException("This answer not exist in the option for trip request.");
+        }
+
     }
 }

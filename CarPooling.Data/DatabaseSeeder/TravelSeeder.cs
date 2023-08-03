@@ -16,6 +16,8 @@ namespace CarPooling.Data.DatabaseSeeder
                 var _jsonManager = serviceScope.ServiceProvider.GetService<IJsonManager>();
 
                 var driver = _context.Users.FirstOrDefault(x => x.FirstName.Equals("Gosho"));
+                var driver2 = _context.Users.FirstOrDefault(x => x.FirstName.Equals("Alex"));
+                var driver3 = _context.Users.FirstOrDefault(x => x.FirstName.Equals("Pesho"));
                 var passenger1 = _context.Users.FirstOrDefault(x => x.FirstName.Equals("Misho"));
                 var passenger2 = _context.Users.FirstOrDefault(x => x.FirstName.Equals("Angel"));
 
@@ -33,6 +35,34 @@ namespace CarPooling.Data.DatabaseSeeder
                     UpdatedOn = DateTime.Now
                 };
 
+                var car2 = new Car
+                {
+                    Driver = driver2,
+                    AvailableSeats = 4,
+                    Color = "Black",
+                    Model = "X5",
+                    Brand = "BMW",
+                    TotalSeats = 4,
+                    CanSmoke = false,
+                    Registration = "BT7777TP",
+                    CreatedOn = DateTime.Now,
+                    UpdatedOn = DateTime.Now
+                };
+
+                var car3 = new Car
+                {
+                    Driver = driver3,
+                    AvailableSeats = 4,
+                    Color = "Silver",
+                    Model = "735",
+                    Brand = "BMW",
+                    TotalSeats = 4,
+                    CanSmoke = false,
+                    Registration = "BT8888KT",
+                    CreatedOn = DateTime.Now,
+                    UpdatedOn = DateTime.Now
+                };
+
                 //             public string Registration { get; set; }
                 //public int TotalSeats { get; set; }
                 //public int AvailableSeats { get; set; }
@@ -44,12 +74,24 @@ namespace CarPooling.Data.DatabaseSeeder
                 //// Foreign keys with navigation properties
                 //public string DriverId { get; set; }
                 //public User Driver { get; set; }
-                if (!_context.Cars.Any(x=>x.Registration == car.Registration))
+                if (_context.Cars.Count() == 0)
                 {
-                    _context.Cars.Add(car);    
-                    _context.SaveChanges();
+                    if (!_context.Cars.Any(x => x.Registration == car.Registration))
+                    {
+                        _context.Cars.Add(car);
+                        _context.SaveChanges();
+                    }
+                    if (!_context.Cars.Any(x => x.Registration == car2.Registration))
+                    {
+                        _context.Cars.Add(car2);
+                        _context.SaveChanges();
+                    }
+                    if (!_context.Cars.Any(x => x.Registration == car3.Registration))
+                    {
+                        _context.Cars.Add(car3);
+                        _context.SaveChanges();
+                    }
                 }
-
                 var startLocaion = _context.Addresses.FirstOrDefault(a => a.Id == 1);
                 var endLocation = _context.Addresses.FirstOrDefault(a => a.Id == 1);
 

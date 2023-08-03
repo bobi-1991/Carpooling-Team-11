@@ -81,10 +81,10 @@ namespace Carpooling.Tests.TravelTests
         public async Task CreateTravelAsync_InvalidTravelTime_ThrowsArgumentException()
         {
             // Arrange
-            var loggedUser = new User { Id = "userId", IsBlocked = false };
+            var loggedUser = TestHelpers.TestHelper.GetTestUserOne();
             var travelRequest = new TravelRequest
             {
-                DriverId = "driverId",
+                DriverId = "1",
                 StartLocationId = 1,
                 DestionationId = 2,
                 CarId = 3,
@@ -114,7 +114,8 @@ namespace Carpooling.Tests.TravelTests
                 travelValidatorMock.Object, userValidationMock.Object);
 
             // Act & Assert
-            await Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
+            
+            Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
             {
                 await travelService.CreateTravelAsync(loggedUser, travelRequest);
             });
@@ -123,10 +124,10 @@ namespace Carpooling.Tests.TravelTests
         public async Task CreateTravelAsync_ValidData_CreatesTravel()
         {
             // Arrange
-            var loggedUser = new User { Id = "userId", IsBlocked = false };
+            var loggedUser = TestHelpers.TestHelper.GetTestUserOne();
             var travelRequest = new TravelRequest
             {
-                DriverId = "driverId",
+                DriverId = "1",
                 StartLocationId = 1,
                 DestionationId = 2,
                 CarId = 3,
@@ -137,14 +138,14 @@ namespace Carpooling.Tests.TravelTests
 
             var startLocation = TestHelpers.TestHelper.GetTestAddressOne();
             var destination = TestHelpers.TestHelper.GetTestAddressTwo();
-            var car = TestHelpers.TestHelper.GetTestAddressOne();
+            var car = TestHelpers.TestHelper.GetTestCarTwo();
             var createdTravel = new Travel
             {
                 Id = 1,
                 Driver = TestHelpers.TestHelper.GetTestUserOne(),
-                StartLocation = TestHelpers.TestHelper.GetTestAddressOne(),
-                EndLocation = TestHelpers.TestHelper.GetTestAddressTwo(),
-                Car = TestHelpers.TestHelper.GetTestCarTwo(),
+                StartLocation = startLocation,
+                EndLocation = destination,
+                Car = car,
                 DepartureTime = new DateTime(2023, 10, 10),
                 ArrivalTime = new DateTime(2023, 10, 12),
                 AvailableSeats =4,
@@ -155,7 +156,8 @@ namespace Carpooling.Tests.TravelTests
                 .ReturnsAsync(startLocation);
             addressRepositoryMock.Setup(repo => repo.GetByIdAsync(travelRequest.DestionationId))
                 .ReturnsAsync(destination);
-
+            carRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(car);
             travelValidatorMock.Setup(validator => validator.ValidateIsNewTravelPossible(It.IsAny<string>(), It.IsAny<DateTime>(), It.IsAny<DateTime>()))
                 .ReturnsAsync(true);
             travelRepositoryMock.Setup(repo => repo.CreateTravelAsync(It.IsAny<Travel>()))
