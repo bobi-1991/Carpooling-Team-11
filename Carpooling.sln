@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carpooling.BusinessLayer", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carpooling.Tests", "Carpooling.Tests\Carpooling.Tests.csproj", "{37DE50E1-A654-462E-A74D-C6B86EA2F4C6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Carpooling.MVC", "Carpooling.MVC\Carpooling.MVC.csproj", "{7B41E5BD-E582-450B-B20E-EFACE9146681}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Carpooling.MVC", "Carpooling.MVC\Carpooling.MVC.csproj", "{7B41E5BD-E582-450B-B20E-EFACE9146681}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
