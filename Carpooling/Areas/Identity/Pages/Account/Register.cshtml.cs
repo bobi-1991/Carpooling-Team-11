@@ -80,6 +80,19 @@ namespace Carpooling.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
+            [Required]
+            [StringLength(20, ErrorMessage = "Name must be at least two character long.", MinimumLength = 2)]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [StringLength(20, ErrorMessage = "Name must be at least two characters long.", MinimumLength = 2)]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+            [Required]
+            [StringLength(20, ErrorMessage = "Name must be at least five characters long.", MinimumLength = 5)]
+            [Display(Name = "Username")]
+            public string UserName { get; set; }
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -116,8 +129,10 @@ namespace Carpooling.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
-
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
+                user.UserName = Input.UserName;
+                await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 await _userManager.AddToRolesAsync(user, new List<string> { "Passenger" });
