@@ -1,43 +1,48 @@
 ﻿using AutoMapper;
 using Carpooling.BusinessLayer.Exceptions;
+using Carpooling.BusinessLayer.Services;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
-using Carpooling.Service.Dto_s.Requests;
-using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
-using Microsoft.AspNetCore.Authorization;
+using Carpooling.Service.Dto_s.Requests;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Carpooling.BusinessLayer.Dto_s.Requests;
 
-namespace Carpooling.Controllers
+namespace Carpooling.Controllers.ApiControllers
 {
-    //[Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
-    public class FeedbackApiController : ControllerBase
+    public class AddressApiController : ControllerBase
     {
-        private readonly IFeedbackService _feedbackService;
+        private readonly IAddressService _addressService;
         private readonly IAuthValidator _authValidator;
         private readonly IMapper _mapper;
-        public FeedbackApiController(IFeedbackService feedbackService, IAuthValidator authValidator, IMapper mapper)
+        public AddressApiController(IAddressService addressService, IAuthValidator authValidator, IMapper mapper)
         {
-            _feedbackService = feedbackService;
+            _addressService = addressService;
             _authValidator = authValidator;
             _mapper = mapper;
         }
-        //Create Delete Update
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetAllFeedbacksAsync([FromHeader] string credentials)
+        public async Task<ActionResult<IEnumerable<AddressDTO>>> GetAllAddressesAsync([FromHeader] string credentials)
         {
             try
             {
                 var loggedUser = await _authValidator.ValidateCredentialAsync(credentials);
-                var feedbacks =  await _feedbackService.GetAllAsync();
+                var addresses = await _addressService.GetAllAsync();
 
-                return StatusCode(StatusCodes.Status200OK, feedbacks);
+                List<AddressDTO> addressDTOS = new List<AddressDTO>();
+                foreach (var address in addresses)
+                {
+                    var addressToMap = _mapper.Map<AddressDTO>(address);
+                    addressDTOS.Add(addressToMap);
+                }
+
+
+                return StatusCode(StatusCodes.Status200OK, addressDTOS);
             }
-
             catch (UnauthorizedOperationException e)
             {
                 return StatusCode(StatusCodes.Status401Unauthorized, e.Message);
@@ -45,13 +50,13 @@ namespace Carpooling.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<FeedbackDTO>> GetFeedbackByIdAsync([FromHeader] string credentials, int id)
+        public async Task<ActionResult<AddressDTO>> GetAddressByIdAsync([FromHeader] string credentials, int id)
         {
             try
             {
                 var loggerUser = await _authValidator.ValidateCredentialAsync(credentials);
-                var feedback = _mapper.Map<FeedbackDTO>(await _feedbackService.GetByIdAsync(id));
-                return StatusCode(StatusCodes.Status200OK, feedback);
+                var address = _mapper.Map<AddressDTO>(await _addressService.GetByIdAsync(id));
+                return StatusCode(StatusCodes.Status200OK, address);
             }
             catch (UnauthorizedOperationException e)
             {
@@ -63,30 +68,30 @@ namespace Carpooling.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<FeedbackDTO>> CreateFeedbackAsync([FromHeader] string credentials, [FromBody] FeedbackDTO feedbackDTO)
+        public async Task<ActionResult<AddressDTO>> CreateAddressAsync([FromHeader] string credentials, [FromBody] AddressDTO addressDTO)
         {
             try
             {
                 var loggedUser = await _authValidator.ValidateCredentialAsync(credentials);
-                
-                Feedback feedback = _mapper.Map<Feedback>(feedbackDTO);
-                Feedback feedbackToCreate = await _feedbackService.CreateAsync(feedback, loggedUser);
 
-                return StatusCode(StatusCodes.Status201Created, feedbackToCreate);
+                Address address = _mapper.Map<Address>(addressDTO);
+                Address addressToCreate = await _addressService.CreateAsync(address, loggedUser);
+
+                return StatusCode(StatusCodes.Status201Created, addressToCreate);
             }
-            catch(UnauthorizedOperationException e)
+            catch (UnauthorizedOperationException e)
             {
                 return StatusCode(StatusCodes.Status401Unauthorized, e.Message);
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateFeedbackAsync(int id, [FromHeader] string credentials, [FromBody] FeedbackDTO feedbackDTO)
+        public async Task<IActionResult> UpdateAddressAsync(int id, [FromHeader] string credentials, [FromBody] AddressDTO addressDTO)
         {
             try
             {
                 var loggedUser = await _authValidator.ValidateCredentialAsync(credentials);
-                Feedback feedback = _mapper.Map<Feedback>(feedbackDTO);
-                Feedback feedbackToUpdate = await _feedbackService.UpdateAsync(id, loggedUser, feedback);
+                Address address = _mapper.Map<Address>(addressDTO);
+                Address addressToUpdate = await _addressService.UpdateAsync(id, loggedUser, address);
 
                 return NoContent();
             }
@@ -94,18 +99,18 @@ namespace Carpooling.Controllers
             {
                 return StatusCode(StatusCodes.Status401Unauthorized, e.Message);
             }
-            catch(EntityNotFoundException e)
+            catch (EntityNotFoundException e)
             {
                 return StatusCode(StatusCodes.Status404NotFound, e.Message);
             }
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteFeedbackAsync(int id, [FromHeader] string credentials)
+        public async Task<IActionResult> DeleteAddressAsync(int id, [FromHeader] string credentials)
         {
             try
             {
                 var loggedUser = await _authValidator.ValidateCredentialAsync(credentials);
-                await _feedbackService.DeleteAsync(id, loggedUser);
+                await _addressService.DeleteAsync(id, loggedUser);
                 return NoContent();
             }
             catch (UnauthorizedOperationException e)

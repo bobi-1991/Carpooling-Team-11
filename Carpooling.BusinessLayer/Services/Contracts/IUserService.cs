@@ -23,5 +23,7 @@ namespace Carpooling.BusinessLayer.Services.Contracts
         Task<string> DeleteAsync(User loggedUser, string id);
         Task<string> BanUser(User loggedUser, BanOrUnBanDto userToBeBanned);
         Task<string> UnBanUser(User loggedUser,BanOrUnBanDto userToBeUnBanned);
+        Task<IEnumerable<User>> TopTravelOrganizers(int count);
+        Task<IEnumerable<User>> TopPassengers(int count);
     }
 }

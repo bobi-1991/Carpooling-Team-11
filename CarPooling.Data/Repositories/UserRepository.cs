@@ -53,6 +53,8 @@ namespace CarPooling.Data.Repositories
         {
             return dbContext.Users
              .Where(x => !x.IsDeleted)
+             .Include(x=>x.Cars)
+             .Include(x=>x.Address)
              .ToList();
         }
 
@@ -134,6 +136,40 @@ namespace CarPooling.Data.Repositories
             userToBeUnBanned.IsBlocked = false;
             this.dbContext.SaveChanges();
             return "User successfully UnBanned";
+        }
+        public async Task<IEnumerable<User>> GetTopTravelOrganizers(IEnumerable<User> users, int count)
+        {
+
+
+            //var roles = dbContext.UserRoles
+            //          .Where(x => x.RoleId == "33638f41-f9ee-4617-870b-7ca60a7aaad0")
+            //          .Take(count)
+            //          .ToList();
+
+            //var users = new List<User>();
+
+            //foreach (var role in roles)
+            //{
+            //    users.Add(await GetByIdAsync(role.UserId));
+            //}
+
+            return users.OrderByDescending(x => x.AverageRating);
+        }
+        public async Task<IEnumerable<User>> GetTopPassengers(IEnumerable<User> users, int count)
+        {
+            //var roles = dbContext.UserRoles
+            //               .Where(x => x.RoleId == "270feac8-1029-4ec2-8332-a795a6e3b43e")
+            //               .Take(count)
+            //               .ToList();
+
+            //var users = new List<User>();
+
+            //foreach (var role in roles)
+            //{
+            //    users.Add(await GetByIdAsync(role.UserId));
+            //}
+
+            return users.OrderByDescending(x => x.AverageRating);
         }
     }
 }

@@ -182,6 +182,51 @@ namespace Carpooling.BusinessLayer.Services
 
             return await this.userRepository.UnBanUser(userToBeUnBanned);
         }
+        public async Task<IEnumerable<User>> TopTravelOrganizers(int count)
+        {
+            var users = await this.userRepository.GetAllAsync();
+            var result = new List<User>();
+
+            foreach (var user in users)
+            {
+                var role = await this.identityHelper.GetRole(user);
+
+                if (role == "Driver")
+                {
+                    result.Add(user);
+                }
+
+                if (result.Count() == 10)
+                {
+                    break;
+                }
+
+            }
+
+            return await this.userRepository.GetTopTravelOrganizers(result, count);
+        }
+        public async Task<IEnumerable<User>> TopPassengers(int count)
+        {
+            var users = await this.userRepository.GetAllAsync();
+            var result = new List<User>();
+
+            foreach (var user in users)
+            {
+                var role = await this.identityHelper.GetRole(user);
+
+                if (role == "Passenger")
+                {
+                    result.Add(user);
+                }
+
+                if (result.Count() == 10)
+                {
+                    break;
+                }
+
+            }
+            return await this.userRepository.GetTopPassengers(result, count);
+        }
 
     }
 }

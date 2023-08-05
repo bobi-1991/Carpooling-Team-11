@@ -10,7 +10,7 @@ using Carpooling.BusinessLayer.Dto_s.Requests;
 using Carpooling.BusinessLayer.Services;
 using Carpooling.BusinessLayer.Dto_s.UpdateModels;
 
-namespace Carpooling.Controllers
+namespace Carpooling.Controllers.ApiControllers
 {
     [ApiController]
     [Route("api/travels")]
@@ -31,9 +31,9 @@ namespace Carpooling.Controllers
         {
             try
             {
-                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                var travels = await this.travelService.GetAllAsync();
-                return this.Ok(travels);
+                var loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                var travels = await travelService.GetAllAsync();
+                return Ok(travels);
             }
             catch (EntityUnauthorizatedException e)
             {
@@ -41,10 +41,10 @@ namespace Carpooling.Controllers
             }
             catch (Exception ex)
             {
-                return this.StatusCode(500, ex.Message);
+                return StatusCode(500, ex.Message);
             }
-          
-        
+
+
         }
 
         [HttpGet("{id}")]
@@ -52,9 +52,9 @@ namespace Carpooling.Controllers
         {
             try
             {
-                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                var travel = await this.travelService.GetByIdAsync(id);
-                return this.Ok(travel);
+                var loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                var travel = await travelService.GetByIdAsync(id);
+                return Ok(travel);
             }
             catch (EntityUnauthorizatedException e)
             {
@@ -62,11 +62,11 @@ namespace Carpooling.Controllers
             }
             catch (EntityNotFoundException ex)
             {
-                return this.NotFound(ex.Message);
+                return NotFound(ex.Message);
             }
             catch (Exception ex)
             {
-                return this.StatusCode(500, ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -78,8 +78,8 @@ namespace Carpooling.Controllers
         {
             try
             {
-                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                return this.Ok(await this.travelService.UpdateAsync(loggedUser, id, travelDataForUpdate));
+                var loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                return Ok(await travelService.UpdateAsync(loggedUser, id, travelDataForUpdate));
             }
             catch (EntityUnauthorizatedException e)
             {
@@ -87,11 +87,11 @@ namespace Carpooling.Controllers
             }
             catch (EntityNotFoundException ex)
             {
-                return this.NotFound(ex.Message);
+                return NotFound(ex.Message);
             }
             catch (UnauthorizedOperationException e)
             {
-                return this.Unauthorized(e.Message);
+                return Unauthorized(e.Message);
             }
             catch (Exception ex)
             {
@@ -105,10 +105,10 @@ namespace Carpooling.Controllers
 
             try
             {
-                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                var loggedUser = await authValidator.ValidateCredentialAsync(credentials);
 
-                var travelToCreate = await this.travelService.CreateTravelAsync(loggedUser, travelRequest);
-                return this.Ok(travelToCreate);
+                var travelToCreate = await travelService.CreateTravelAsync(loggedUser, travelRequest);
+                return Ok(travelToCreate);
             }
             catch (EntityUnauthorizatedException e)
             {
@@ -116,11 +116,11 @@ namespace Carpooling.Controllers
             }
             catch (EntityNotFoundException ex)
             {
-                return this.NotFound(ex.Message);
+                return NotFound(ex.Message);
             }
             catch (UnauthorizedOperationException ex)
             {
-                return this.Forbid(ex.Message);
+                return Forbid(ex.Message);
             }
             catch (Exception ex)
             {
@@ -134,8 +134,8 @@ namespace Carpooling.Controllers
         {
             try
             {
-                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                return this.Ok(await this.travelService.DeleteAsync(loggedUser, id));
+                var loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                return Ok(await travelService.DeleteAsync(loggedUser, id));
             }
             catch (EntityUnauthorizatedException e)
             {
@@ -152,7 +152,7 @@ namespace Carpooling.Controllers
         }
 
         [HttpGet("filter")]
-        public async Task<ActionResult> FilterTravelsAndSortAsync([FromHeader] string credentials,[FromQuery] string filter)
+        public async Task<ActionResult> FilterTravelsAndSortAsync([FromHeader] string credentials, [FromQuery] string filter)
         {
             try
             {
