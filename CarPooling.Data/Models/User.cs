@@ -9,12 +9,12 @@ namespace CarPooling.Data.Models
         {
             
         }
-         public bool IsDeleted { get; set; }
+        public bool IsDeleted { get; set; }
 
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
         public decimal AverageRating { get; set; }
-        public string? ProfileImage { get; set; }
+        public string? ImageURL { get; set; }
         public bool IsBlocked { get; set; }
 
         // IdentityUser ??

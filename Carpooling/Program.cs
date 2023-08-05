@@ -55,7 +55,7 @@ public class Program
         builder.Services.AddScoped<IFeedbackService, FeedbackService>();
         builder.Services.AddScoped<ITravelService, TravelService>();
         builder.Services.AddScoped<ITripRequestService, TripRequestService>();
-
+        builder.Services.AddScoped<IFileUploadService, FileUploadService>();
         //Add identity services
         builder.Services.AddScoped<UserManager<User>>();
 
@@ -77,7 +77,7 @@ public class Program
         builder.Services.AddScoped<ICarRepository, CarRepository>();
         builder.Services.AddScoped<ICountryRepository, CountryRepository>();
         builder.Services.AddScoped<IFeedbackRepository,FeedbackRepository>();
-
+        
 
 
 
