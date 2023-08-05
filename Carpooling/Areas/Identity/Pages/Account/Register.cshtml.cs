@@ -11,6 +11,7 @@ using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
 using Carpooling.AttributeHelpers;
+using Carpooling.BusinessLayer.Services.Contracts;
 using CarPooling.Data.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -32,13 +33,14 @@ namespace Carpooling.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<User> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
-
+        private readonly IFileUploadService _fileUploadService;
         public RegisterModel(
             UserManager<User> userManager,
             IUserStore<User> userStore,
             SignInManager<User> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IFileUploadService fileUploadService)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -46,6 +48,7 @@ namespace Carpooling.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _fileUploadService = fileUploadService;
         }
 
         /// <summary>
@@ -97,7 +100,7 @@ namespace Carpooling.Areas.Identity.Pages.Account
             [Display(Name = "Username")]
             public string UserName { get; set; }
             [Display(Name = "UserPhoto")]
-            public byte[] UserPhoto { get; set; }
+            public IFormFile UserPhoto { get; set; }
 
             [Required]
             [StringLength(10, ErrorMessage = "Phone number must be exactly 10 digits.", MinimumLength = 10)]
@@ -137,17 +140,35 @@ namespace Carpooling.Areas.Identity.Pages.Account
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            //ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            
             if (ModelState.IsValid)
             {
-                var user = CreateUser();
-                user.FirstName = Input.FirstName;
-                user.LastName = Input.LastName;
-                user.UserName = Input.UserName;
-               
+                string uniqueFileNamePath = null;
+                if (Input.UserPhoto != null)
+                {
+                    uniqueFileNamePath = _fileUploadService.UploadFile(Input.UserPhoto);
+                }
+                else
+                {
+                    uniqueFileNamePath = null;
+                }
+                //var user = CreateUser();
+                var user = new User
+                {
+                    //UserName = Input.UserName,
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    ImageURL = uniqueFileNamePath
+                };
+                //user.FirstName = Input.FirstName;
+                //user.LastName = Input.LastName;
+                //user.UserName = Input.UserName;
+                //user.ImageURL = uniqueFileNamePath;
+                
                 await _userStore.SetUserNameAsync(user, Input.UserName, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                 
+                
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 await _userManager.AddToRolesAsync(user, new List<string> { "Passenger" });
 
@@ -166,15 +187,15 @@ namespace Carpooling.Areas.Identity.Pages.Account
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
                         $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-                    if (Input.UserPhoto != null && Input.UserPhoto.Length > 0)
-                    {
-                        // Save the uploaded user photo and get the URL
-                        string userPhotoUrl = await SaveUserPhoto(Input.UserPhoto);
+                    //if (Input.UserPhoto != null && Input.UserPhoto.Length > 0)
+                    //{
+                    //    // Save the uploaded user photo and get the URL
+                    //    string userPhotoUrl = await SaveUserPhoto(Input.UserPhoto);
 
-                        // Update the user's profile picture URL
-                        user.ProfileImage = userPhotoUrl;
-                        await _userManager.UpdateAsync(user);
-                    }
+                    //    // Update the user's profile picture URL
+                    //    user.ProfileImage = userPhotoUrl;
+                    //    await _userManager.UpdateAsync(user);
+                    //}
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
                         return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
