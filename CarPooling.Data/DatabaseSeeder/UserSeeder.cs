@@ -29,7 +29,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     FirstName = "Pesho",
                     LastName = "Peshev",
                     Email = "pesho@gmail.com",
-                    AverageRating = 4.5m,
+                    AverageRating = 5m,
                     IsBlocked = false
                 };
                 var userMisho = new User

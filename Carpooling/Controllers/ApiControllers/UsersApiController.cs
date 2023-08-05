@@ -10,7 +10,7 @@ using CarPooling.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
-namespace Carpooling.Controllers
+namespace Carpooling.Controllers.ApiControllers
 {
     [ApiController]
     [Route("api/users")]
@@ -31,7 +31,7 @@ namespace Carpooling.Controllers
         {
             try
             {
-                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                var loggedUser = await authValidator.ValidateCredentialAsync(credentials);
                 var users = await userService.GetAllAsync();
 
                 return StatusCode(StatusCodes.Status200OK, users);
@@ -47,12 +47,12 @@ namespace Carpooling.Controllers
         }
 
         [HttpGet("id/{id}")]
-        public async Task<IActionResult> GetById([FromHeader] string credentials,[FromRoute] string id)
+        public async Task<IActionResult> GetById([FromHeader] string credentials, [FromRoute] string id)
         {
             try
             {
-                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                var user = await this.userService.GetByIdAsync(id);
+                var loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                var user = await userService.GetByIdAsync(id);
 
                 return StatusCode(StatusCodes.Status200OK, user);
             }
@@ -72,7 +72,7 @@ namespace Carpooling.Controllers
         {
             try
             {
-                var userResponse = await this.userService.RegisterAsync(userRequest);
+                var userResponse = await userService.RegisterAsync(userRequest);
 
                 return Ok(userResponse);
             }
@@ -95,7 +95,7 @@ namespace Carpooling.Controllers
         {
             try
             {
-                User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                User loggedUser = await authValidator.ValidateCredentialAsync(credentials);
                 var result = await userService.DeleteAsync(loggedUser, id);
 
                 return StatusCode(StatusCodes.Status200OK, result);
@@ -111,11 +111,11 @@ namespace Carpooling.Controllers
         }
 
         [HttpGet("username/{username}")]
-        public async Task<IActionResult> GetByUsernameAsync([FromHeader] string credentials,[FromRoute] string username)
+        public async Task<IActionResult> GetByUsernameAsync([FromHeader] string credentials, [FromRoute] string username)
         {
             try
             {
-                User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                User loggedUser = await authValidator.ValidateCredentialAsync(credentials);
                 var user = await userService.GetByUsernameAsync(username);
 
                 return Ok(user);
@@ -135,7 +135,7 @@ namespace Carpooling.Controllers
         {
             try
             {
-                User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
+                User loggedUser = await authValidator.ValidateCredentialAsync(credentials);
                 var travels = await userService.TravelHistoryAsync(loggedUser, id);
 
                 return Ok(travels);
@@ -151,8 +151,8 @@ namespace Carpooling.Controllers
         {
             try
             {
-                User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                UserResponse updatedUser = await this.userService.UpdateAsync(loggedUser, id, userUpdateDto);
+                User loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                UserResponse updatedUser = await userService.UpdateAsync(loggedUser, id, userUpdateDto);
 
                 return StatusCode(StatusCodes.Status200OK, updatedUser);
             }
@@ -180,8 +180,8 @@ namespace Carpooling.Controllers
         {
             try
             {
-                User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                var message = await this.userService.BanUser(loggedUser, userToBeBanned);
+                User loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                var message = await userService.BanUser(loggedUser, userToBeBanned);
                 return Ok(message);
             }
             catch (EntityUnauthorizatedException e)
@@ -207,8 +207,8 @@ namespace Carpooling.Controllers
         {
             try
             {
-                User loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                var message = await this.userService.UnBanUser(loggedUser, userToBeUnBanned);
+                User loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                var message = await userService.UnBanUser(loggedUser, userToBeUnBanned);
                 return StatusCode(StatusCodes.Status200OK, message);
             }
             catch (EntityUnauthorizatedException e)

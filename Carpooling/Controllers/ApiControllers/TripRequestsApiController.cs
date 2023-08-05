@@ -7,7 +7,7 @@ using CarPooling.Data.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace Carpooling.Controllers
+namespace Carpooling.Controllers.ApiControllers
 {
     [ApiController]
     [Route("api/triprequests")]
@@ -28,8 +28,8 @@ namespace Carpooling.Controllers
         {
             try
             {
-                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                return this.Ok(await this.tripRequestService.GetAllAsync());
+                var loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                return Ok(await tripRequestService.GetAllAsync());
             }
             catch (EntityUnauthorizatedException e)
             {
@@ -37,7 +37,7 @@ namespace Carpooling.Controllers
             }
             catch (Exception ex)
             {
-                return this.StatusCode(500, ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -47,8 +47,8 @@ namespace Carpooling.Controllers
         {
             try
             {
-                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                return this.Ok(await this.tripRequestService.GetByIdAsync(id));
+                var loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                return Ok(await tripRequestService.GetByIdAsync(id));
             }
             catch (EntityUnauthorizatedException e)
             {
@@ -60,7 +60,7 @@ namespace Carpooling.Controllers
             }
             catch (Exception ex)
             {
-                return this.StatusCode(500, ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
@@ -69,8 +69,8 @@ namespace Carpooling.Controllers
         {
             try
             {
-                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                return this.Ok(await this.tripRequestService.CreateAsync(loggedUser, tripRequest));
+                var loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                return Ok(await tripRequestService.CreateAsync(loggedUser, tripRequest));
 
             }
             catch (EntityUnauthorizatedException e)
@@ -87,17 +87,17 @@ namespace Carpooling.Controllers
             }
             catch (Exception ex)
             {
-                return this.StatusCode(500, ex.Message);
+                return StatusCode(500, ex.Message);
             }
         }
 
-        [HttpDelete("{id}")]     
-        public async Task<IActionResult> DeleteTripRequest([FromHeader]string credentials, int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteTripRequest([FromHeader] string credentials, int id)
         {
             try
             {
-                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                return this.Ok(await this.tripRequestService.DeleteAsync(loggedUser, id));
+                var loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                return Ok(await tripRequestService.DeleteAsync(loggedUser, id));
             }
             catch (EntityUnauthorizatedException e)
             {
@@ -114,13 +114,13 @@ namespace Carpooling.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> RespondToTripRequest([FromHeader]string credentials,int id,[FromBody]  string answer)
+        public async Task<IActionResult> RespondToTripRequest([FromHeader] string credentials, int id, [FromBody] string answer)
         {
             try
             {
-                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                return this.Ok(await this.tripRequestService.EditRequestAsync(loggedUser, id ,answer));
-               
+                var loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                return Ok(await tripRequestService.EditRequestAsync(loggedUser, id, answer));
+
             }
             catch (EntityUnauthorizatedException e)
             {
@@ -145,8 +145,8 @@ namespace Carpooling.Controllers
         {
             try
             {
-                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                return this.Ok(await this.tripRequestService.SeeAllHisDriverRequestsAsync(loggedUser, id));
+                var loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                return Ok(await tripRequestService.SeeAllHisDriverRequestsAsync(loggedUser, id));
             }
             catch (EntityUnauthorizatedException e)
             {
@@ -171,8 +171,8 @@ namespace Carpooling.Controllers
         {
             try
             {
-                var loggedUser = await this.authValidator.ValidateCredentialAsync(credentials);
-                return this.Ok(await this.tripRequestService.SeeAllHisPassengerRequestsAsync(loggedUser, id));
+                var loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                return Ok(await tripRequestService.SeeAllHisPassengerRequestsAsync(loggedUser, id));
             }
             catch (EntityUnauthorizatedException e)
             {

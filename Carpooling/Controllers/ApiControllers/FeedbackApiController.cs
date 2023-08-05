@@ -1,44 +1,43 @@
 ﻿using AutoMapper;
-using Carpooling.BusinessLayer.Dto_s.Requests;
 using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
+using Carpooling.Service.Dto_s.Requests;
+using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Carpooling.Controllers
+namespace Carpooling.Controllers.ApiControllers
 {
+    //[Authorize(Roles = "Admin")]
     [Route("api/[controller]")]
     [ApiController]
-    public class CountryApiController : ControllerBase
+    public class FeedbackApiController : ControllerBase
     {
-        private readonly ICountryService _countryService;
+        private readonly IFeedbackService _feedbackService;
         private readonly IAuthValidator _authValidator;
         private readonly IMapper _mapper;
-        public CountryApiController(ICountryService countryService, IAuthValidator authValidator, IMapper mapper)
+        public FeedbackApiController(IFeedbackService feedbackService, IAuthValidator authValidator, IMapper mapper)
         {
-            _countryService = countryService;
+            _feedbackService = feedbackService;
             _authValidator = authValidator;
             _mapper = mapper;
         }
+        //Create Delete Update
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CountryDTO>>> GetAllCountriesAsync([FromHeader] string credentials)
+        public async Task<ActionResult<IEnumerable<FeedbackDTO>>> GetAllFeedbacksAsync([FromHeader] string credentials)
         {
             try
             {
                 var loggedUser = await _authValidator.ValidateCredentialAsync(credentials);
-                var countries = await _countryService.GetAllAsync();
-                List<CountryDTO> countryDTOS = new List<CountryDTO>();// _mapper.Map<CountryDTO>(countries);
-                foreach(var country in countries)
-                {
-                    var countryToMap = _mapper.Map<CountryDTO>(country);
-                    countryDTOS.Add(countryToMap);
-                }
+                var feedbacks = await _feedbackService.GetAllAsync();
 
-                return StatusCode(StatusCodes.Status200OK, countryDTOS);
+                return StatusCode(StatusCodes.Status200OK, feedbacks);
             }
+
             catch (UnauthorizedOperationException e)
             {
                 return StatusCode(StatusCodes.Status401Unauthorized, e.Message);
@@ -46,13 +45,13 @@ namespace Carpooling.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CountryDTO>> GetCountryByIdAsync([FromHeader] string credentials, int id)
+        public async Task<ActionResult<FeedbackDTO>> GetFeedbackByIdAsync([FromHeader] string credentials, int id)
         {
             try
             {
                 var loggerUser = await _authValidator.ValidateCredentialAsync(credentials);
-                var country = _mapper.Map<CountryDTO>(await _countryService.GetByIdAsync(id));
-                return StatusCode(StatusCodes.Status200OK, country);
+                var feedback = _mapper.Map<FeedbackDTO>(await _feedbackService.GetByIdAsync(id));
+                return StatusCode(StatusCodes.Status200OK, feedback);
             }
             catch (UnauthorizedOperationException e)
             {
@@ -64,16 +63,16 @@ namespace Carpooling.Controllers
             }
         }
         [HttpPost]
-        public async Task<ActionResult<CountryDTO>> CreateCountryAsync([FromHeader] string credentials, [FromBody] CountryDTO countryDTO)
+        public async Task<ActionResult<FeedbackDTO>> CreateFeedbackAsync([FromHeader] string credentials, [FromBody] FeedbackDTO feedbackDTO)
         {
             try
             {
                 var loggedUser = await _authValidator.ValidateCredentialAsync(credentials);
 
-                Country country = _mapper.Map<Country>(countryDTO);
-                Country countryToCreate = await _countryService.CreateAsync(country, loggedUser);
+                Feedback feedback = _mapper.Map<Feedback>(feedbackDTO);
+                Feedback feedbackToCreate = await _feedbackService.CreateAsync(feedback, loggedUser);
 
-                return StatusCode(StatusCodes.Status201Created, countryToCreate);
+                return StatusCode(StatusCodes.Status201Created, feedbackToCreate);
             }
             catch (UnauthorizedOperationException e)
             {
@@ -81,13 +80,13 @@ namespace Carpooling.Controllers
             }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCountryAsync(int id, [FromHeader] string credentials, [FromBody] CountryDTO countryDTO)
+        public async Task<IActionResult> UpdateFeedbackAsync(int id, [FromHeader] string credentials, [FromBody] FeedbackDTO feedbackDTO)
         {
             try
             {
                 var loggedUser = await _authValidator.ValidateCredentialAsync(credentials);
-                Country country = _mapper.Map<Country>(countryDTO);
-                Country countryToUpdate = await _countryService.UpdateAsync(id, country, loggedUser);
+                Feedback feedback = _mapper.Map<Feedback>(feedbackDTO);
+                Feedback feedbackToUpdate = await _feedbackService.UpdateAsync(id, loggedUser, feedback);
 
                 return NoContent();
             }
@@ -101,12 +100,12 @@ namespace Carpooling.Controllers
             }
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCountryAsync(int id, [FromHeader] string credentials)
+        public async Task<IActionResult> DeleteFeedbackAsync(int id, [FromHeader] string credentials)
         {
             try
             {
                 var loggedUser = await _authValidator.ValidateCredentialAsync(credentials);
-                await _countryService.DeleteAsync(id, loggedUser);
+                await _feedbackService.DeleteAsync(id, loggedUser);
                 return NoContent();
             }
             catch (UnauthorizedOperationException e)

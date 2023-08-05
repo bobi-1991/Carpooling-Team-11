@@ -16,7 +16,7 @@ using System.Runtime.Intrinsics.X86;
 using System;
 
 
-namespace Carpooling.Controllers
+namespace Carpooling.Controllers.ApiControllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -80,8 +80,8 @@ namespace Carpooling.Controllers
             catch (UnauthorizedOperationException e)
             {
                 return StatusCode(StatusCodes.Status401Unauthorized, e.Message);
-            }     
-            catch(EmptyListException e)
+            }
+            catch (EmptyListException e)
             {
                 return StatusCode(StatusCodes.Status404NotFound, e.Message);
             }
@@ -96,7 +96,7 @@ namespace Carpooling.Controllers
             {
                 var loggerUser = await _authValidator.ValidateCredentialAsync(credentials);
                 var car = _mapper.Map<CarDTO>(await _carService.GetByBrandModelAndRegistrationAsync(brand, model, registration));
-                
+
                 return StatusCode(StatusCodes.Status200OK, car);
             }
             catch (UnauthorizedOperationException e)
