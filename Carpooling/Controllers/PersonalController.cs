@@ -42,6 +42,32 @@ namespace Carpooling.Controllers
 
             return View(driverModel);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> PassengerInfo(string id)
+        {
+            var user = await userService.GetByIdAsync(id);
+            var feedbacks = await feedbackService.GetAllAsync();
+            var passengerFeedbacks = feedbacks.Where(x => x.PassengerId == id);
+
+            var passengerModel = new PassengerViewInfoModel
+            {
+                Username = user.Username,
+                AverageRating = user.AverageRating,
+                Feedbacks = passengerFeedbacks
+       
+            };
+
+            return View(passengerModel);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Menu()
+        {
+            
+
+            return View();
+        }
     }
 
 

@@ -1,0 +1,27 @@
+﻿@using Carpooling.Models;
+
+@model PassengerViewInfoModel
+
+@{
+    ViewData["Title"] = "Passenger Info";
+}
+
+@if (User.Identity?.IsAuthenticated == true)
+{
+
+    <div>
+        <h2>User, @Model.Username!</h2>
+        <h5>Profile Details:</h5>
+        <br>
+        <p><i class="fas fa-star"></i> Rating: @Model.AverageRating</p>
+        <p><i class="fas fa-comments"></i> Feedbacks: @Model.Feedbacks.Count()</p>
+
+        <a asp-controller="Home" asp-action="Index" class="nav">Go back</a>
+    </div>
+}
+else
+{
+    <a asp-page="/Identity/Account/Login" class="nav">Login</a>
+}
+
+
