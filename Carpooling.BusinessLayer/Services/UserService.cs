@@ -72,6 +72,13 @@ namespace Carpooling.BusinessLayer.Services
 
             return "User successfully deleted.";
         }
+        public async Task<string> DeleteUserWhenAdminAsync(string id)
+        {
+            var userToDelete = await this.userRepository.GetByIdAsync(id);
+            await userRepository.DeleteAsync(userToDelete.Id);
+            await _userManager.DeleteAsync(userToDelete);
+            return "User successfully deleted.";
+        }
 
         public async Task<IEnumerable<UserResponse>> GetAllAsync()
         {
@@ -87,7 +94,16 @@ namespace Carpooling.BusinessLayer.Services
 
             //return result.Select(x => mapper.Map<UserResponse>(x));
         }
-
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        {
+            var result = await this.userRepository.GetAllAsync();
+            return result;
+        }
+        public async Task<User> GetUserByIdAsync(string id)
+        {
+            var user = await this.userRepository.GetByIdAsync(id);
+            return user;
+        }
         public async Task<UserResponse> GetByIdAsync(string id)
         {
             var user = await this.userRepository.GetByIdAsync(id);
@@ -228,9 +244,9 @@ namespace Carpooling.BusinessLayer.Services
             return await this.userRepository.GetTopPassengers(result, count);
         }
 
-        public async Task ConvertToManager(string id)
+        public async Task ConvertToAdministrator(string id)
         {
-            await userRepository.ConvertToManager(id);
+            await userRepository.ConvertToAdministrator(id);
         }
     }
 }

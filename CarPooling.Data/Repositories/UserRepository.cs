@@ -176,7 +176,7 @@ namespace CarPooling.Data.Repositories
 
             return users.OrderByDescending(x => x.AverageRating);
         }
-        public async Task ConvertToManager(string id) //tested
+        public async Task ConvertToAdministrator(string id) //tested
         {
             var user = await this.GetByIdAsync(id);
 
@@ -184,7 +184,7 @@ namespace CarPooling.Data.Repositories
 
             await userManager.RemoveFromRolesAsync(user, roles);
 
-            await userManager.AddToRoleAsync(user, "Manager");
+            await userManager.AddToRoleAsync(user, "Administrator");
 
             await dbContext.SaveChangesAsync();
         }

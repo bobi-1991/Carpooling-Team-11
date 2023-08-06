@@ -1,5 +1,5 @@
-﻿@using Carpooling.Models
-@model UserViewModel
+﻿@using CarPooling.Data.Models;
+@model User
 
 <h2>Delete User</h2>
 
@@ -13,9 +13,9 @@
     </dl>
 </div>
 
-<form asp-controller="User" asp-action="DeleteConfirmed" method="post">
+<form asp-controller="Admin" asp-action="DeleteConfirmed" asp-route-id="@this.Model.Id" method="post">
     <input type="hidden" name="id" value="@Model.Id" />
     <input type="hidden" name="credentials" value="@ViewBag.Credentials" />
     <button type="submit" class="btn btn-danger">Delete</button>
-    <a asp-controller="User" asp-action="ListUsers" class="btn btn-secondary">Cancel</a>
+    <a asp-controller="Admin" asp-action="ListUsers" class="btn btn-secondary">Cancel</a>
 </form>

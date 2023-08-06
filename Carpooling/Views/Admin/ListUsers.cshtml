@@ -1,6 +1,6 @@
-﻿@using Carpooling.Models;
-
-@model IEnumerable<UserViewModel>
+﻿@using CarPooling.Data.Models;
+@using Carpooling.Models;
+@model IEnumerable<User>
 @{
     ViewData["Title"] = "List Users";
 }
@@ -23,8 +23,8 @@
                     <td>@user.UserName</td>
                     <td>@user.Email</td>
                     <td>
-                        <a asp-controller="User" asp-action="Delete" asp-route-id="@user.Id">Delete</a> |
-                        <a asp-controller="User" asp-action="ChangeRoleToManager" asp-route-id="@user.Id">Change to Manager</a>
+                        <a asp-controller="Admin" asp-action="Delete" asp-route-id="@user.Id">Delete</a> |
+                        <a asp-controller="Admin" asp-action="ChangeRoleToAdministrator" asp-route-id="@user.Id">Change to Administrator</a>
                     </td>
                 </tr>
             }

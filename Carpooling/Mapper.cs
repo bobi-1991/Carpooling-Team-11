@@ -39,6 +39,7 @@ namespace Carpooling
                 .ForMember(c=>c.Country, c=>c.MapFrom(opt=>opt.Name))
                 .ReverseMap();
             CreateMap<User, UserViewModel>().ReverseMap();
+            CreateMap<UserResponse, UserViewModel>().ReverseMap();
         }
     }
 }
