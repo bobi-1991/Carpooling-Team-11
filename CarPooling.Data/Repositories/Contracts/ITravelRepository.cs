@@ -1,5 +1,6 @@
 ﻿using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
+using CarPooling.Data.Models.Pagination;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -20,6 +21,7 @@ namespace CarPooling.Data.Repositories.Contracts
         Task<IEnumerable<Travel>> FilterTravelsAndSortAsync(string sortBy);
         Task AddUserToTravelAsync(int travelId, string passengerId);
         Task RemoveUserToTravelAsync(int travelId, string passengerId);
+        Task <PaginatedList<Travel>> FilterByAsync (TravelQueryParameters filter);
 
 
         //Task<TravelDTO> AddStopToTravelAsync();

@@ -6,6 +6,7 @@ using Carpooling.BusinessLayer.Validation.Contracts;
 using Carpooling.Service.Dto_s.Requests;
 using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Models;
+using CarPooling.Data.Models.Pagination;
 using CarPooling.Data.Repositories;
 using CarPooling.Data.Repositories.Contracts;
 using System;
@@ -42,6 +43,11 @@ namespace Carpooling.BusinessLayer.Services
 
             return travels.Select(x => mapper.Map<TravelResponse>(x));
         }
+
+        public async Task<IEnumerable<Travel>> GetAllTravelAsync()
+        {
+            return await this.travelRepository.GetAllAsync();
+        }
         public async Task<TravelResponse> GetByIdAsync(int travelId)
         {
             return this.mapper.Map<TravelResponse>(await this.travelRepository.GetByIdAsync(travelId));
@@ -50,8 +56,8 @@ namespace Carpooling.BusinessLayer.Services
         public async Task<TravelResponse> CreateTravelAsync(User loggedUser, TravelRequest travelRequest)
         {
             await this.travelValidator.ValidateIsLoggedUserAreDriver(loggedUser, travelRequest.DriverId);
-          //  var driverCar = loggedUser.Cars.FirstOrDefault();
-            
+            //  var driverCar = loggedUser.Cars.FirstOrDefault();
+
             var car = await this.carRepository.GetByIdAsync(travelRequest.CarId);
 
             if (loggedUser.IsBlocked)
@@ -96,7 +102,7 @@ namespace Carpooling.BusinessLayer.Services
                 AvailableSeats = (int)createdTravel.AvailableSeats,
                 IsComplete = false,
                 CarRegistration = createdTravel.Car.Registration
-            };      
+            };
         }
 
         public async Task<string> DeleteAsync(User loggedUser, int travelId)
@@ -117,7 +123,7 @@ namespace Carpooling.BusinessLayer.Services
 
             if (loggedUser.IsBlocked)
             {
-              throw new  UnauthorizedOperationException($"You can't update the travel because you're banned.");
+                throw new UnauthorizedOperationException($"You can't update the travel because you're banned.");
             }
 
             await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, travelToUpdate.DriverId);
@@ -179,6 +185,10 @@ namespace Carpooling.BusinessLayer.Services
                 CarRegistration = x.Car.Registration
             });
             return travelResponses;
+        }
+        public async Task<PaginatedList<Travel>> FilterBy(TravelQueryParameters search)
+        {
+            return await this.travelRepository.FilterByAsync(search);
         }
     }
 }
