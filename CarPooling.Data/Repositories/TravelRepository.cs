@@ -1,6 +1,7 @@
 ﻿using CarPooling.Data.Data;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
+using CarPooling.Data.Models.Pagination;
 using CarPooling.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,13 +24,15 @@ namespace CarPooling.Data.Repositories
             this.dbContext = dbContext;
             this.userRepository = userRepository;
         }
+
         public async Task<IEnumerable<Travel>> GetAllAsync()
         {
             var result = await this.dbContext.Travels
                     .Include(x => x.Car)
+                    .Include(x=>x.Driver)
                     .Include(x => x.StartLocation)
                     .Include(x => x.EndLocation)
-                    .Where(x => x.IsCompleted == false)
+                    .Where(x => x.IsCompleted == false && !x.IsDeleted)
                     .ToListAsync();
 
             return result;
@@ -40,7 +43,7 @@ namespace CarPooling.Data.Repositories
             var travel = await this.dbContext.Travels
                .Include(x => x.Car)
                .Include(x => x.StartLocation)
-                  .ThenInclude(x=>x.Country)
+                  .ThenInclude(x => x.Country)
                .Include(x => x.EndLocation)
                     .ThenInclude(x => x.Country)
                .Where(x => x.IsCompleted == false)
@@ -110,7 +113,7 @@ namespace CarPooling.Data.Repositories
            .Include(x => x.Car)
            .Include(x => x.StartLocation)
            .Include(x => x.EndLocation)
-          // .Include(x => x.Passengers)
+           // .Include(x => x.Passengers)
            .FirstOrDefaultAsync(x => x.Id == travelId);
 
             var passenger = await this.dbContext.Users
@@ -118,9 +121,9 @@ namespace CarPooling.Data.Repositories
 
             travel.Passengers.Add(passenger);
             travel.AvailableSeats--;
-          //  passenger.TravelHistory.Add(travel);
+            //  passenger.TravelHistory.Add(travel);
 
-           await  this.dbContext.SaveChangesAsync();
+            await this.dbContext.SaveChangesAsync();
 
         }
 
@@ -130,7 +133,7 @@ namespace CarPooling.Data.Repositories
              .Include(x => x.Car)
              .Include(x => x.StartLocation)
              .Include(x => x.EndLocation)
-       //      .Include(x => x.Passengers)
+             //      .Include(x => x.Passengers)
              .FirstOrDefaultAsync(x => x.Id == travelId);
 
             var passenger = await this.dbContext.Users
@@ -191,6 +194,123 @@ namespace CarPooling.Data.Repositories
             throw new EmptyListException("No travels added yet!");
 
         }
+
+        // FilterBy logic:
+
+        public async Task<IQueryable<Travel>> GetAllToQueriable()
+        {
+            IQueryable<Travel> result = this.dbContext.Travels
+                    .Include(x => x.Car)
+                    .Include(x => x.Driver)
+                    .Include(x => x.StartLocation)
+                    .Include(x => x.EndLocation)
+                    .Where(x => x.IsCompleted == false && !x.IsDeleted);
+
+            return result;
+        }
+        public async Task<PaginatedList<Travel>> FilterByAsync(TravelQueryParameters filter)
+        {
+
+
+            IQueryable<Travel> travels = await this.GetAllToQueriable();
+
+            travels = FilterByDriverUsername(travels, filter.DriverUsername);
+
+
+            int totalPages = (travels.Count() + 1) / filter.PageSize;
+            var result = Paginate(travels, filter.PageNumber, filter.PageSize);
+
+            return new PaginatedList<Travel>(result, totalPages, filter.PageNumber);
+        }
+        public static List<Travel> Paginate(IQueryable<Travel> result, int pageNumber, int pageSize)
+        {
+            return result
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize).ToList();
+        }
+
+
+        //public string? DriverUsername { get; set; }
+        //public string? StartLocation { get; set; }
+        //public string? EndLocation { get; set; }
+        //public string? IsCompleted { get; set; }
+        //public int? AvailableSeats { get; set; }
+        //public string? SortBy { get; set; }
+
+
+        //public int PageSize { get; set; } = 3;
+        //public int PageNumber { get; set; } = 1;
+
+
+
+
+        private static IQueryable<Travel> FilterByDriverUsername(IQueryable<Travel> travels, string username)
+        {
+            if (!string.IsNullOrEmpty(username))
+            {
+                return travels.Where(travel => travel.Driver.UserName == username);
+            }
+
+            return travels;
+        }
+
+        //public List<Post> FilterByTag(List<Post> posts, string tag)
+        //{
+        //    if (!string.IsNullOrEmpty(tag))
+        //    {
+        //        var currentTag = tagRepository.GetByContent(tag);
+
+        //        return posts.Where(x => x.Tags.Contains(currentTag)).ToList();
+
+        //    }
+
+        //    return posts;
+        //}
+        //private static List<Post> FilterByMinLikes(List<Post> posts, string minLikes)
+        //{
+        //    if (minLikes is not null)
+        //    {
+        //        var likes = Convert.ToInt32(minLikes);
+        //        return posts.FindAll(post => post.Likes.Count() >= likes);
+        //    }
+
+        //    return posts;
+        //}
+        //private static List<Post> FilterByMaxLikes(List<Post> posts, string maxLikes)
+        //{
+        //    if (maxLikes is not null)
+        //    {
+        //        var likes = Convert.ToInt32(maxLikes);
+        //        return posts.FindAll(post => post.Likes.Count() <= likes);
+        //    }
+
+        //    return posts;
+        //}
+        //private static List<Post> SortBy(List<Post> posts, string sortCriteria)
+        //{
+        //    switch (sortCriteria)
+        //    {
+        //        case "title":
+        //            return posts.OrderBy(post => post.Title).ToList();
+        //        case "likes":
+        //            return posts.OrderBy(post => post.Likes.Count()).ToList();
+        //        default:
+        //            return posts;
+        //    }
+        //}
+        //private static List<Post> Order(List<Post> posts, string sortOrderByLikes)
+        //{
+        //    switch (sortOrderByLikes)
+        //    {
+        //        case "asc":
+        //            return posts.OrderBy(x => x.Likes.Count()).ToList();
+        //        case "desc":
+        //            return posts.OrderByDescending(x => x.Likes.Count()).ToList();
+        //        default:
+        //            return posts;
+        //    }
+
+        //}
 
 
 

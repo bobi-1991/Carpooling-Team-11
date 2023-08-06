@@ -48,3 +48,39 @@
         .info-box:hover p {
             color: #fff;
         }
+
+
+.search-form {
+    display: flex;
+    align-items: center;
+}
+
+.search-form input[type="text"] {
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid #3498db;
+    outline: none;
+    font-size: 16px;
+    transition: border-bottom-color 0.3s;
+}
+
+    .search-form input[type="text"]:focus {
+        border-bottom-color: #2980b9;
+    }
+
+.search-form .btn-search {
+    background-color: #3498db;
+    color: #fff;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s;
+}
+
+    .search-form .btn-search:hover {
+        background-color: #2980b9;
+    }
+
+

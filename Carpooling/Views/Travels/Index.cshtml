@@ -1,0 +1,198 @@
+﻿@*@using CarPooling.Data.Models.Pagination;
+@using CarPooling.Data.Models;
+@using Carpooling.Service.Dto_s.Responses;
+
+@{
+    this.ViewData["Title"] = "Travels";
+}
+
+@* @model PaginatedList<Travel>*@
+
+@*@model IEnumerable<Travel>
+*@
+
+@*
+<h2>Travels</h2>
+
+
+@if (Model.Count() == 0)
+{
+    <h3> <div class="cell"> No results </div></h3>
+    <br>
+}
+else
+{
+    <div class="table">
+        <div class="header">
+            <div class="header-cell">Title</div>
+        </div>
+        @{
+            foreach (var travel in this.Model)
+            {
+
+                <a class="row clickable-row" href="@Url.Action("Details", "Travels", new { id = travel.Id })">
+                    <div class="cell">@travel.StartLocation.City - @travel.EndLocation.City</div>
+                </a>
+            }
+        }
+    </div>
+}*@
+
+
+
+
+
+
+@using CarPooling.Data.Models.Pagination;
+@using CarPooling.Data.Models;
+@using Carpooling.Service.Dto_s.Responses;
+
+@{
+    this.ViewData["Title"] = "Travels";
+}
+
+@model PaginatedList<Travel>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+
+    /* Стилове за списъка с пътувания */
+    .travel-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .travel-item {
+        display: grid;
+        grid-template-columns: 2fr 2fr 1fr 1fr;
+        align-items: center;
+        padding: 10px;
+        background-color: #f0f0f0;
+        border-radius: 5px;
+        text-decoration: none;
+        color: #333;
+        transition: background-color 0.3s;
+    }
+
+        .travel-item.header {
+            font-weight: bold;
+            background-color: #ddd;
+        }
+
+        .travel-item:hover {
+            background-color: #ddd;
+        }
+
+    .start-end-locations {
+        display: flex;
+        align-items: center;
+    }
+
+    .location {
+        margin-right: 5px;
+    }
+
+    .divider {
+        margin: 0 5px;
+    }
+
+    .departure-time,
+    .driver {
+        text-align: right; /* Променено на "right" за позициониране в дясно */
+    }
+
+</style>
+
+<h2>Travels</h2>
+
+@if (Model.Count() == 0)
+{
+    <h3><div class="no-results">No results</div></h3>
+}
+else
+{
+    <div class="travel-list">
+        <div class="travel-item header">
+            <div class="start-end-locations">
+                <div class="label">Start/</div>
+                <div class="label">End Location</div>
+            </div>
+            <div class="label" style="text-align: right;">Departure Time</div>
+            <div class="label" style="text-align: right;">Driver</div>
+        </div>
+        @foreach (var travel in Model)
+        {
+            <a class="travel-item" href="@Url.Action("Details", "Travels", new { id = travel.Id })">
+                <div class="start-end-locations">
+                    <div class="location">@travel.StartLocation.City</div>
+                    <div class="divider">-</div>
+                    <div class="location">@travel.EndLocation.City</div>
+                </div>
+                <div class="departure-time" style="text-align: right;">@travel.DepartureTime</div>
+                <div class="driver" style="text-align: right;">@travel.Driver?.UserName</div>
+            </a>
+        }
+    </div>
+}
+
+
+@*Pagination*@
+@{
+    string prevButtonState = this.Model.HasPrevPage ? "" : "disabled";
+    string nextButtonState = this.Model.HasNextPage ? "" : "disabled";
+}
+
+<a asp-controller="Travels" asp-action="Index" asp-route-PageNumber="@(this.Model.PageNumber - 1)" class="btn btn-link @prevButtonState">Prev</a>
+
+@{
+    int currentPageNumber = this.Model.PageNumber;
+    int totalPages = this.Model.TotalPages;
+    int pageRange = 3; // Брой страници, които да се показват преди и след текущата страница
+    int startPage = Math.Max(1, currentPageNumber - pageRange);
+    int endPage = Math.Min(totalPages, currentPageNumber + pageRange);
+
+    if (startPage > 1)
+    {
+        <span><a asp-controller="Travels" asp-action="Index" asp-route-PageNumber="1">1</a></span>
+        if (startPage > 2)
+        {
+            <span>...</span>
+        }
+    }
+
+    for (int i = startPage; i <= endPage; i++)
+    {
+        if (i == currentPageNumber)
+        {
+            <span>@i</span>
+        }
+        else
+        {
+            <span><a asp-controller="Travels" asp-action="Index" asp-route-PageNumber="@i">@i</a></span>
+        }
+    }
+
+    if (endPage < totalPages)
+    {
+        if (endPage < totalPages - 1)
+        {
+            <span>...</span>
+        }
+        <span><a asp-controller="Travels" asp-action="Index" asp-route-PageNumber="@totalPages">@totalPages</a></span>
+    }
+}
+<a asp-controller="Travels" asp-action="Index" asp-route-PageNumber="@(this.Model.PageNumber + 1)" class="btn btn-link @nextButtonState">Next</a>
+<br>
+<br>
+<a asp-controller="Travels" asp-action="Index" class="nav">See all travels</a>
+
+
+
+
+
+
+
