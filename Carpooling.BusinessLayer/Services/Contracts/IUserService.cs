@@ -25,5 +25,6 @@ namespace Carpooling.BusinessLayer.Services.Contracts
         Task<string> UnBanUser(User loggedUser,BanOrUnBanDto userToBeUnBanned);
         Task<IEnumerable<User>> TopTravelOrganizers(int count);
         Task<IEnumerable<User>> TopPassengers(int count);
+        Task ConvertToManager(string id);
     }
 }

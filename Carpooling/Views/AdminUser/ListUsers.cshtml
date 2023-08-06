@@ -1,0 +1,37 @@
+﻿@using Carpooling.Models;
+
+@model IEnumerable<UserViewModel>
+@{
+    ViewData["Title"] = "List Users";
+}
+<h2>List Users</h2>
+
+@if (Model.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.UserName</td>
+                    <td>@user.Email</td>
+                    <td>
+                        <a asp-controller="User" asp-action="Delete" asp-route-id="@user.Id">Delete</a> |
+                        <a asp-controller="User" asp-action="ChangeRoleToManager" asp-route-id="@user.Id">Change to Manager</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No users available.</p>
+}

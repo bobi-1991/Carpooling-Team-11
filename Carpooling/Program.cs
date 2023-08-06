@@ -42,7 +42,7 @@ public class Program
 
         //Helpers
         builder.Services.AddScoped<IJsonManager, JsonManager>();
-        builder.Services.AddAutoMapper(typeof(Carpooling.BusinessLayer.Helpers.Mapper));
+        builder.Services.AddAutoMapper(typeof(Carpooling.Mapper));
         builder.Services.AddScoped<IIdentityHelper,IdentityHelper>();
 
 

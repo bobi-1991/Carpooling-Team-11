@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using Carpooling.BusinessLayer.Dto_s.Requests;
 using Carpooling.BusinessLayer.Dto_s.UpdateModels;
+using Carpooling.Models;
 using Carpooling.Service.Dto_s.Requests;
 using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Carpooling.BusinessLayer.Helpers
+namespace Carpooling
 {
     public class Mapper : Profile
     {
@@ -37,7 +38,7 @@ namespace Carpooling.BusinessLayer.Helpers
             CreateMap<Country, CountryDTO>()
                 .ForMember(c=>c.Country, c=>c.MapFrom(opt=>opt.Name))
                 .ReverseMap();
-
+            CreateMap<User, UserViewModel>().ReverseMap();
         }
     }
 }

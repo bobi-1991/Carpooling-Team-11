@@ -228,5 +228,9 @@ namespace Carpooling.BusinessLayer.Services
             return await this.userRepository.GetTopPassengers(result, count);
         }
 
+        public async Task ConvertToManager(string id)
+        {
+            await userRepository.ConvertToManager(id);
+        }
     }
 }

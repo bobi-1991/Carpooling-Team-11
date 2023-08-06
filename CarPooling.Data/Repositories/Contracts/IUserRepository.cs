@@ -23,6 +23,7 @@ namespace CarPooling.Data.Repositories.Contracts
         Task<string> UnBanUser(User userToBeUnBanned);
         Task<IEnumerable<User>> GetTopTravelOrganizers(IEnumerable<User> users, int count);
         Task<IEnumerable<User>> GetTopPassengers(IEnumerable<User> users, int count);
+        Task ConvertToManager(string id);
 
         //   Task<IEnumerable<Car>> SeeAllCarsAsync(int userId);
         //  Task<IEnumerable<Feedback>> SeeAllPassengerFeedbacksAsync(int userId);
