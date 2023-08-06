@@ -76,7 +76,7 @@ namespace CarPooling.Data.DatabaseSeeder
                 {
                     Id = Guid.NewGuid().ToString(),
                     UserName = "AlexP",
-                    FirstName = "Alex",
+                    FirstName = "Aleksei",
                     LastName = "Alexandrev",
                     Email = "liulin@gmail.com",
                     AverageRating = 5m,
@@ -85,8 +85,8 @@ namespace CarPooling.Data.DatabaseSeeder
                 var user8 = new User
                 {
                     Id = Guid.NewGuid().ToString(),
-                    UserName = "Sef",
-                    FirstName = "Alex",
+                    UserName = "Siso",
+                    FirstName = "Aleko",
                     LastName = "Alexandrev",
                     Email = "nargile@abv.bg",
                     AverageRating = 5m,
@@ -96,7 +96,7 @@ namespace CarPooling.Data.DatabaseSeeder
                 {
                     Id = Guid.NewGuid().ToString(),
                     UserName = "Vlado",
-                    FirstName = "Alex",
+                    FirstName = "Valcho",
                     LastName = "Alexandrev",
                     Email = "nargile@abv.bg",
                     AverageRating = 5m,
@@ -105,8 +105,8 @@ namespace CarPooling.Data.DatabaseSeeder
                 var user10 = new User
                 {
                     Id = Guid.NewGuid().ToString(),
-                    UserName = "KruvnaGrupaAudi",
-                    FirstName = "Alex",
+                    UserName = "AudiFen",
+                    FirstName = "Dimitar",
                     LastName = "Alexandrev",
                     Email = "audi@abv.bg",
                     AverageRating = 5m,
@@ -116,7 +116,7 @@ namespace CarPooling.Data.DatabaseSeeder
                 {
                     Id = Guid.NewGuid().ToString(),
                     UserName = "SamoCSKA",
-                    FirstName = "Alex",
+                    FirstName = "Alexandropolis",
                     LastName = "Alexandrev",
                     Email = "VW@abv.bg",
                     AverageRating = 5m,
