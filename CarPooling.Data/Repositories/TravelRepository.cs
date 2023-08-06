@@ -29,7 +29,7 @@ namespace CarPooling.Data.Repositories
         {
             var result = await this.dbContext.Travels
                     .Include(x => x.Car)
-                    .Include(x=>x.Driver)
+                    .Include(x => x.Driver)
                     .Include(x => x.StartLocation)
                     .Include(x => x.EndLocation)
                     .Where(x => x.IsCompleted == false && !x.IsDeleted)
@@ -215,6 +215,15 @@ namespace CarPooling.Data.Repositories
             IQueryable<Travel> travels = await this.GetAllToQueriable();
 
             travels = FilterByDriverUsername(travels, filter.DriverUsername);
+            travels = FilterByStartLocation(travels, filter.StartLocation);
+            travels = FilterByEndLocation(travels, filter.EndLocation);
+            if (filter.AvailableSeats.HasValue)
+            {
+                travels = FilterByAvailableSeats(travels, (int)filter.AvailableSeats.Value);
+            }
+            //            travels = FilterByAvailableSeats(travels, (int)filter.AvailableSeats);
+            travels = SortBy(travels, filter.SortBy);
+
 
 
             int totalPages = (travels.Count() + 1) / filter.PageSize;
@@ -228,22 +237,6 @@ namespace CarPooling.Data.Repositories
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize).ToList();
         }
-
-
-        //public string? DriverUsername { get; set; }
-        //public string? StartLocation { get; set; }
-        //public string? EndLocation { get; set; }
-        //public string? IsCompleted { get; set; }
-        //public int? AvailableSeats { get; set; }
-        //public string? SortBy { get; set; }
-
-
-        //public int PageSize { get; set; } = 3;
-        //public int PageNumber { get; set; } = 1;
-
-
-
-
         private static IQueryable<Travel> FilterByDriverUsername(IQueryable<Travel> travels, string username)
         {
             if (!string.IsNullOrEmpty(username))
@@ -254,65 +247,49 @@ namespace CarPooling.Data.Repositories
             return travels;
         }
 
-        //public List<Post> FilterByTag(List<Post> posts, string tag)
-        //{
-        //    if (!string.IsNullOrEmpty(tag))
-        //    {
-        //        var currentTag = tagRepository.GetByContent(tag);
+        private static IQueryable<Travel> FilterByStartLocation(IQueryable<Travel> travels, string startLocation)
+        {
+            if (!string.IsNullOrEmpty(startLocation))
+            {
+                return travels.Where(travel => travel.StartLocation.City == startLocation);
+            }
 
-        //        return posts.Where(x => x.Tags.Contains(currentTag)).ToList();
+            return travels;
+        }
+        private static IQueryable<Travel> FilterByEndLocation(IQueryable<Travel> travels, string endLocation)
+        {
+            if (!string.IsNullOrEmpty(endLocation))
+            {
+                return travels.Where(travel => travel.EndLocation.City == endLocation);
+            }
 
-        //    }
+            return travels;
+        }
+        private static IQueryable<Travel> FilterByAvailableSeats(IQueryable<Travel> travels, int availableSeats)
+        {
+            if (availableSeats >= 0 && availableSeats <= 4)
+            {
+                return travels.Where(travel => travel.AvailableSeats == availableSeats);
+            }
 
-        //    return posts;
-        //}
-        //private static List<Post> FilterByMinLikes(List<Post> posts, string minLikes)
-        //{
-        //    if (minLikes is not null)
-        //    {
-        //        var likes = Convert.ToInt32(minLikes);
-        //        return posts.FindAll(post => post.Likes.Count() >= likes);
-        //    }
-
-        //    return posts;
-        //}
-        //private static List<Post> FilterByMaxLikes(List<Post> posts, string maxLikes)
-        //{
-        //    if (maxLikes is not null)
-        //    {
-        //        var likes = Convert.ToInt32(maxLikes);
-        //        return posts.FindAll(post => post.Likes.Count() <= likes);
-        //    }
-
-        //    return posts;
-        //}
-        //private static List<Post> SortBy(List<Post> posts, string sortCriteria)
-        //{
-        //    switch (sortCriteria)
-        //    {
-        //        case "title":
-        //            return posts.OrderBy(post => post.Title).ToList();
-        //        case "likes":
-        //            return posts.OrderBy(post => post.Likes.Count()).ToList();
-        //        default:
-        //            return posts;
-        //    }
-        //}
-        //private static List<Post> Order(List<Post> posts, string sortOrderByLikes)
-        //{
-        //    switch (sortOrderByLikes)
-        //    {
-        //        case "asc":
-        //            return posts.OrderBy(x => x.Likes.Count()).ToList();
-        //        case "desc":
-        //            return posts.OrderByDescending(x => x.Likes.Count()).ToList();
-        //        default:
-        //            return posts;
-        //    }
-
-        //}
-
-
+            return travels;
+        }
+        private static IQueryable<Travel> SortBy(IQueryable<Travel> travels, string sortCriteria)
+        {
+            switch (sortCriteria)
+            {
+                case "username":
+                    return travels.OrderBy(travel => travel.Driver.UserName);
+                case "start location":
+                    return travels.OrderBy(travel => travel.StartLocation.City);
+                case "end location":
+                    return travels.OrderBy(travel => travel.EndLocation.City);
+                case "available seats":
+                    return travels.OrderBy(travel => travel.AvailableSeats);
+                default:
+                    return travels;
+            }
+        }
 
     }
 }
