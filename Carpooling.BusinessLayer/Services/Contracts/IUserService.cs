@@ -3,6 +3,7 @@ using Carpooling.BusinessLayer.Dto_s.UpdateModels;
 using Carpooling.Service.Dto_s.Requests;
 using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Models;
+using CarPooling.Data.Repositories;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,5 +30,7 @@ namespace Carpooling.BusinessLayer.Services.Contracts
         Task<IEnumerable<User>> TopPassengers(int count);
         Task ConvertToAdministrator(string id);
         Task<IEnumerable<User>> GetAllUsersAsync();
+        Task<string> BanUserById(string id);
+        Task<string> UnbanUserById(string id);
     }
 }
