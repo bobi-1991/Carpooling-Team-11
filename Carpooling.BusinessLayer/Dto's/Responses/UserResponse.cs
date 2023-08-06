@@ -29,7 +29,6 @@ namespace Carpooling.Service.Dto_s.Responses
         public string Email { get; set; }
         public decimal AverageRating { get; set; }
 
-
         // Optional? |
 
         //public ICollection<Feedback> Feedbacks { get; set; }

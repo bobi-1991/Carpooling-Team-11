@@ -19,6 +19,7 @@ using CarPooling.Data.DatabaseSeeder;
 using Carpooling.BusinessLayer.Helpers;
 using CarPooling.BusinessLayer.Services;
 using Carpooling.IAssemblyMarker;
+using NToastNotify;
 
 public class Program
 {
@@ -42,9 +43,9 @@ public class Program
 
         //Helpers
         builder.Services.AddScoped<IJsonManager, JsonManager>();
-        builder.Services.AddAutoMapper(typeof(Carpooling.BusinessLayer.Helpers.Mapper));
+        builder.Services.AddAutoMapper(typeof(Carpooling.Mapper));
         builder.Services.AddScoped<IIdentityHelper,IdentityHelper>();
-
+       
 
         // Add services to the container
       //  builder.Services.AddRazorPages();

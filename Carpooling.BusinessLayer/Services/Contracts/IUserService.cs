@@ -15,7 +15,9 @@ namespace Carpooling.BusinessLayer.Services.Contracts
     {
         Task<IEnumerable<UserResponse>> GetAllAsync();
         Task<UserResponse> GetByIdAsync(string id);
+        Task<User> GetUserByIdAsync(string id);
         Task<UserResponse> GetByUsernameAsync(string username);
+        Task<string> DeleteUserWhenAdminAsync(string id);
         Task<User> GetByUsernameAuthAsync(string username);
         Task<IEnumerable<TravelResponse>> TravelHistoryAsync(User loggedUser, string userId);
         Task<UserResponse> RegisterAsync(UserRequest userRequest);
@@ -25,5 +27,7 @@ namespace Carpooling.BusinessLayer.Services.Contracts
         Task<string> UnBanUser(User loggedUser,BanOrUnBanDto userToBeUnBanned);
         Task<IEnumerable<User>> TopTravelOrganizers(int count);
         Task<IEnumerable<User>> TopPassengers(int count);
+        Task ConvertToAdministrator(string id);
+        Task<IEnumerable<User>> GetAllUsersAsync();
     }
 }

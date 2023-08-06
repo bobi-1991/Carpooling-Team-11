@@ -15,13 +15,13 @@ namespace CarPooling.Data.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly CarPoolingDbContext dbContext;
-        private readonly UserManager<User> userManger;
+        private readonly UserManager<User> userManager;
 
 
         public UserRepository(CarPoolingDbContext dbContext, UserManager<User> userManger)
         {
             this.dbContext = dbContext;
-            this.userManger = userManger;
+            this.userManager = userManger;
         }
 
         public async Task<User> CreateAsync(User user)
@@ -51,6 +51,11 @@ namespace CarPooling.Data.Repositories
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
+            if(dbContext.Users.Count()==0)
+            {
+                throw new EmptyListException("No users yet!");
+            }
+
             return dbContext.Users
              .Where(x => !x.IsDeleted)
              .Include(x=>x.Cars)
@@ -119,7 +124,7 @@ namespace CarPooling.Data.Repositories
             userToUpdate.PasswordHash = user.PasswordHash ?? userToUpdate.PasswordHash;
             userToUpdate.Email = user.Email ?? userToUpdate.Email;
 
-            await this.userManger.UpdateAsync(userToUpdate);
+            await this.userManager.UpdateAsync(userToUpdate);
 
             return userToUpdate;
         }
@@ -170,6 +175,18 @@ namespace CarPooling.Data.Repositories
             //}
 
             return users.OrderByDescending(x => x.AverageRating);
+        }
+        public async Task ConvertToAdministrator(string id) //tested
+        {
+            var user = await this.GetByIdAsync(id);
+
+            var roles = await userManager.GetRolesAsync(user);
+
+            await userManager.RemoveFromRolesAsync(user, roles);
+
+            await userManager.AddToRoleAsync(user, "Administrator");
+
+            await dbContext.SaveChangesAsync();
         }
     }
 }
