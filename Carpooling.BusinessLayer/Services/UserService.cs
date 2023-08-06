@@ -176,6 +176,18 @@ namespace Carpooling.BusinessLayer.Services
             //await this._userManager.UpdateAsync(this.mapper.Map<User>(userUpdateDto));
             //return this.mapper.Map<UserResponse>(this.userRepository.GetByIdAsync(id));
         }
+        public async Task<string> BanUserById(string id)
+        {
+            var userToGetBanned = await userRepository.GetByIdAsync(id);
+            
+            return await userRepository.BanUser(userToGetBanned); 
+        }
+        public async Task<string> UnbanUserById(string id)
+        {
+            var userToGetUnbanned = await userRepository.GetByIdAsync(id);
+
+            return await userRepository.UnBanUser(userToGetUnbanned);
+        }
         public async Task<string> BanUser(User loggedUser, BanOrUnBanDto userToBeBanned)
         {
             await this.userValidator.ValidateIfUsernameExist(userToBeBanned.Username);

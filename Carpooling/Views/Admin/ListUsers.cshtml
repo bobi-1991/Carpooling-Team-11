@@ -24,7 +24,15 @@
                     <td>@user.Email</td>
                     <td>
                         <a asp-controller="Admin" asp-action="Delete" asp-route-id="@user.Id">Delete</a> |
-                        <a asp-controller="Admin" asp-action="ChangeRoleToAdministrator" asp-route-id="@user.Id">Change to Administrator</a>
+                        <a asp-controller="Admin" asp-action="ChangeRoleToAdministrator" asp-route-id="@user.Id">Change to Administrator</a> |
+                        @if (user.IsBlocked == true)
+                        {
+                            <a asp-controller="Admin" asp-action ="Unblock" asp-route-id="@user.Id">Unblock User</a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Admin" asp-action="Block" asp-route-id="@user.Id">Block User</a>
+                        }
                     </td>
                 </tr>
             }
