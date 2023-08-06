@@ -23,10 +23,8 @@ namespace Carpooling.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Index( [FromQuery] TravelQueryParameters searchQuery)
-       // public async Task<IActionResult> Index()
         {
             PaginatedList<Travel> travels = await this.travelService.FilterBy(searchQuery);
-           // var travels = await this.travelService.GetAllTravelAsync();
 
             return this.View(travels);
         }

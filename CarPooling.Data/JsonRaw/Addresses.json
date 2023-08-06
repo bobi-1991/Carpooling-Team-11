@@ -22,7 +22,7 @@
   {
     "CountryId": "1",
     "City": "Sofia",
-    "Details": "Ovcha Kupel"
+    "Details": "Lyvov most"
   },
   {
     "CountryId": "1",
@@ -36,12 +36,42 @@
   },
   {
     "CountryId": "1",
-    "City": "Sofia",
-    "Details": "Ovcha Kupel"
+    "City": "Pernik",
+    "Details": "Marno pole"
   },
   {
     "CountryId": "1",
     "City": "Stara Zagora",
     "Details": "Kraen kvartal"
+  },
+  {
+    "CountryId": "1",
+    "City": "Troyan",
+    "Details": "Chiflika"
+  },
+  {
+    "CountryId": "1",
+    "City": "Pleven",
+    "Details": "Krasna polyana"
+  },
+  {
+    "CountryId": "1",
+    "City": "Veliko Tyrnovo",
+    "Details": "Kartala"
+  },
+  {
+    "CountryId": "1",
+    "City": "Silistra",
+    "Details": "Petyr Beron"
+  },
+  {
+    "CountryId": "1",
+    "City": "Popovo",
+    "Details": "Elin Pelin"
+  },
+  {
+    "CountryId": "1",
+    "City": "Gorna Oryahovica",
+    "Details": "Ivan Asen II"
   }
 ]
