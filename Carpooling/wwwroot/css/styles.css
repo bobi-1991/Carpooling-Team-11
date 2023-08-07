@@ -136,3 +136,24 @@ body {
     text-align: right; /* ѕроменено на "right" за позициониране в д€сно */
 }
 
+
+body {
+    font-family: Arial, sans-serif;
+}
+
+.travel-container {
+    width: 80%;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+}
+
+.property {
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+
+

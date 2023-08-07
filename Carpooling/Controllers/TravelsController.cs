@@ -2,6 +2,7 @@
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
 using CarPooling.Data.Models.Pagination;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Carpooling.Controllers

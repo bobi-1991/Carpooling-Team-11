@@ -4,39 +4,28 @@
 }
 @model TravelResponse
 
-<style>
-    body {
-        font-family: Arial, sans-serif;
-    }
-
-    .travel-container {
-        width: 80%;
-        margin: auto;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
-    }
-
-    .property {
-        font-weight: bold;
-        margin-right: 10px;
-    }
-</style>
-
-
-@*   public string StartLocationName { get; set; }
-        public string DestinationName { get; set; }
-        public DateTime DepartureTime { get; set; }
-        public DateTime ArrivalTime { get; set; }
-        public int AvailableSeats { get; set; }
-        public bool IsComplete { get; set; }
-        public string CarRegistration { get; set; }*@
-
-
-
 
 <div class="travel-container">
+    <h2>Travel Details</h2>
+    <br>
+    <p><i class="fas fa-map-marker-alt"></i> <span class="property">Start Location:</span> @Model.StartLocationName</p>
+    <p><i class="fas fa-flag"></i> <span class="property">Destination:</span> @Model.DestinationName</p>
+    <p><i class="fas fa-calendar"></i> <span class="property">Departure Time:</span> @Model.DepartureTime.ToString("yyyy-MM-dd HH:mm")</p>
+    <p><i class="fas fa-clock"></i> <span class="property">Arrival Time:</span> @Model.ArrivalTime.ToString("yyyy-MM-dd HH:mm")</p>
+    <p><i class="fas fa-chair"></i> <span class="property">Available Seats:</span> @Model.AvailableSeats</p>
+    <p><i class="fas fa-check-circle"></i> <span class="property">Is Complete:</span> @(Model.IsComplete ? "Yes" : "No")</p>
+    <p><i class="fas fa-car"></i> <span class="property">Car Registration:</span> @Model.CarRegistration</p>
+</div>
+
+
+
+
+
+
+
+
+
+@*<div class="travel-container">
     <h2>Travel Details</h2>
     <p><span class="property">Start Location:</span> @Model.StartLocationName</p>
     <p><span class="property">Destination:</span> @Model.DestinationName</p>
@@ -45,80 +34,6 @@
     <p><span class="property">Available Seats:</span> @Model.AvailableSeats</p>
     <p><span class="property">Is Complete:</span> @(Model.IsComplete ? "Yes" : "No")</p>
     <p><span class="property">Car Registration:</span> @Model.CarRegistration</p>
-</div>
+</div>*@
 
-
-
-@*<h2>
-    @this.Model.Content
-</h2>
-<h3>
-    From: @this.Model.User.Username
-</h3>
-
-@*Форма за like/unlike *@
-
-@*@if (authManager.CurrentUser is not null)
-{
-    <form asp-controller="Likes" asp-action="Like" method="post">
-        <input type="hidden" name="postId" value="@Model.PostId" />
-        <button type="submit" class="btn btn-link like-button" style="color: @(Model.Likes.Any(l => l.UserId == authManager.CurrentUser?.UserId && l.Liked) ? "blue" : (Model.Likes.Any(l => l.UserId == authManager.CurrentUser?.UserId && !l.Liked) ?"black" : "black"));">
-            <i class="fa-thumbs-up-icon fas @(Model.Likes.Any(l => l.UserId == authManager.CurrentUser?.UserId && l.Liked) ? "fa-thumbs-up" : "fa-thumbs-up")"></i>
-        </button>
-        <span>@Model.Likes.Count(l => l.Liked)</span>
-    </form>
-}
-@*Само ако си логнат и си автор на поста или админ имаш опции за edit/delete*@
-
-@*@if (authManager.CurrentUser is not null && (authManager.CurrentUser.UserId == this.Model.UserId || authManager.CurrentUser.IsAdmin))
-{
-    <div>
-        <a asp-controller="Posts" asp-action="Edit" asp-route-id="@this.Model.PostId" class="btn btn-primary">Edit Post</a>
-        <a asp-controller="Posts" asp-action="Delete" asp-route-id="@this.Model.PostId" class="btn btn-danger">Delete Post</a>
-    </div>
-}
-*@
-
-@*<h4> <a asp-controller="Comments" asp-action="Create" asp-route-id="@Model.PostId" class="btn btn-primary">Add a comment</a></h4>
-
-<h4>Comments <br></h4>*@
-
-@*@if (this.Model.Comments.Count == 0)
-{
-    <p>
-        <i>No comments</i>
-    </p>
-}
-else
-{
-    <ul>
-        @foreach (var comment in this.Model.Comments.OrderByDescending(x => x.CreatedAt))
-        {
-            <li class="margin12">
-                Comment from @comment.User.Username <br>
-                Published at: @comment.CreatedAt
-                @if (authManager.CurrentUser is not null && (authManager.CurrentUser.UserId == this.Model.UserId || authManager.CurrentUser.IsAdmin || authManager.CurrentUser.UserId == comment.UserId))
-                {
-
-                    <a asp-controller="Comments" asp-action="Edit" asp-route-id="@comment.CommentId" class="btn btn-warning">Edit</a>
-
-                }
-                <br>
-                <p>@comment.Content</p>
-                <hr>
-            </li>
-        }
-    </ul>
-}*@
-
-@*@if (authManager.CurrentUser is null)
-{
-    <a asp-controller="Posts" asp-action="Index" class="nav">See all posts</a>
-}
-
-@if (authManager.CurrentUser is not null)
-{
-    <a asp-controller="Posts" asp-action="Index" class="nav">See all posts</a>
-}
-*@
 

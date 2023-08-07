@@ -6,6 +6,7 @@ using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
+using System.Diagnostics;
 
 namespace Carpooling.BusinessLayer.Services
 {
@@ -96,7 +97,13 @@ namespace Carpooling.BusinessLayer.Services
         public async Task<string> DeleteAsync(User loggedUser, int tripRequestId)
         {
             var tripRequest = await this.tripRequestRepository.GetByIdAsync(tripRequestId);
+            var travelId = tripRequest.TravelId;
             await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, tripRequest.PassengerId);
+
+            if (tripRequest.Status.ToString().ToLower() == "approved")
+            {
+                await this.travelRepository.RemoveUserToTravelAsync(travelId, tripRequest.PassengerId);
+            }
 
             return await this.tripRequestRepository.DeleteAsync(tripRequestId);   
         }
