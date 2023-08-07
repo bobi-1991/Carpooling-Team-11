@@ -45,13 +45,7 @@ namespace CarPooling.Data.Models
         }
 
         public List<User>? Passengers = new List<User>();
-
-
         public List<Feedback>? Feedbacks { get; set; } = new List<Feedback>();
-
-
-
-
     }
 
 }

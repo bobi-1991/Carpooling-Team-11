@@ -46,24 +46,6 @@ namespace Carpooling.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Delete([FromRoute] string id)
-        {
-            try
-            {
-                var user = await _userService.GetUserByIdAsync(id);
-                ViewBag.Credentials = Request.Headers["Authorization"];
-                return View(user);
-
-            }
-            catch (EntityNotFoundException ex)
-            {
-                this.Response.StatusCode = StatusCodes.Status404NotFound;
-                this.ViewData["ErrorMessage"] = ex.Message;
-                return View("Error");
-            }
-
-        }
-        [HttpGet]
         public async Task<IActionResult> Block([FromRoute] string id)
         {
             try
@@ -84,23 +66,70 @@ namespace Carpooling.Controllers
         [HttpPost]
         public async Task<IActionResult> BlockConfirmed([FromRoute] string id)
         {
-            await _userService.BanUserById(id);
-            return RedirectToAction("ListUsers", "Admin");
+            try
+            {
+                await _userService.BanUserById(id);
+                return RedirectToAction("ListUsers", "Admin");
+            }
+            catch (EntityNotFoundException ex)
+            {
+                this.Response.StatusCode = StatusCodes.Status404NotFound;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
+        }
+        [HttpGet]
+        public async Task<IActionResult> Unblock([FromRoute] string id)
+        {
+            try
+            {
+                var user = await _userService.GetUserByIdAsync(id);
+                ViewBag.Credentials = Request.Headers["Authorization"];
+                return View(user);
+
+            }
+            catch (EntityNotFoundException ex)
+            {
+                this.Response.StatusCode = StatusCodes.Status404NotFound;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
+
         }
         [HttpPost]
         public async Task<IActionResult> UnblockConfirmed([FromRoute] string id)
         {
-            await _userService.UnbanUserById(id);
-            return RedirectToAction("ListUsers", "Admin");
+            try
+            {
+                await _userService.UnbanUserById(id);
+                return RedirectToAction("ListUsers", "Admin");
+            }
+            catch (EntityNotFoundException ex)
+            {
+                this.Response.StatusCode = StatusCodes.Status404NotFound;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
         }
-        [HttpPost]
-        public async Task<IActionResult> DeleteConfirmed([FromRoute] string id)
-        {
-            await _userService.DeleteUserWhenAdminAsync(id);
-            return RedirectToAction("ListUsers", "Admin");
-        }
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> ChangeRoleToAdministrator([FromRoute] string id)
+        {
+            try
+            {
+                var user = await _userService.GetUserByIdAsync(id);
+                return View(user);
+
+            }
+            catch (EntityNotFoundException ex)
+            {
+                this.Response.StatusCode = StatusCodes.Status404NotFound;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> ChangeRoleToAdministratorConfirmed([FromRoute] string id)
         {
             try
             {

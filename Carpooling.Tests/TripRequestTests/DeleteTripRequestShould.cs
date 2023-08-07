@@ -3,6 +3,7 @@ using Carpooling.BusinessLayer.Services;
 using Carpooling.BusinessLayer.Validation.Contracts;
 using CarPooling.Data.Models;
 using CarPooling.Data.Models.Enums;
+using CarPooling.Data.Repositories;
 using CarPooling.Data.Repositories.Contracts;
 using Moq;
 using System;
@@ -19,16 +20,18 @@ namespace Carpooling.Tests.TripRequestTests
         private Mock<ITripRequestRepository> tripRequestRepositoryMock;
         private Mock<IUserValidation> userValidationMock;
         private TripRequestService tripRequestService;
+        private Mock<ITravelRepository> travelRepositoryMock;
 
         [TestInitialize]
         public void Initialize()
         {
             tripRequestRepositoryMock = new Mock<ITripRequestRepository>();
             userValidationMock = new Mock<IUserValidation>();
+            travelRepositoryMock = new Mock<ITravelRepository>();
             tripRequestService = new TripRequestService(
                 tripRequestRepositoryMock.Object,
                 userValidationMock.Object,
-                null, // Mock other required dependencies as needed or pass null
+                travelRepositoryMock.Object, // Mock other required dependencies as needed or pass null
                 null,
                 null);
         }
@@ -42,14 +45,16 @@ namespace Carpooling.Tests.TripRequestTests
             {
                 Id = tripRequestId,
                 PassengerId = "2",
-                Status = TripRequestEnum.Approved
+                Status = TripRequestEnum.Approved,
+                TravelId=1
+               
             };
             var loggedUser = TestHelpers.TestHelper.GetTestUserOne();
 
             tripRequestRepositoryMock.Setup(repo => repo.GetByIdAsync(tripRequestId)).ReturnsAsync(tripRequest);
             userValidationMock.Setup(validation => validation.ValidateUserLoggedAndAdmin(loggedUser, tripRequest.PassengerId)).Verifiable();
             tripRequestRepositoryMock.Setup(repo => repo.DeleteAsync(tripRequestId)).ReturnsAsync("Trip request successfully deleted.");
-
+            travelRepositoryMock.Setup(repo => repo.RemoveUserToTravelAsync(tripRequest.TravelId, tripRequest.PassengerId));
             // Act
             var result = await tripRequestService.DeleteAsync(loggedUser, tripRequestId);
 

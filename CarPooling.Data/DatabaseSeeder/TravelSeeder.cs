@@ -38,7 +38,7 @@ namespace CarPooling.Data.DatabaseSeeder
                 var passenger11 = _context.Users.FirstOrDefault(x => x.FirstName.Equals("Damqn"));
 
 
-
+                
 
                 var car = new Car
                 {
@@ -53,7 +53,8 @@ namespace CarPooling.Data.DatabaseSeeder
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now
                 };
-
+                driver.Cars.Add(car);
+                
                 var car2 = new Car
                 {
                     Driver = driver2,
@@ -67,7 +68,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now
                 };
-
+                driver2.Cars.Add(car2);
                 var car3 = new Car
                 {
                     Driver = driver3,
@@ -81,7 +82,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now
                 };
-
+                driver3.Cars.Add(car3);
                 var car4 = new Car
                 {
                     Driver = driver4,
@@ -95,7 +96,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now
                 };
-
+                driver4.Cars.Add(car4);
                 var car5 = new Car
                 {
                     Driver = driver5,
@@ -109,7 +110,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now
                 };
-
+                driver5.Cars.Add(car5);
                 var car6 = new Car
                 {
                     Driver = driver6,
@@ -123,7 +124,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     CreatedOn = DateTime.Now,
                     UpdatedOn = DateTime.Now
                 };
-
+                driver6.Cars.Add(car6);
                 if (_context.Cars.Count() == 0)
                 {
                     if (!_context.Cars.Any(x => x.Registration == car.Registration))

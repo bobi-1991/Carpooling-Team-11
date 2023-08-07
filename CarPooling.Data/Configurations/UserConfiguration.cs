@@ -47,8 +47,8 @@ namespace CarPooling.Data.Configurations
             //    .OnDelete(DeleteBehavior.NoAction);
 
             //builder.HasMany(u => u.Cars)
-            //    .WithOne(c => c.User)
-            //    .HasForeignKey(c => c.UserId)
+            //    .WithOne(c => c.Driver)
+            //    .HasForeignKey(c => c.DriverId)
             //    .OnDelete(DeleteBehavior.NoAction);
         }
 

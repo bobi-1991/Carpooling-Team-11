@@ -5,8 +5,14 @@ using Carpooling.Models;
 using Carpooling.Service.Dto_s.Requests;
 using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Models;
+using Humanizer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
+using Moq;
+using Newtonsoft.Json.Linq;
+using NuGet.Packaging.Signing;
+using System.Collections.Generic;
+using System.Configuration;
 
 namespace Carpooling
 {
@@ -24,8 +30,8 @@ namespace Carpooling
             CreateMap<AddressDTO, Address>()
                 .ForPath(a => a.Country.Name, opt => opt.MapFrom(c => c.Country));
 
-                     
-            
+
+
             CreateMap<Car, CarDTO>().ReverseMap();
 
             CreateMap<Travel, TravelResponse>()
@@ -37,10 +43,20 @@ namespace Carpooling
                 .ReverseMap();
 
             CreateMap<Country, CountryDTO>()
-                .ForMember(c=>c.Country, c=>c.MapFrom(opt=>opt.Name))
+                .ForMember(c => c.Country, c => c.MapFrom(opt => opt.Name))
                 .ReverseMap();
             CreateMap<User, UserViewModel>().ReverseMap();
             CreateMap<UserResponse, UserViewModel>().ReverseMap();
+            CreateMap<Travel, TravelViewModel>()
+                .ForPath(c => c.CarRegistration, opt => opt.MapFrom(src => src.Car.Registration))
+                .ForPath(c => c.CityEndDest, opt => opt.MapFrom(src => src.EndLocation.City))
+                .ForPath(c => c.CityStartDest, opt => opt.MapFrom(src => src.StartLocation.City))
+                .ForPath(c => c.EndDestination, opt => opt.MapFrom(src => src.EndLocation.Details))
+                .ForPath(c => c.StartDestination, opt => opt.MapFrom(src => src.StartLocation.Details))
+                .ForPath(c => c.Country, opt => opt.MapFrom(src => src.StartLocation.Country.Name))
+                .ForPath(c => c.Country, opt => opt.MapFrom(src => src.EndLocation.Country.Name))
+                .ReverseMap();
         }
+
     }
 }

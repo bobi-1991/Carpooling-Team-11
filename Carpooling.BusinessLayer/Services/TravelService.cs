@@ -9,6 +9,7 @@ using CarPooling.Data.Models;
 using CarPooling.Data.Models.Pagination;
 using CarPooling.Data.Repositories;
 using CarPooling.Data.Repositories.Contracts;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,7 +53,19 @@ namespace Carpooling.BusinessLayer.Services
         {
             return this.mapper.Map<TravelResponse>(await this.travelRepository.GetByIdAsync(travelId));
         }
-
+        public async Task<Travel> CreateTravelForMVCAsync(User loggedUser, Travel travel)
+        {
+            await this.travelValidator.ValidateIsLoggedUserAreDriver(loggedUser, travel.DriverId);
+            if (loggedUser.IsBlocked)
+            {
+                throw new UnauthorizedOperationException($"You can't create travel because you're banned.");
+            }
+            if (!loggedUser.Cars.Any(x => x.Id == travel.Car.Id))
+            {
+                throw new EntityUnauthorizatedException("The driver cannot operate a car that is not owned by them.");
+            }
+            return await travelRepository.CreateTravelAsync(travel);
+        }
         public async Task<TravelResponse> CreateTravelAsync(User loggedUser, TravelRequest travelRequest)
         {
             await this.travelValidator.ValidateIsLoggedUserAreDriver(loggedUser, travelRequest.DriverId);

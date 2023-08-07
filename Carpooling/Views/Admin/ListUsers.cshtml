@@ -1,5 +1,6 @@
 ﻿@using CarPooling.Data.Models;
 @using Carpooling.Models;
+@inject Microsoft.AspNetCore.Identity.UserManager<CarPooling.Data.Models.User> UserManager
 @model IEnumerable<User>
 @{
     ViewData["Title"] = "List Users";
@@ -23,16 +24,27 @@
                     <td>@user.UserName</td>
                     <td>@user.Email</td>
                     <td>
-                        <a asp-controller="Admin" asp-action="Delete" asp-route-id="@user.Id">Delete</a> |
-                        <a asp-controller="Admin" asp-action="ChangeRoleToAdministrator" asp-route-id="@user.Id">Change to Administrator</a> |
-                        @if (user.IsBlocked == true)
+                        @if (!await UserManager.IsInRoleAsync(user, "Administrator"))
                         {
-                            <a asp-controller="Admin" asp-action ="Unblock" asp-route-id="@user.Id">Unblock User</a>
+                            <a asp-controller="Admin" asp-action="ChangeRoleToAdministrator" asp-route-id="@user.Id">Change to Administrator |</a>
+                        }
+                       
+                        @if (!await UserManager.IsInRoleAsync(user, "Administrator"))
+                        {
+                            @if (user.IsBlocked == true)
+                            {
+                                <a asp-controller="Admin" asp-action="Unblock" asp-route-id="@user.Id">Unblock User</a>
+                            }
+                            else
+                            {
+                                <a asp-controller="Admin" asp-action="Block" asp-route-id="@user.Id">Block User</a>
+                            }
                         }
                         else
                         {
-                            <a asp-controller="Admin" asp-action="Block" asp-route-id="@user.Id">Block User</a>
+                            <p>You cannot do any actions on other admins!</p>
                         }
+
                     </td>
                 </tr>
             }

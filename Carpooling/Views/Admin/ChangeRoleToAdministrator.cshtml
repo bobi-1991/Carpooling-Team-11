@@ -1,0 +1,21 @@
+﻿@using CarPooling.Data.Models;
+@model User
+
+<h2>Block User</h2>
+
+<div>
+    <p>Are you sure you want to make the user admisnistrator with the following details?</p>
+    <dl class="dl-horizontal">
+        <dt>Username</dt>
+        <dd>@Model.UserName</dd>
+        <dt>Email</dt>
+        <dd>@Model.Email</dd>
+    </dl>
+</div>
+
+<form asp-controller="Admin" asp-action="ChangeRoleToAdministratorConfirmed" asp-route-id="@this.Model.Id" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <input type="hidden" name="credentials" value="@ViewBag.Credentials" />
+    <button type="submit" class="btn btn-danger">Make Administrator</button>
+    <a asp-controller="Admin" asp-action="ListUsers" class="btn btn-secondary">Cancel</a>
+</form>

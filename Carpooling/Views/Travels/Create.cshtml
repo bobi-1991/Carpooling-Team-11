@@ -1,0 +1,70 @@
+﻿@using Carpooling.Models
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@model TravelViewModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create Travel</h2>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <p><strong>Validation Error:</strong> Please correct the errors and try again.</p>
+    </div>
+}
+
+<form asp-controller="Travels" asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="StartDestination"></label>
+        <input asp-for="StartDestination" class="form-control" />
+        <span asp-validation-for="StartDestination" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="EndDestination"></label>
+        <input asp-for="EndDestination" class="form-control" />
+        <span asp-validation-for="EndDestination" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CityStartDest"></label>
+        <input asp-for="CityStartDest" class="form-control" />
+        <span asp-validation-for="CityStartDest" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CityEndDest"></label>
+        <input asp-for="CityEndDest" class="form-control" />
+        <span asp-validation-for="CityEndDest" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Country"></label>
+        <input asp-for="Country" class="form-control" />
+        <span asp-validation-for="Country" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DepartureTime"></label>
+        <input asp-for="DepartureTime" class="form-control" />
+        <span asp-validation-for="DepartureTime" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="ArrivalTime"></label>
+        <input asp-for="ArrivalTime" class="form-control" />
+        <span asp-validation-for="ArrivalTime" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="AvailableSeats"></label>
+        <input asp-for="AvailableSeats" class="form-control" />
+        <span asp-validation-for="AvailableSeats" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="CarRegistration"></label>
+        <input asp-for="CarRegistration" class="form-control" />
+        <span asp-validation-for="CarRegistration" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="DriverId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
+    </br>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
+
+
+        
