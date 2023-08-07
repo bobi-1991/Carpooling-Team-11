@@ -2606,6 +2606,7 @@ textarea.form-control-lg {
 
 .form-floating {
   position: relative;
+  margin: 20px;
 }
 .form-floating > .form-control,
 .form-floating > .form-select {
