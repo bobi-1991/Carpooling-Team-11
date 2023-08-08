@@ -32,8 +32,4 @@
     <ProjectReference Include="..\CarPooling.Data\CarPooling.Data.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\Shared\" />
-  </ItemGroup>
-
 </Project>

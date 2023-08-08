@@ -62,7 +62,7 @@ namespace Carpooling.Tests.TestHelpers
                 Email = "testOne@gmail.com",
                 UserName = "testOne@gmail.com",
                 IsBlocked = false,
-                Cars = new List<Car> { GetTestCarThree() }
+                Cars = new List<Car> { GetTestCarThree(), GetTestCarOne() }
             };
             return user;
         }
@@ -113,6 +113,7 @@ namespace Carpooling.Tests.TestHelpers
             {
                 Driver = new User
                 {
+                    Id="1",
                     FirstName = "Test User One",
                     LastName = "Test User One",
                     Email = "testOne@gmail.com",

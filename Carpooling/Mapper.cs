@@ -57,6 +57,7 @@ namespace Carpooling
                 .ForPath(c => c.Country, opt => opt.MapFrom(src => src.EndLocation.Country.Name))
                 .ReverseMap();
             CreateMap<Car, CarViewModel>().ReverseMap();
+            CreateMap<TripRequest,TripRequestViewModel>().ReverseMap();
         }
 
     }

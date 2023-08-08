@@ -67,6 +67,10 @@ namespace Carpooling.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(TravelViewModel travelViewModel)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge(); 
+            }
             if (!this.ModelState.IsValid)
             {
                 return this.View(travelViewModel);

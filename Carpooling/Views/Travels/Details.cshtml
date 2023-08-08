@@ -16,7 +16,17 @@
     <p><i class="fas fa-check-circle"></i> <span class="property">Is Complete:</span> @(Model.IsComplete ? "Yes" : "No")</p>
     <p><i class="fas fa-car"></i> <span class="property">Car Registration:</span> @Model.CarRegistration</p>
 </div>
-
+</br>
+<div class="create-request-button" style="text-align: left;">
+    @if (this.Model.AvailableSeats > 0)
+    {
+        <a asp-controller="Personal" asp-action="CreateTripRequest" asp-route-travelId="" class="btn btn-success">Create Trip Request</a>
+    }
+    else
+    {
+        <p>Unfortunately there are no available seats :(</p>
+    }
+</div>
 
 
 

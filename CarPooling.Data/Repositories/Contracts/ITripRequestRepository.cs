@@ -16,6 +16,7 @@ namespace CarPooling.Data.Repositories.Contracts
         Task<IEnumerable<TripRequest>> GetAllDriverRequestsAsync();
         Task<IEnumerable<TripRequest>> GetAllPassengerRequestsAsync();
         Task<TripRequest> GetByIdAsync(int id);
+        
         Task<TripRequest> CreateAsync(string driverId, string pasengerId, int travelId);
         Task<string> EditRequestAsync(TripRequest tripRequestToUpdate,string answer);
         Task<string> DeleteAsync(int tripRequestId);

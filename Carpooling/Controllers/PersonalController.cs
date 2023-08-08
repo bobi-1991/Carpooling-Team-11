@@ -17,15 +17,19 @@ namespace Carpooling.Controllers
         private readonly IUserService userService;
         private readonly ICarService carService;
         private readonly IFeedbackService feedbackService;
+        private readonly ITripRequestService tripRequestService;
         private readonly UserManager<User> userManager;
         private readonly IMapper mapper;
-        public PersonalController(IUserService userService, ICarService carService, IFeedbackService feedbackService, UserManager<User> userManager, IMapper mapper)
+        public PersonalController(IUserService userService, ICarService carService,
+            IFeedbackService feedbackService, UserManager<User> userManager, 
+            IMapper mapper, ITripRequestService tripRequestService)
         {
             this.userService = userService;
             this.carService = carService;
             this.feedbackService = feedbackService;
             this.userManager = userManager;
             this.mapper = mapper;
+            this.tripRequestService = tripRequestService;
         }
 
         [HttpGet]
@@ -86,17 +90,62 @@ namespace Carpooling.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCar(CarViewModel carViewModel)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge();
+            }
             if (!this.ModelState.IsValid)
             {
                 return this.View(carViewModel);
             }
             try
             {
+
                 var user = await userManager.Users.Include(c => c.Cars)
                     .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
                 var car = mapper.Map<Car>(carViewModel);
                 var createdCar = await carService.CreateAsync(car, user);
                 return this.RedirectToAction("DriverInfo", "Personal", new {id = user.Id});
+            }
+            catch (UnauthorizedOperationException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
+            catch (DuplicateEntityException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateTripRequest([FromRoute] int id)
+        {
+            var tripRequestViewModel = new TripRequestViewModel() { TravelId = id};
+            return View(tripRequestViewModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateTripRequest(TripRequestViewModel tripRequestViewModel)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge();
+            }
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(tripRequestViewModel);
+            }
+            try
+            {
+
+                var user = await userManager.Users.Include(c => c.Cars)
+                    .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
+                var tripRequest = mapper.Map<TripRequest>(tripRequestViewModel);
+                var createdTripRequest = await tripRequestService.CreateTripRequestForMVCAsync(user, tripRequest);
+                return this.RedirectToAction("DriverInfo", "Personal", new { id = user.Id });
             }
             catch (UnauthorizedOperationException ex)
             {
