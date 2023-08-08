@@ -25,5 +25,7 @@ namespace Carpooling.BusinessLayer.Services.Contracts
         Task<PaginatedList<Travel>> FilterBy(TravelQueryParameters search);
         Task<Travel> CreateTravelForMVCAsync(User loggedUser, Travel travel);
 
+        Task<string> SetTravelToIsCompleteAsync(User loggedUser, int id);
+
     }
 }

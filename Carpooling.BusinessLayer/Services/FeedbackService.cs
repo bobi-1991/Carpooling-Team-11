@@ -10,19 +10,26 @@ namespace Carpooling.BusinessLayer.Services
     {
         private readonly IFeedbackRepository _feedbackRepository;
         private readonly UserManager<User> _userManager;
+        private readonly ITravelRepository travelRepository;
 
-        public FeedbackService(IFeedbackRepository feedbackRepository, UserManager<User> userManager)
+        public FeedbackService(IFeedbackRepository feedbackRepository, UserManager<User> userManager, ITravelRepository travelRepository)
         {
             _feedbackRepository = feedbackRepository;
             _userManager = userManager;
+            this.travelRepository = travelRepository;
         }
 
         public async Task<Feedback> CreateAsync(Feedback feedback, User user)
         {
+            var currentTravel = await this.travelRepository.GetByIdAsync(feedback.TravelId);
             
             if (user.IsBlocked)
             {
                 throw new UnauthorizedOperationException("Only non-blocked user can make feedbacks!");
+            }
+            if (currentTravel.IsCompleted == false)
+            {
+                throw new UnauthorizedOperationException("Фeedback can only be left on completed trips!");
             }
 
             feedback.Passenger = user;

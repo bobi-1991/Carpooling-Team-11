@@ -46,7 +46,7 @@ namespace CarPooling.Data.Repositories
                   .ThenInclude(x => x.Country)
                .Include(x => x.EndLocation)
                     .ThenInclude(x => x.Country)
-               .Where(x => x.IsCompleted == false)
+             //  .Where(x => x.IsCompleted == false)
                .Where(x => !x.IsDeleted)
                .FirstOrDefaultAsync(x => x.Id == travelId);
 
@@ -85,6 +85,18 @@ namespace CarPooling.Data.Repositories
             await dbContext.SaveChangesAsync();
 
             return "Travel successfully deleted.";
+        }
+
+        public async Task<string> SetTravelToIsCompleteAsync(Travel travel)
+        {
+            travel.IsCompleted = true;
+
+            this.dbContext.Update(travel);
+            await this.dbContext.SaveChangesAsync();
+
+            await dbContext.SaveChangesAsync();
+
+            return "Travel successfully set to completed.";
         }
 
 
@@ -290,6 +302,8 @@ namespace CarPooling.Data.Repositories
                     return travels;
             }
         }
+
+   
 
     }
 }

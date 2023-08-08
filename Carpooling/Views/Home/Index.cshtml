@@ -38,14 +38,14 @@
             {
                 <tr>
                     <td>
-                        @if (User.Identity?.IsAuthenticated == true)
-                        {
+                      @*  @if (User.Identity?.IsAuthenticated == true)
+                        {*@
                             <a href="@Url.Action("DriverInfo", "Personal" , new { id = @user.Id })">@user.UserName</a>
-                        }
+                      @*  }
                         else
                         {
                             <a href="/Identity/Account/Login">@user.UserName</a>
-                        }
+                        }*@
                     </td>
                     <td>@user.AverageRating</td>
                 </tr>
@@ -67,14 +67,14 @@
             {
                 <tr>
                     <td>
-                        @if (User.Identity?.IsAuthenticated == true)
-                        {
+                   @*     @if (User.Identity?.IsAuthenticated == true)
+                        {*@
                             <a href="@Url.Action("PassengerInfo", "Personal" , new { id = @user.Id })">@user.UserName</a>
-                        }
+                    @*    }
                         else
                         {
                             <a href="/Identity/Account/Login">@user.UserName</a>
-                        }
+                        }*@
                     </td>
                     <td>@user.AverageRating</td>
                 </tr>

@@ -31,24 +31,30 @@ namespace Carpooling.Controllers
         [HttpGet]
         public async Task<IActionResult> DriverInfo(string id)
         {
-            var user = await userService.GetByIdAsync(id);
+          //  var user = await userService.GetByIdAsync(id);
             var cars = await carService.GetAllAsync();
             var feedbacks = await feedbackService.GetAllAsync();
             var driverFeedbacks = feedbacks.Where(x => x.DriverId == id);
 
-            var car = cars.FirstOrDefault(x => x.DriverId == id);
+
+            var user = await userManager.Users.Include(c => c.Cars)
+                   .SingleAsync(x => x.Id.Equals(id));
+
+            var driverCars = user.Cars;
+
 
             var driverModel = new DriverViewInfoModel
             {
-                Username = user.Username,
+                Username = user.UserName,
                 AverageRating = user.AverageRating,
                 Feedbacks = driverFeedbacks,
-                Capacity = Convert.ToString(car?.AvailableSeats) ?? Convert.ToString("-"),
-                CarBrand = car?.Brand ?? "-",
-                CarModel = car?.Model ?? "-",
-                CarColor = car?.Color ?? "-",
-                Registration = car?.Registration ?? "-",
-                CanSmoke = car?.CanSmoke ?? false
+                Cars = driverCars 
+                //Capacity = Convert.ToString(car?.AvailableSeats) ?? Convert.ToString("-"),
+                //CarBrand = car?.Brand ?? "-",
+                //CarModel = car?.Model ?? "-",
+                //CarColor = car?.Color ?? "-",
+                //Registration = car?.Registration ?? "-",
+                //CanSmoke = car?.CanSmoke ?? false
             };
 
             return View(driverModel);

@@ -29,11 +29,8 @@ namespace CarPooling.Data.Models
 
 
         //  public bool? IsCompleted { get; set; }
-        public bool? IsCompleted
-        {
-            get => DepartureTime <= DateTime.Now;
-            set { }
-        }
+        public bool? IsCompleted { get; set; }
+
        
 
         //public int? CarId { get; set; }
