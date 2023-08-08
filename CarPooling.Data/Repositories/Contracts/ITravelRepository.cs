@@ -22,6 +22,7 @@ namespace CarPooling.Data.Repositories.Contracts
         Task AddUserToTravelAsync(int travelId, string passengerId);
         Task RemoveUserToTravelAsync(int travelId, string passengerId);
         Task <PaginatedList<Travel>> FilterByAsync (TravelQueryParameters filter);
+        Task<string> SetTravelToIsCompleteAsync(Travel travel);
 
 
         //Task<TravelDTO> AddStopToTravelAsync();

@@ -70,6 +70,27 @@ namespace Carpooling.Controllers.ApiControllers
             }
         }
 
+        [HttpPut("coplete/{id}")]
+        public async Task<IActionResult> SetTravelToIsCompleteAsync([FromHeader] string credentials, int id)
+        {
+            try
+            {
+                var loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                return Ok(await travelService.SetTravelToIsCompleteAsync(loggedUser, id));
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (EntityNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
 
 
         // Shoud be tested
@@ -150,6 +171,8 @@ namespace Carpooling.Controllers.ApiControllers
                 return StatusCode(500, ex.Message);
             }
         }
+
+   
 
         [HttpGet("filter")]
         public async Task<ActionResult> FilterTravelsAndSortAsync([FromHeader] string credentials, [FromQuery] string filter)

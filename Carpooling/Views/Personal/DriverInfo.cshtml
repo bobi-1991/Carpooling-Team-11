@@ -6,33 +6,50 @@
     ViewData["Title"] = "Driver Info";
 }
 
-@if (User.Identity?.IsAuthenticated == true)
-{
+@*@if (User.Identity?.IsAuthenticated == true)
+{*@
     <div>
         <h2>User, @Model.Username!</h2>
         <h5>Profile Details:</h5>
         <br>
         <p><i class="fas fa-star"></i> Rating: @Model.AverageRating</p>
         <p><i class="fas fa-comments"></i> Feedbacks: @Model.Feedbacks.Count()</p>
-        <p><i class="fas fa-user"></i> Capacity: @Model.Capacity</p>
-        <p><i class="fas fa-car"></i> Vehicle: @Model.CarBrand,  @Model.CarModel</p>
-        <p><i class="fas fa-paint-brush"></i> Colour: @Model.CarColor</p>
-        <p><i class="fas fa-id-badge"></i> Plate number: @Model.Registration</p>
 
-        @if (Model.CanSmoke == true)
-        {
-            <p><i class="fas fa-user-tag"></i> Can smoke: Yes</p>
-        }
-        else
-        {
-            <p><i class="fas fa-user-tag"></i> Can smoke: No</p>
-        }
+        <div class="car-container">
+            @foreach (var car in Model.Cars)
+            {
+                <div class="car-card">
+                    <h3>@car.Brand @car.Model</h3>
+                    <div class="car-details">
+                        <p><i class="fas fa-user"></i> Capacity: @car.AvailableSeats</p>
+                        <p><i class="fas fa-paint-brush"></i> Colour: @car.Color</p>
+                        <p><i class="fas fa-id-badge"></i> Plate number: @car.Registration</p>
+                        <p><i class="fas fa-user-tag"></i> Can smoke: @(car.CanSmoke ? "Yes" : "No")</p>
+                    </div>
+                </div>
+            }
+        </div>
+        <br>
+
+    @foreach (var feedback in Model.Feedbacks)
+    {
+        <div class="feedback-container">
+            <div class="feedback-details">
+                <p class="feedback-comment">@feedback.Driver.UserName - feedback based on realised travel:</p>
+
+            </div>
+            <p>@feedback.Comment</p>
+            <p class="feedback-date">@feedback.CreatedOn.ToString("dd. MMM. yyyy.")</p>
+        </div>
+        <hr /> <!-- Добавете линия между отзивите, за да ги разделите -->
+    }
+
+
+        <br>
         <a asp-controller="Home" asp-action="Index" class="nav">Go back</a>
     </div>
-}
+@*}
 else
 {
     <a asp-page="/Identity/Account/Login" class="nav">Login</a>
-}
-
-
+}*@

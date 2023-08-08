@@ -134,6 +134,20 @@ namespace Carpooling.BusinessLayer.Services
 
             return await this.travelRepository.DeleteAsync(travelId);
         }
+        public async Task<string> SetTravelToIsCompleteAsync(User loggedUser, int id)
+        {
+            var travel = await this.travelRepository.GetByIdAsync(id);
+
+            await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, travel.DriverId);
+
+            if (travel.IsCompleted == true)
+            {
+                return "This travel is already completed.";
+            }
+
+            return await this.travelRepository.SetTravelToIsCompleteAsync(travel);
+
+        }
 
         public async Task<TravelResponse> UpdateAsync(User loggedUser, int travelId, TravelUpdateDto travelDataForUpdate)
         {
@@ -208,5 +222,7 @@ namespace Carpooling.BusinessLayer.Services
         {
             return await this.travelRepository.FilterByAsync(search);
         }
+   
+
     }
 }
