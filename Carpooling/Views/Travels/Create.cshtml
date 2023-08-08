@@ -61,7 +61,6 @@
         <input asp-for="CarRegistration" class="form-control" />
         <span asp-validation-for="CarRegistration" class="text-danger"></span>
     </div>
-    <input type="hidden" asp-for="DriverId" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" />
     </br>
     <button type="submit" class="btn btn-primary">Create</button>
 </form>

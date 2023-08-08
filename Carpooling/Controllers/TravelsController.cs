@@ -2,11 +2,13 @@
 using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.Models;
+using CarPooling.Data.Data;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
 using CarPooling.Data.Models.Pagination;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Carpooling.Controllers
 {
@@ -18,7 +20,9 @@ namespace Carpooling.Controllers
         private readonly ITravelService travelService;
         private readonly UserManager<User> userManager;
         private readonly IMapper mapper;
-        public TravelsController(IUserService userService, ICarService carService, IFeedbackService feedbackService, ITravelService travelService, UserManager<User> userManager, IMapper mapper)
+        private readonly CarPoolingDbContext dbContext;
+        public TravelsController(IUserService userService, ICarService carService, IFeedbackService feedbackService, 
+            ITravelService travelService, UserManager<User> userManager, IMapper mapper, CarPoolingDbContext dbContext)
         {
             this.userService = userService;
             this.carService = carService;
@@ -26,6 +30,7 @@ namespace Carpooling.Controllers
             this.travelService = travelService;
             this.userManager = userManager;
             this.mapper = mapper;
+            this.dbContext = dbContext;
         }
 
         [HttpGet]
@@ -68,10 +73,11 @@ namespace Carpooling.Controllers
             }
             try
             {
-                var user = await userManager.GetUserAsync(User);
+                var user = await userManager.Users.Include(c => c.Cars)
+                    .SingleAsync(x=>x.UserName.Equals(User.Identity.Name));
                 var travel = mapper.Map<Travel>(travelViewModel);
-                var createdTravel = travelService.CreateTravelForMVCAsync(user, travel);
-                return this.RedirectToAction("Details", "Travels", new { id = createdTravel.Id });
+                var createdTravel = await travelService.CreateTravelForMVCAsync(user, travel);
+                return this.RedirectToAction("Details", "Travels", new {id = travel.Id});
             }
             catch (UnauthorizedOperationException ex)
             {
@@ -89,7 +95,7 @@ namespace Carpooling.Controllers
             {
                 HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
                 this.ViewData["ErrorMessage"] = ex.Message;
-                return View(travelViewModel);
+                return View("Error");
             }
         }
         

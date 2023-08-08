@@ -43,6 +43,7 @@ namespace CarPooling.Data.DatabaseSeeder
                 var car = new Car
                 {
                     Driver = driver,
+                    DriverId = driver.Id,
                     AvailableSeats = 4,
                     Color = "Red",
                     Model = "Q5",
@@ -58,6 +59,7 @@ namespace CarPooling.Data.DatabaseSeeder
                 var car2 = new Car
                 {
                     Driver = driver2,
+                    DriverId = driver2.Id,
                     AvailableSeats = 4,
                     Color = "Black",
                     Model = "X5",
@@ -72,6 +74,7 @@ namespace CarPooling.Data.DatabaseSeeder
                 var car3 = new Car
                 {
                     Driver = driver3,
+                    DriverId = driver3.Id,
                     AvailableSeats = 4,
                     Color = "Silver",
                     Model = "735",
@@ -86,6 +89,7 @@ namespace CarPooling.Data.DatabaseSeeder
                 var car4 = new Car
                 {
                     Driver = driver4,
+                    DriverId = driver4.Id,
                     AvailableSeats = 4,
                     Color = "Silver",
                     Model = "Q7",
@@ -100,6 +104,7 @@ namespace CarPooling.Data.DatabaseSeeder
                 var car5 = new Car
                 {
                     Driver = driver5,
+                    DriverId = driver5.Id,
                     AvailableSeats = 4,
                     Color = "Black",
                     Model = "X3",
@@ -114,6 +119,7 @@ namespace CarPooling.Data.DatabaseSeeder
                 var car6 = new Car
                 {
                     Driver = driver6,
+                    DriverId = driver6.Id,
                     AvailableSeats = 4,
                     Color = "Red",
                     Model = "320",

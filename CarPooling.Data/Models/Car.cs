@@ -18,9 +18,9 @@ namespace CarPooling.Data.Models
         public bool CanSmoke { get; set; }
 
         // Foreign keys with navigation properties
-        [JsonIgnore]
+        //[JsonIgnore]
         public string DriverId { get; set; }
-        [JsonIgnore]
+        //[JsonIgnore]
         public User Driver { get; set; }
     }
 }

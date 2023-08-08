@@ -60,10 +60,15 @@ namespace Carpooling.BusinessLayer.Services
             {
                 throw new UnauthorizedOperationException($"You can't create travel because you're banned.");
             }
-            if (!loggedUser.Cars.Any(x => x.Id == travel.Car.Id))
+            if (!loggedUser.Cars.Any(x => x.Registration == travel.Car.Registration))
             {
                 throw new EntityUnauthorizatedException("The driver cannot operate a car that is not owned by them.");
             }
+            Car car = loggedUser.Cars.Where(x => x.Registration == travel.Car.Registration)
+                .FirstOrDefault();
+            travel.Car = car;
+            travel.Driver = loggedUser;
+            travel.DriverId = loggedUser.Id;
             return await travelRepository.CreateTravelAsync(travel);
         }
         public async Task<TravelResponse> CreateTravelAsync(User loggedUser, TravelRequest travelRequest)

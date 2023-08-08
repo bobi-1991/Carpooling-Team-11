@@ -1,6 +1,14 @@
-﻿using Carpooling.BusinessLayer.Services.Contracts;
+﻿using AutoMapper;
+using Carpooling.BusinessLayer.Exceptions;
+using Carpooling.BusinessLayer.Services;
+using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.Models;
+using CarPooling.Data.Exceptions;
+using CarPooling.Data.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace Carpooling.Controllers
 {
@@ -9,12 +17,15 @@ namespace Carpooling.Controllers
         private readonly IUserService userService;
         private readonly ICarService carService;
         private readonly IFeedbackService feedbackService;
-
-        public PersonalController(IUserService userService, ICarService carService, IFeedbackService feedbackService)
+        private readonly UserManager<User> userManager;
+        private readonly IMapper mapper;
+        public PersonalController(IUserService userService, ICarService carService, IFeedbackService feedbackService, UserManager<User> userManager, IMapper mapper)
         {
             this.userService = userService;
             this.carService = carService;
             this.feedbackService = feedbackService;
+            this.userManager = userManager;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -64,9 +75,41 @@ namespace Carpooling.Controllers
         [HttpGet]
         public async Task<IActionResult> Menu()
         {
-            
-
             return View();
+        }
+        [HttpGet]
+        public async Task<IActionResult> CreateCar()
+        {
+            var carViewModel = new CarViewModel();
+            return View(carViewModel);
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateCar(CarViewModel carViewModel)
+        {
+            if (!this.ModelState.IsValid)
+            {
+                return this.View(carViewModel);
+            }
+            try
+            {
+                var user = await userManager.Users.Include(c => c.Cars)
+                    .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
+                var car = mapper.Map<Car>(carViewModel);
+                var createdCar = await carService.CreateAsync(car, user);
+                return this.RedirectToAction("DriverInfo", "Personal", new {id = user.Id});
+            }
+            catch (UnauthorizedOperationException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
+            catch (DuplicateEntityException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
         }
     }
 

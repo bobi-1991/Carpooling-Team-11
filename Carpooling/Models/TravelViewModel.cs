@@ -4,7 +4,6 @@ namespace Carpooling.Models
 {
     public class TravelViewModel
     {
-        public string DriverId { get; set; }
         public string StartDestination { get; set; }
         public string EndDestination { get; set; }
         public string CityStartDest { get; set; }

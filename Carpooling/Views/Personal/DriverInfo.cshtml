@@ -6,7 +6,7 @@
     ViewData["Title"] = "Driver Info";
 }
 
-if (User.Identity?.IsAuthenticated == true)
+@if (User.Identity?.IsAuthenticated == true)
 {
     <div>
         <h2>User, @Model.Username!</h2>
