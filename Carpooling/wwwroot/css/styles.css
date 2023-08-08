@@ -189,3 +189,25 @@ body {
 }
 
 
+/*стилове за показване на фийдбеците на passengers и drivers*/
+.feedback-container {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.feedback-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.feedback-comment {
+    font-weight: bold;
+}
+
+.feedback-date {
+    text-align: right;
+}
+
+

@@ -29,6 +29,21 @@
                 </div>
             }
         </div>
+        <br>
+
+    @foreach (var feedback in Model.Feedbacks)
+    {
+        <div class="feedback-container">
+            <div class="feedback-details">
+                <p class="feedback-comment">@feedback.Driver.UserName - feedback based on realised travel:</p>
+
+            </div>
+            <p>@feedback.Comment</p>
+            <p class="feedback-date">@feedback.CreatedOn.ToString("dd. MMM. yyyy.")</p>
+        </div>
+        <hr /> <!-- Добавете линия между отзивите, за да ги разделите -->
+    }
+
 
         <br>
         <a asp-controller="Home" asp-action="Index" class="nav">Go back</a>
