@@ -46,6 +46,7 @@ namespace Carpooling.Controllers
         {
             try
             {
+                this.ViewBag.id= id;
                 var travel = await this.travelService.GetByIdAsync(id);
 
                 return this.View(travel);
@@ -61,6 +62,10 @@ namespace Carpooling.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge();
+            }
             var travelViewModel = new TravelViewModel();
             return this.View(travelViewModel);
         }

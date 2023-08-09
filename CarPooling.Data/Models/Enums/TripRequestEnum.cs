@@ -8,8 +8,8 @@ namespace CarPooling.Data.Models.Enums
 {
     public enum TripRequestEnum
     {
-        Pending,
-        Approved,
-        Declined
+        Pending=0,
+        Approved=1,
+        Declined=2
     }
 }

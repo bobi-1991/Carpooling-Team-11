@@ -88,6 +88,10 @@ namespace Carpooling.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateCar()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge();
+            }
             var carViewModel = new CarViewModel();
             return View(carViewModel);
         }
@@ -129,8 +133,12 @@ namespace Carpooling.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateTripRequest([FromRoute] int id)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge();
+            }
             var tripRequestViewModel = new TripRequestViewModel();
-            tripRequestViewModel.TravelId = id; 
+            tripRequestViewModel.TravelId = id;
             return View(tripRequestViewModel);
         }
         [HttpPost]
@@ -207,8 +215,45 @@ namespace Carpooling.Controllers
             }
 
         }
-    }
 
+        //[HttpPost]
+        //public async Task<IActionResult> EditTripRequest(int tripRequestId, string newStatus)
+        //{
+        //    if (!User.Identity.IsAuthenticated)
+        //    {
+        //        return Challenge();
+        //    }
+
+        //    try
+        //    {
+        //        var user = await userManager.Users.Include(c => c.Cars).Include(t=>t.PassengerTripRequests).Include(t=>t.DriverTripRequests)
+        //            .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
+
+        //        await tripRequestService.EditRequestAsync(user, tripRequestId, newStatus);
+
+        //        return RedirectToAction("DriverInfo", "Personal", new { id = user.Id });
+        //    }
+        //    catch (EntityNotFoundException ex)
+        //    {
+        //        HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+        //        this.ViewData["ErrorMessage"] = ex.Message;
+        //        return View("Error");
+        //    }
+        //    catch (UnauthorizedOperationException ex)
+        //    {
+        //        HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+        //        this.ViewData["ErrorMessage"] = ex.Message;
+        //        return View("Error");
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Handle other exceptions here
+        //        HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        //        this.ViewData["ErrorMessage"] = "An error occurred while updating the trip request.";
+        //        return View("Error");
+        //    }
+        //}
+    }
 }
 
 

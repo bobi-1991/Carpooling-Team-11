@@ -92,7 +92,7 @@ namespace Carpooling.BusinessLayer.Services
             var destination = await this.addressRepository.GetByIdAsync(travelRequest.DestionationId);
 
             var travel = new Travel
-            {
+            {               
                 DriverId = travelRequest.DriverId,
                 DepartureTime = travelRequest.DepartureTime,
                 ArrivalTime = travelRequest.ArrivalTime,
@@ -113,6 +113,7 @@ namespace Carpooling.BusinessLayer.Services
 
             return new TravelResponse
             {
+                TravelId=travel.Id,
                 StartLocationName = createdTravel.StartLocation.Details,
                 DestinationName = createdTravel.EndLocation.Details,
                 DepartureTime = (DateTime)createdTravel.DepartureTime,
