@@ -8,9 +8,20 @@
 
 
 <div class="user-menu">
-    <ul>       
+    <ul>
         <li><a asp-controller="Personal" asp-action="MyTravels">My Travels</a></li>
-        <li><a href="#">My Bookings</a></li>
+        @*    @if (User.IsInRole("driver"))
+        {*@
+        <li><a asp-controller="Personal" asp-action="MyBookings">My Bookings</a></li>
+        @* }*@
+        @*   @if (User.IsInRole("driver"))
+        {
+        <li><a asp-controller="Personal" asp-action="">My requests</a></li>
+        }*@
+
+        @*    <li><a href="#">My Passengers</a></li>*@
+
+        <li><a href="#">My Passengers</a></li>
         <li><a href="#">My Passengers</a></li>
         <li><a asp-controller="Personal" asp-action="MyCars">My Vehicles</a></li>
         <li><a href="#">My Received Ratings</a></li>
