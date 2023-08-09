@@ -69,6 +69,10 @@ namespace Carpooling.BusinessLayer.Services
             {
                 throw new DublicateEntityException("You already has request for this travel.");
             }
+            if (driverId.Equals(loggedUser.Id))
+            {
+                throw new DriverPassengerMachingException("You cannot apply for your own travel!");
+            }
             var trip = await this.tripRequestRepository.CreateAsync(driverId, loggedUser.Id, travel.Id);
             return trip;
         }
@@ -168,7 +172,7 @@ namespace Carpooling.BusinessLayer.Services
                x.Travel.EndLocation.Details, (DateTime)
                x.Travel.DepartureTime,
                x.Status.ToString()));
-        }
+        } 
 
         
     }

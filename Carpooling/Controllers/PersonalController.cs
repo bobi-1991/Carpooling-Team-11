@@ -130,7 +130,8 @@ namespace Carpooling.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateTripRequest([FromRoute] int id)
         {
-            var tripRequestViewModel = new TripRequestViewModel() { TravelId = id};
+            var tripRequestViewModel = new TripRequestViewModel();
+            tripRequestViewModel.TravelId = id; 
             return View(tripRequestViewModel);
         }
         [HttpPost]
@@ -146,12 +147,18 @@ namespace Carpooling.Controllers
             }
             try
             {
-
                 var user = await userManager.Users.Include(c => c.Cars)
                     .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
+                tripRequestViewModel.Status = CarPooling.Data.Models.Enums.TripRequestEnum.Pending;
                 var tripRequest = mapper.Map<TripRequest>(tripRequestViewModel);
                 var createdTripRequest = await tripRequestService.CreateTripRequestForMVCAsync(user, tripRequest);
                 return this.RedirectToAction("DriverInfo", "Personal", new { id = user.Id });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
             }
             catch (UnauthorizedOperationException ex)
             {
@@ -160,6 +167,12 @@ namespace Carpooling.Controllers
                 return View("Error");
             }
             catch (DuplicateEntityException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
+            catch (DriverPassengerMachingException ex)
             {
                 HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
                 this.ViewData["ErrorMessage"] = ex.Message;

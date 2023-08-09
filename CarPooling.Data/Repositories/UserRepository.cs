@@ -176,7 +176,7 @@ namespace CarPooling.Data.Repositories
 
             return users.OrderByDescending(x => x.AverageRating);
         }
-        public async Task ConvertToAdministrator(string id) //tested
+        public async Task ConvertToAdministrator(string id) 
         {
             var user = await this.GetByIdAsync(id);
 

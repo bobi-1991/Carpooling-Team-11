@@ -5,7 +5,7 @@ namespace Carpooling.Models
     public class TripRequestViewModel
     {
         public int TravelId { get; set; }
-        public TripRequestEnum Status { get; set; } = TripRequestEnum.Pending;
+        public TripRequestEnum Status { get; set; } 
         
     }
 }
