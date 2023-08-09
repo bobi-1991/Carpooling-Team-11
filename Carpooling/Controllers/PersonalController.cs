@@ -21,11 +21,10 @@ namespace Carpooling.Controllers
         private readonly ITripRequestService tripRequestService;
         private readonly UserManager<User> userManager;
         private readonly IMapper mapper;
-        public PersonalController(IUserService userService, ICarService carService,
-            IFeedbackService feedbackService, UserManager<User> userManager, 
-            IMapper mapper, ITripRequestService tripRequestService)
         private readonly ITravelService travelService;
-        public PersonalController(IUserService userService, ICarService carService, IFeedbackService feedbackService, UserManager<User> userManager, IMapper mapper, ITravelService travelService)
+
+
+        public PersonalController(IUserService userService, ICarService carService, IFeedbackService feedbackService, UserManager<User> userManager, IMapper mapper, ITravelService travelService, ITripRequestService tripRequestService)
         {
             this.userService = userService;
             this.carService = carService;
@@ -34,6 +33,7 @@ namespace Carpooling.Controllers
             this.mapper = mapper;
             this.tripRequestService = tripRequestService;
             this.travelService = travelService;
+            this.tripRequestService = tripRequestService;
         }
 
         [HttpGet]
@@ -165,7 +165,6 @@ namespace Carpooling.Controllers
                 return View("Error");
             }
         }
-    }
 
         [HttpGet]
         public async Task<IActionResult> MyTravels()
@@ -195,13 +194,11 @@ namespace Carpooling.Controllers
             }
 
         }
-
-
-
+    }
 
 }
 
 
-}
+
 
 
