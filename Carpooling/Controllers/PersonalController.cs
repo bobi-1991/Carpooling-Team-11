@@ -219,6 +219,10 @@ namespace Carpooling.Controllers
         [HttpGet]
         public async Task<IActionResult> MyTravels()
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge();
+            }
             try
             {
                 if (!User.Identity.IsAuthenticated)
@@ -248,6 +252,40 @@ namespace Carpooling.Controllers
             }
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> MyBookings()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge();
+            }
+            try
+            {
+                var user = await userManager.Users
+                    .Include(c => c.Cars)
+                    .Include(t => t.PassengerTripRequests)
+                    .Include(t => t.DriverTripRequests)
+                    .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
+
+                IEnumerable<TripRequestResponse> result = await this.tripRequestService.SeeAllHisPassengerRequestsMVCAsync(user, user.Id);
+
+
+                return this.View(result);
+
+
+            }
+            catch (UnauthorizedOperationException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+
+            }
+
+        }
+
+
 
         //[HttpPost]
         //public async Task<IActionResult> EditTripRequest(int tripRequestId, string newStatus)

@@ -22,6 +22,7 @@ namespace CarPooling.Data.Repositories.Contracts
         Task<string> DeleteAsync(int tripRequestId);
         Task<IEnumerable<TripRequest>> SeeAllHisDriverRequestsAsync(string userId);
         Task<IEnumerable<TripRequest>> SeeAllHisPassengerRequestsAsync(string userId);
+        Task<IEnumerable<TripRequest>> SeeAllHisPassengerRequestsMVCAsync(string userId);
 
     }
 }

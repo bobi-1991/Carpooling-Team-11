@@ -173,8 +173,23 @@ namespace Carpooling.BusinessLayer.Services
                x.Travel.EndLocation.Details, (DateTime)
                x.Travel.DepartureTime,
                x.Status.ToString()));
-        } 
+        }
+        public async Task<IEnumerable<TripRequestResponse>> SeeAllHisPassengerRequestsMVCAsync(User loggedUser, string passengerId)
+        {
+            await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, passengerId);
 
-        
+
+            var tripRequests = await this.tripRequestRepository.SeeAllHisPassengerRequestsMVCAsync(passengerId);
+
+            return tripRequests.Select(x => new TripRequestResponse(
+               x.Passenger.UserName,
+               x.Driver.UserName,
+               x.Travel.StartLocation.Details,
+               x.Travel.EndLocation.Details, (DateTime)
+               x.Travel.DepartureTime,
+               x.Status.ToString()));
+        }
+
+
     }
 }
