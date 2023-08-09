@@ -120,18 +120,19 @@ namespace Carpooling.BusinessLayer.Services
 
             if (currentAnswer.Equals("approve") && travel.AvailableSeats > 0)
             {
-              await this.travelRepository.AddUserToTravelAsync(travel.Id, tripRequestToUpdate.PassengerId);
+                await this.travelRepository.AddUserToTravelAsync(travel.Id, tripRequestToUpdate.PassengerId);
             }
             else if (currentAnswer.Equals("approve") && travel.AvailableSeats == 0)
             {
                 return "I'm sorry, but there are no seats available for this trip";
             }
-            else if (currentAnswer.Equals("decline"))
+            else if (currentAnswer.Equals("decline") && tripRequestToUpdate.Status.ToString().ToLower() == "approved")
             {
                 await this.travelRepository.RemoveUserToTravelAsync(travel.Id, tripRequestToUpdate.PassengerId);
             }
 
-            return await this.tripRequestRepository.EditRequestAsync(tripRequestToUpdate, currentAnswer);
+
+                return await this.tripRequestRepository.EditRequestAsync(tripRequestToUpdate, currentAnswer);
 
         }
         public async Task<IEnumerable<TripRequestResponse>> SeeAllHisDriverRequestsAsync(User loggedUser, string driverId)

@@ -9,20 +9,6 @@
 @*@if (User.Identity?.IsAuthenticated == true)
 {*@
 
-<style>
-    .feedback-container {
-        margin-bottom: 20px;
-    }
-
-    .feedback-comment {
-        font-weight: bold;
-    }
-
-    .feedback-date {
-        margin-top: 5px;
-    }
-</style>
-
 
 
 <div>
@@ -34,11 +20,13 @@
 
     @foreach (var feedback in Model.Feedbacks)
     {
-
-        <div>
-            <p class="feedback-comment">@feedback.Passenger.UserName - feedback based on realised ride:</p>
-                <p class="feedback-date">@feedback.CreatedOn.ToString("dd. MMM. yyyy.")</p>
+        <div class="feedback-container">
+            <div class="feedback-details">
+                <p class="feedback-comment">@feedback.Passenger.UserName - feedback based on realised ride:</p>
+               
+            </div>
             <p>@feedback.Comment</p>
+            <p class="feedback-date">@feedback.CreatedOn.ToString("dd. MMM. yyyy.")</p>
         </div>
         <hr /> <!-- Добавете линия между отзивите, за да ги разделите -->
     }
@@ -48,21 +36,3 @@
 
 
 
-
-
- @*   <div>
-        <h2>User, @Model.Username!</h2>
-        <h5>Profile Details:</h5>
-        <br>
-        <p><i class="fas fa-star"></i> Rating: @Model.AverageRating</p>
-        <p><i class="fas fa-comments"></i> Feedbacks: @Model.Feedbacks.Count()</p>
-
-        <a asp-controller="Home" asp-action="Index" class="nav">Go back</a>
-    </div>*@
-@*}
-else
-{
-    <a asp-page="/Identity/Account/Login" class="nav">Login</a>
-}
-
-*@

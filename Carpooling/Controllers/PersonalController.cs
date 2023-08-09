@@ -3,6 +3,7 @@ using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.Models;
+using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
 using Microsoft.AspNetCore.Identity;
@@ -19,19 +20,20 @@ namespace Carpooling.Controllers
         private readonly IFeedbackService feedbackService;
         private readonly UserManager<User> userManager;
         private readonly IMapper mapper;
-        public PersonalController(IUserService userService, ICarService carService, IFeedbackService feedbackService, UserManager<User> userManager, IMapper mapper)
+        private readonly ITravelService travelService;
+        public PersonalController(IUserService userService, ICarService carService, IFeedbackService feedbackService, UserManager<User> userManager, IMapper mapper, ITravelService travelService)
         {
             this.userService = userService;
             this.carService = carService;
             this.feedbackService = feedbackService;
             this.userManager = userManager;
             this.mapper = mapper;
+            this.travelService = travelService;
         }
 
         [HttpGet]
         public async Task<IActionResult> DriverInfo(string id)
         {
-          //  var user = await userService.GetByIdAsync(id);
             var cars = await carService.GetAllAsync();
             var feedbacks = await feedbackService.GetAllAsync();
             var driverFeedbacks = feedbacks.Where(x => x.DriverId == id);
@@ -48,13 +50,7 @@ namespace Carpooling.Controllers
                 Username = user.UserName,
                 AverageRating = user.AverageRating,
                 Feedbacks = driverFeedbacks,
-                Cars = driverCars 
-                //Capacity = Convert.ToString(car?.AvailableSeats) ?? Convert.ToString("-"),
-                //CarBrand = car?.Brand ?? "-",
-                //CarModel = car?.Model ?? "-",
-                //CarColor = car?.Color ?? "-",
-                //Registration = car?.Registration ?? "-",
-                //CanSmoke = car?.CanSmoke ?? false
+                Cars = driverCars
             };
 
             return View(driverModel);
@@ -72,7 +68,7 @@ namespace Carpooling.Controllers
                 Username = user.Username,
                 AverageRating = user.AverageRating,
                 Feedbacks = passengerFeedbacks
-       
+
             };
 
             return View(passengerModel);
@@ -83,12 +79,14 @@ namespace Carpooling.Controllers
         {
             return View();
         }
+
         [HttpGet]
         public async Task<IActionResult> CreateCar()
         {
             var carViewModel = new CarViewModel();
             return View(carViewModel);
         }
+
         [HttpPost]
         public async Task<IActionResult> CreateCar(CarViewModel carViewModel)
         {
@@ -102,7 +100,7 @@ namespace Carpooling.Controllers
                     .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
                 var car = mapper.Map<Car>(carViewModel);
                 var createdCar = await carService.CreateAsync(car, user);
-                return this.RedirectToAction("DriverInfo", "Personal", new {id = user.Id});
+                return this.RedirectToAction("DriverInfo", "Personal", new { id = user.Id });
             }
             catch (UnauthorizedOperationException ex)
             {
@@ -117,7 +115,40 @@ namespace Carpooling.Controllers
                 return View("Error");
             }
         }
-    }
+
+        [HttpGet]
+        public async Task<IActionResult> MyTravels()
+        {
+            try
+            {
+                var user = await userManager.Users.Include(x => x.TravelHistory)
+                       .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
+
+                var history = user.TravelHistory;
+                var trips = new List<TravelResponse>();
+
+                foreach (var travel in history)
+                {
+                    var trip = await this.travelService.GetByIdAsync(travel.Id);
+                    trips.Add(trip);
+                }
+
+                return this.View(trips);
+            }
+            catch (UnauthorizedOperationException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+
+            }
+
+        }
+
+
+
+
+}
 
 
 }

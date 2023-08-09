@@ -125,6 +125,8 @@ namespace CarPooling.Data.Repositories
            .Include(x => x.Car)
            .Include(x => x.StartLocation)
            .Include(x => x.EndLocation)
+
+
            // .Include(x => x.Passengers)
            .FirstOrDefaultAsync(x => x.Id == travelId);
 
@@ -132,8 +134,13 @@ namespace CarPooling.Data.Repositories
               .FirstOrDefaultAsync(x => x.Id == passengerId);
 
             travel.Passengers.Add(passenger);
+            //NEW
+            this.dbContext.Travels.Update(travel);
             travel.AvailableSeats--;
-            //  passenger.TravelHistory.Add(travel);
+            //NEW
+            passenger.TravelHistory.Add(travel);
+            this.dbContext.Users.Update(passenger);
+
 
             await this.dbContext.SaveChangesAsync();
 
