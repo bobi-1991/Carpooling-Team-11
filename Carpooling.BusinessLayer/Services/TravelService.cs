@@ -113,7 +113,6 @@ namespace Carpooling.BusinessLayer.Services
 
             return new TravelResponse
             {
-                TravelId=travel.Id,
                 StartLocationName = createdTravel.StartLocation.Details,
                 DestinationName = createdTravel.EndLocation.Details,
                 DepartureTime = (DateTime)createdTravel.DepartureTime,
