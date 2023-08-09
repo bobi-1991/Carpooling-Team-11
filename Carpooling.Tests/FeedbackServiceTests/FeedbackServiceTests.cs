@@ -36,7 +36,7 @@ namespace Carpooling.Tests.FeedbackServiceTests
                 .Setup(x => x.GetAllAsync())
                 .Returns(Task.FromResult(new List<Feedback>()));
 
-            sut = new FeedbackService(feedbackRepositoryMock.Object, userManagerMock.Object);
+           // sut = new FeedbackService(feedbackRepositoryMock.Object, userManagerMock.Object);
         }
 
         [TestMethod]
