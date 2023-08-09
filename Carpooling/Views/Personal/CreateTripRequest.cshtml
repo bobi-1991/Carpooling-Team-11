@@ -1,0 +1,22 @@
+﻿@using Carpooling.Models
+@model TripRequestViewModel
+@{
+    this.ViewData["Title"] = "TripRequest";
+}
+
+<h2>Confirm Trip Request</h2>
+
+<p>Are you sure you want to make this request?</p>
+
+
+<form asp-action="CreateTripRequest" method="post">
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(model => model.TravelId)
+    @Html.HiddenFor(model => model.Status)
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Confirm</button>
+        <a asp-action="Index" class="btn btn-link">Cancel</a>
+    </div>
+</form>

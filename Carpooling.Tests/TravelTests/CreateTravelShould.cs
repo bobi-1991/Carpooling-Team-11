@@ -13,6 +13,7 @@ using Carpooling.BusinessLayer.Services;
 using Carpooling.Service.Dto_s.Requests;
 using Carpooling.BusinessLayer.Exceptions;
 using CarPooling.Data.Exceptions;
+using Carpooling.Models;
 
 namespace Carpooling.Tests.TravelTests
 {
@@ -67,7 +68,7 @@ namespace Carpooling.Tests.TravelTests
             travelRepositoryMock.Setup(repo => repo.CreateTravelAsync(createdTravel)).ThrowsAsync(new UnauthorizedOperationException("You cannot create travel!"));
 
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
-                addressRepositoryMock.Object, carRepositoryMock.Object, 
+                addressRepositoryMock.Object, carRepositoryMock.Object,
                 travelValidatorMock.Object, userValidationMock.Object);
 
             // Act & Assert
@@ -75,7 +76,7 @@ namespace Carpooling.Tests.TravelTests
             await Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(async () =>
             {
                 await travelService.CreateTravelAsync(loggedUser, travelRequest);
-            });           
+            });
         }
         [TestMethod]
         public async Task CreateTravelAsync_InvalidTravelTime_ThrowsArgumentException()
@@ -114,7 +115,7 @@ namespace Carpooling.Tests.TravelTests
                 travelValidatorMock.Object, userValidationMock.Object);
 
             // Act & Assert
-            
+
             Assert.ThrowsExceptionAsync<ArgumentException>(async () =>
             {
                 await travelService.CreateTravelAsync(loggedUser, travelRequest);
@@ -148,7 +149,7 @@ namespace Carpooling.Tests.TravelTests
                 Car = car,
                 DepartureTime = new DateTime(2023, 10, 10),
                 ArrivalTime = new DateTime(2023, 10, 12),
-                AvailableSeats =4,
+                AvailableSeats = 4,
                 IsCompleted = false
             };
 
@@ -180,5 +181,91 @@ namespace Carpooling.Tests.TravelTests
 
             travelRepositoryMock.Verify(repo => repo.CreateTravelAsync(It.IsAny<Travel>()), Times.Once);
         }
+
+        [TestMethod]
+        public async Task CreateTravelForMVCAsync_BannedUser_ThrowsUnauthorizedOperationException()
+        {
+            // Arrange
+            var loggedUser = TestHelpers.TestHelper.GetTestUserFourBlocked();
+            var travel = new Travel();
+
+            travelValidatorMock.Setup(validator => validator.ValidateIsLoggedUserAreDriver(loggedUser, travel.DriverId))
+                .ThrowsAsync(new UnauthorizedOperationException("User is not allowed to create travel"));
+
+            var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
+                addressRepositoryMock.Object, carRepositoryMock.Object,
+                travelValidatorMock.Object, userValidationMock.Object);
+
+            // Act & Assert
+            await Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(async () =>
+            {
+                await travelService.CreateTravelForMVCAsync(loggedUser, travel);
+            });
+        }
+        [TestMethod]
+        public async Task CreateTravelForMVCAsync_ValidData_CreatesTravel()
+        {
+            // Arrange
+            var loggedUser = TestHelpers.TestHelper.GetTestUserOne();
+            var travel = new Travel
+            {
+                DriverId = "1",
+                Car = TestHelpers.TestHelper.GetTestCarOne(),
+                StartLocation = TestHelpers.TestHelper.GetTestAddressOne(),
+                EndLocation = TestHelpers.TestHelper.GetTestAddressTwo(),
+                DepartureTime = DateTime.Now.AddDays(1),
+                ArrivalTime = DateTime.Now.AddDays(2)
+            };
+
+            travelValidatorMock.Setup(validator => validator.ValidateIsLoggedUserAreDriver(loggedUser, travel.DriverId))
+                .ReturnsAsync(true);
+
+            travelRepositoryMock.Setup(repo => repo.CreateTravelAsync(travel))
+                .ReturnsAsync(travel);
+
+            var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
+                addressRepositoryMock.Object, carRepositoryMock.Object,
+                travelValidatorMock.Object, userValidationMock.Object);
+
+            // Act
+            var result = await travelService.CreateTravelForMVCAsync(loggedUser, travel);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(travel.DriverId, result.DriverId);
+            Assert.AreEqual(travel.Car.Registration, result.Car.Registration);
+
+            travelRepositoryMock.Verify(repo => repo.CreateTravelAsync(travel), Times.Once);
+        }
+        [TestMethod]
+        public async Task CreateTravelForMVCAsync_UnauthorizedCar_ThrowsEntityUnauthorizatedException()
+        {
+            // Arrange
+            var loggedUser = TestHelpers.TestHelper.GetTestUserTwo();
+            var travel = new Travel
+            {
+                DriverId = "1",
+                Car = TestHelpers.TestHelper.GetTestCarOne(),
+                StartLocation = TestHelpers.TestHelper.GetTestAddressOne(),
+                EndLocation = TestHelpers.TestHelper.GetTestAddressTwo(),
+                DepartureTime = DateTime.Now.AddDays(1),
+                ArrivalTime = DateTime.Now.AddDays(2)
+            };
+
+            travelValidatorMock.Setup(validator => validator.ValidateIsLoggedUserAreDriver(loggedUser, travel.DriverId))
+                .ReturnsAsync(true);
+
+            var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
+                addressRepositoryMock.Object, carRepositoryMock.Object,
+                travelValidatorMock.Object, userValidationMock.Object);
+
+            // Act & Assert
+            await Assert.ThrowsExceptionAsync<EntityUnauthorizatedException>(async () =>
+            {
+                await travelService.CreateTravelForMVCAsync(loggedUser, travel);
+            });
+        }
     }
+
 }
+

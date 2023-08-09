@@ -12,9 +12,8 @@ namespace Carpooling.BusinessLayer.Services.Contracts
     public interface ITripRequestService
     {
         Task<IEnumerable<TripRequestResponse>> GetAllAsync();
-        Task<IEnumerable<TripRequestResponse>> GetAllDriverRequestsAsync();
-        Task<IEnumerable<TripRequestResponse>> GetAllPassengerRequestsAsync();
         Task<TripRequestResponse> GetByIdAsync(int id);
+        Task<TripRequest> CreateTripRequestForMVCAsync(User loggedUser, TripRequest request);
         Task<TripRequestResponse> CreateAsync(User loggedUser, TripRequestRequest tripReqeust);
         Task<string> DeleteAsync(User loggedUser, int tripRequestId);
         Task<string> EditRequestAsync(User loggedUser, int tripId, string answer);

@@ -44,16 +44,6 @@ namespace Carpooling.BusinessLayer.Services
                 x.Status.ToString()));
         }
 
-        public Task<IEnumerable<TripRequestResponse>> GetAllDriverRequestsAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<TripRequestResponse>> GetAllPassengerRequestsAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<TripRequestResponse> GetByIdAsync(int id)
         {
             var tripRequest = await this.tripRequestRepository.GetByIdAsync(id);
@@ -67,7 +57,21 @@ namespace Carpooling.BusinessLayer.Services
                 tripRequest.Status.ToString());
         }
 
+        public async Task<TripRequest> CreateTripRequestForMVCAsync(User loggedUser, TripRequest request)
+        {
+            var travel = await this.travelRepository.GetByIdAsync(request.TravelId);
+            var driverId = travel.DriverId;
+            await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, loggedUser.Id);
 
+            var trips = await this.tripRequestRepository.GetAllAsync();
+
+            if (trips.Any(x => x.PassengerId.Equals(loggedUser.Id) && x.TravelId.Equals(request.TravelId)))
+            {
+                throw new DublicateEntityException("You already has request for this travel.");
+            }
+            var trip = await this.tripRequestRepository.CreateAsync(driverId, loggedUser.Id, travel.Id);
+            return trip;
+        }
 
         public async Task<TripRequestResponse> CreateAsync(User loggedUser, TripRequestRequest tripRequest)
         {
@@ -166,5 +170,7 @@ namespace Carpooling.BusinessLayer.Services
                x.Travel.DepartureTime,
                x.Status.ToString()));
         }
+
+        
     }
 }

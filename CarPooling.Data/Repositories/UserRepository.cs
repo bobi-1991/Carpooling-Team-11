@@ -182,8 +182,6 @@ namespace CarPooling.Data.Repositories
 
             var roles = await userManager.GetRolesAsync(user);
 
-            await userManager.RemoveFromRolesAsync(user, roles);
-
             await userManager.AddToRoleAsync(user, "Administrator");
 
             await dbContext.SaveChangesAsync();
