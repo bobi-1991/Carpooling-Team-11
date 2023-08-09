@@ -27,7 +27,12 @@ namespace Carpooling.BusinessLayer.Services
         public async Task<Car> CreateAsync(Car car, User user)
         {
             var roles = await _userManager.GetRolesAsync(user);
-            if (user.IsBlocked && !roles.Contains("Driver") && !roles.Contains("Administrator"))
+            if (!roles.Contains("Driver"))
+            {
+                await _userManager.AddToRoleAsync(user, "Driver");
+            }
+            var updatedRoles = await _userManager.GetRolesAsync(user);
+            if (user.IsBlocked && !updatedRoles.Contains("Driver") && !updatedRoles.Contains("Administrator"))
             {
                 throw new UnauthorizedOperationException("Only non-banned users with role driver can create cars!");
             }

@@ -1,11 +1,15 @@
 ﻿@using Carpooling.Models
 @using Microsoft.AspNetCore.Identity
 @using System.Security.Claims
+@using CarPooling.Data.Models;
+@inject UserManager<User> UserManager
 @model TravelViewModel
 @{
     ViewData["Title"] = "Create";
 }
-
+@{
+    var user = await UserManager.GetUserAsync(User);
+}
 <h2>Create Travel</h2>
 
 @if (!ViewData.ModelState.IsValid)
@@ -62,7 +66,16 @@
         <span asp-validation-for="CarRegistration" class="text-danger"></span>
     </div>
     </br>
-    <button type="submit" class="btn btn-primary">Create</button>
+    </br>
+    @if (user.IsBlocked == true)
+    {
+        <p>You have been blocked and you do not have permission to create a travel.</p>
+    }
+    else
+    {
+        <button type="submit" class="btn btn-primary">Create Travel</button>
+    }
+    
 </form>
 
 

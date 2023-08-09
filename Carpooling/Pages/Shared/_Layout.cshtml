@@ -1,5 +1,6 @@
 ﻿@using CarPooling.Data.Models;
-
+@using Microsoft.AspNetCore.Identity;
+@inject UserManager<User> userManager
 <!DOCTYPE html>
 
 <html lang="en">
@@ -30,22 +31,28 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" href="/">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-action="Menu" asp-controller="Personal">Travel panel</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-page="/About">About</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Travels" asp-action="Index">Search</a>
+                        <li>
+                            <a class="nav-link text-dark" asp-controller="Personal" asp-action="DriverInfo" asp-route-id="@userManager.GetUserId(User)">Profile Information</a>
                         </li>
                         @if (User.IsInRole("Administrator"))
                         {
                             <li class="nav-item">
-                                <a class="nav-link" asp-controller="Admin" asp-action="ListUsers">See Users</a>
+                                <a class="nav-link text-dark" href="/api/swagger">Swagger Documentation</a>
+                            </li>
+                        }
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-action="Menu" asp-controller="Personal">Travel panel</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-page="/About">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-controller="Travels" asp-action="Index">Search</a>
+                        </li>
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-controller="Admin" asp-action="ListUsers">See Users</a>
                             </li>
                         }
                     </ul>

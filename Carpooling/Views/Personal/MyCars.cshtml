@@ -1,0 +1,37 @@
+﻿@using CarPooling.Data.Models
+@model List<Car>
+
+<h2>My Cars</h2>
+
+@if (Model.Count == 0)
+{
+    <p>You have no cars registered.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Registration</th>
+                <th>Total Seats</th>
+                <th>Brand</th>
+                <th>Model</th>
+                <th>Color</th>
+                <th>Can Smoke</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var car in Model)
+            {
+                <tr>
+                    <td>@car.Registration</td>
+                    <td>@car.TotalSeats</td>
+                    <td>@car.Brand</td>
+                    <td>@car.Model</td>
+                    <td>@car.Color</td>
+                    <td>@(car.CanSmoke ? "Yes" : "No")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

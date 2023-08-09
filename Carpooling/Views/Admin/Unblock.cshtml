@@ -16,6 +16,6 @@
 <form asp-controller="Admin" asp-action="UnblockConfirmed" asp-route-id="@this.Model.Id" method="post">
     <input type="hidden" name="id" value="@Model.Id" />
     <input type="hidden" name="credentials" value="@ViewBag.Credentials" />
-    <button type="submit" class="btn btn-danger">Delete</button>
+    <button type="submit" class="btn btn-danger">Unblock</button>
     <a asp-controller="Admin" asp-action="ListUsers" class="btn btn-secondary">Cancel</a>
 </form>

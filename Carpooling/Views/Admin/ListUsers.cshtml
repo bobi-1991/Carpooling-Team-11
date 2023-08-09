@@ -24,11 +24,13 @@
                     <td>@user.UserName</td>
                     <td>@user.Email</td>
                     <td>
-                        @if (!await UserManager.IsInRoleAsync(user, "Administrator"))
+                        @if (user.IsBlocked == false)
                         {
-                            <a asp-controller="Admin" asp-action="ChangeRoleToAdministrator" asp-route-id="@user.Id">Change to Administrator |</a>
+                            @if (!await UserManager.IsInRoleAsync(user, "Administrator"))
+                            {
+                                <a asp-controller="Admin" asp-action="ChangeRoleToAdministrator" asp-route-id="@user.Id">Change to Administrator |</a>
+                            }
                         }
-                       
                         @if (!await UserManager.IsInRoleAsync(user, "Administrator"))
                         {
                             @if (user.IsBlocked == true)

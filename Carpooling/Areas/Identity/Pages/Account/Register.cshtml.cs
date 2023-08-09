@@ -104,7 +104,7 @@ namespace Carpooling.Areas.Identity.Pages.Account
 
             [Required]
             [StringLength(10, ErrorMessage = "Phone number must be exactly 10 digits.", MinimumLength = 10)]
-            [RegularExpression(@"^08\d{8}$", ErrorMessage = "Phone number must start with 08 and be exactly 10 digits.")]
+            [RegularExpression(@"^(089|088|087|098)\d{7}$", ErrorMessage = "Phone number must start with 089, 088, 087 or 098 and be exactly 10 digits.")]
             [Display(Name = "Phone number")]
             [UniquePhoneNumber]
             public string PhoneNumber { get; set; }
@@ -159,6 +159,7 @@ namespace Carpooling.Areas.Identity.Pages.Account
                     //UserName = Input.UserName,
                     FirstName = Input.FirstName,
                     LastName = Input.LastName,
+                    PhoneNumber = Input.PhoneNumber,
                     ImageURL = uniqueFileNamePath
                 };
                 //user.FirstName = Input.FirstName;

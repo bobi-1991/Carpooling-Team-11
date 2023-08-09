@@ -37,7 +37,7 @@ namespace Carpooling.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> DriverInfo(string id)
+        public async Task<IActionResult> DriverInfo([FromRoute] string id)
         {
             var cars = await carService.GetAllAsync();
             var feedbacks = await feedbackService.GetAllAsync();
@@ -186,12 +186,45 @@ namespace Carpooling.Controllers
                 return View("Error");
             }
         }
-
+        [HttpGet]
+        public async Task<IActionResult> MyCars() 
+        {
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return Challenge();
+                }
+                var user = await userManager.Users.Include(x => x.Cars)
+                       .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
+                var carHistory = user.Cars;
+                var cars = new List<Car>();
+                foreach (var car in carHistory)
+                {
+                    var car1 = await this.carService.GetByIdAsync(car.Id);
+                    if (car.IsDeleted == false)
+                    {
+                        cars.Add(car1);
+                    }     
+                }
+                return this.View(cars);
+            }
+            catch(EntityNotFoundException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
+        }
         [HttpGet]
         public async Task<IActionResult> MyTravels()
         {
             try
             {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return Challenge();
+                }
                 var user = await userManager.Users.Include(x => x.TravelHistory)
                        .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
 
