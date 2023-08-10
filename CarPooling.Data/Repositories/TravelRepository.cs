@@ -35,6 +35,9 @@ namespace CarPooling.Data.Repositories
                     .Where(x => x.IsCompleted == false && !x.IsDeleted)
                     .ToListAsync();
 
+            if(result.Count()  == 0) {
+                throw new EmptyListException("No travels yet!");
+            }
             return result;
         }
 

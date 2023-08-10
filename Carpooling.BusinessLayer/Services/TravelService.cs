@@ -41,7 +41,7 @@ namespace Carpooling.BusinessLayer.Services
         public async Task<IEnumerable<TravelResponse>> GetAllAsync()
         {
             var travels = await this.travelRepository.GetAllAsync();
-
+            
             return travels.Select(x => mapper.Map<TravelResponse>(x));
         }
 
@@ -63,6 +63,10 @@ namespace Carpooling.BusinessLayer.Services
             if (!loggedUser.Cars.Any(x => x.Registration == travel.Car.Registration))
             {
                 throw new EntityUnauthorizatedException("The driver cannot operate a car that is not owned by them.");
+            }
+            if (!await this.travelValidator.ValidateIsNewTravelPossible(travel.DriverId, (DateTime)travel.DepartureTime, (DateTime)travel.ArrivalTime))
+            {
+                throw new ArgumentException("This trip cannot be made because the driver has another trip at the time.");
             }
             Car car = loggedUser.Cars.Where(x => x.Registration == travel.Car.Registration)
                 .FirstOrDefault();
@@ -217,10 +221,6 @@ namespace Carpooling.BusinessLayer.Services
                 CarRegistration = x.Car.Registration
             });
             return travelResponses;
-        }
-        public async Task<PaginatedList<Travel>> FilterBy(TravelQueryParameters search)
-        {
-            return await this.travelRepository.FilterByAsync(search);
         }
    
 

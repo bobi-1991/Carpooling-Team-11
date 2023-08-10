@@ -2,6 +2,7 @@
 using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.Models;
+using Carpooling.PaginationHelper;
 using CarPooling.Data.Data;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
@@ -9,6 +10,7 @@ using CarPooling.Data.Models.Pagination;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Carpooling.Controllers
 {
@@ -34,13 +36,55 @@ namespace Carpooling.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index([FromQuery] TravelQueryParameters searchQuery)
+        public async Task<IActionResult> Index(int? pg, string searchQuery)
         {
-            PaginatedList<Travel> travels = await this.travelService.FilterBy(searchQuery);
+            try
+            {
+                var pageSize = 5;
+                var travels = await travelService.GetAllTravelAsync();
+                if (!string.IsNullOrEmpty(searchQuery))
+                {
+                    travels = SearchTravels(travels.AsQueryable(), searchQuery);
+                }
+                if (pg < 1)
+                {
+                    pg = 1;
+                }
 
-            return this.View(travels);
+                int recsCount = travels.Count();
+
+                var pager = new Pager(recsCount, pg ?? 1, pageSize);
+
+                int recSkip = (pager.CurrentPage - 1) * pageSize;
+                var data = travels
+                   .Skip(recSkip)
+                   .Take(pager.PageSize)
+                   .ToList();
+                ViewBag.Pager = pager;
+                return this.View(data);
+            }
+            catch(EmptyListException e)
+            {
+                this.Response.StatusCode = StatusCodes.Status404NotFound;
+                this.ViewData["ErrorMessage"] = e.Message;
+
+                return this.View("Error");
+            }
         }
-
+        private IQueryable<Travel> SearchTravels(IQueryable<Travel> travels, string searchQuery)
+        {
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                travels = travels.Where(travel =>
+                    travel.StartLocation.Details.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                    travel.StartLocation.City.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                    travel.EndLocation.Details.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                    travel.EndLocation.City.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+                    travel.Driver.UserName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)
+                );
+            }
+            return travels;
+        }
         [HttpGet]
         public async Task<IActionResult> Details(int id)
         {

@@ -22,9 +22,7 @@ namespace Carpooling.BusinessLayer.Services.Contracts
         Task<string> DeleteAsync(User loggedUser, int travelId);
       //  Task<TravelResponse> AddUserToTravelAsync(string driveId, int travelId, string passengerId);
         Task<IEnumerable<TravelResponse>> FilterTravelsAndSortAsync(string sortBy);
-        Task<PaginatedList<Travel>> FilterBy(TravelQueryParameters search);
         Task<Travel> CreateTravelForMVCAsync(User loggedUser, Travel travel);
-
         Task<string> SetTravelToIsCompleteAsync(User loggedUser, int id);
 
     }
