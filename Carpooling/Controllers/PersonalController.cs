@@ -5,12 +5,14 @@ using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation;
 using Carpooling.Models;
 using Carpooling.Service.Dto_s.Responses;
+using CarPooling.Data.Data;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
 using CarPooling.Data.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
 
 namespace Carpooling.Controllers
@@ -24,9 +26,10 @@ namespace Carpooling.Controllers
         private readonly UserManager<User> userManager;
         private readonly IMapper mapper;
         private readonly ITravelService travelService;
+        private readonly CarPoolingDbContext dbContext;
 
 
-        public PersonalController(IUserService userService, ICarService carService, IFeedbackService feedbackService, UserManager<User> userManager, IMapper mapper, ITravelService travelService, ITripRequestService tripRequestService)
+        public PersonalController(IUserService userService, ICarService carService, IFeedbackService feedbackService, UserManager<User> userManager, IMapper mapper, ITravelService travelService, ITripRequestService tripRequestService, CarPoolingDbContext dbContext)
         {
             this.userService = userService;
             this.carService = carService;
@@ -36,6 +39,7 @@ namespace Carpooling.Controllers
             this.tripRequestService = tripRequestService;
             this.travelService = travelService;
             this.tripRequestService = tripRequestService;
+            this.dbContext = dbContext;
         }
 
         [HttpGet]
@@ -197,7 +201,7 @@ namespace Carpooling.Controllers
             }
         }
         [HttpGet]
-        public async Task<IActionResult> MyCars() 
+        public async Task<IActionResult> MyCars()
         {
             try
             {
@@ -215,11 +219,11 @@ namespace Carpooling.Controllers
                     if (car.IsDeleted == false)
                     {
                         cars.Add(car1);
-                    }     
+                    }
                 }
                 return this.View(cars);
             }
-            catch(EntityNotFoundException ex)
+            catch (EntityNotFoundException ex)
             {
                 HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
                 this.ViewData["ErrorMessage"] = ex.Message;
@@ -243,12 +247,25 @@ namespace Carpooling.Controllers
                        .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
 
                 var history = user.TravelHistory;
-                var trips = new List<TravelResponse>();
+                var trips = new List<TravelViewResponseWithId>();
+                
 
                 foreach (var travel in history)
                 {
+                    var isCompleted = travel.IsCompleted;
                     var trip = await this.travelService.GetByIdAsync(travel.Id);
-                    trips.Add(trip);
+
+                    trips.Add(new TravelViewResponseWithId
+                    {
+                        Id = travel.Id,
+                        StartLocationName = trip.StartLocationName,
+                        DestinationName = trip.DestinationName,
+                        DepartureTime = trip.DepartureTime,
+                        ArrivalTime = trip.ArrivalTime,
+                        AvailableSeats = trip.AvailableSeats,
+                        IsComplete = (bool)isCompleted,
+                        CarRegistration = trip.CarRegistration,
+                    });
                 }
 
                 return this.View(trips);
@@ -258,7 +275,12 @@ namespace Carpooling.Controllers
                 HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
                 this.ViewData["ErrorMessage"] = ex.Message;
                 return View("Error");
-
+            }
+            catch (EntityNotFoundException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
             }
 
         }
@@ -344,7 +366,7 @@ namespace Carpooling.Controllers
 
                 var result = await tripRequestService.DeleteAsync(user, id);
 
-                return RedirectToAction("MyBookings","Personal");
+                return RedirectToAction("MyBookings", "Personal");
             }
             catch (EntityUnauthorizatedException e)
             {

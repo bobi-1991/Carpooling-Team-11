@@ -16,7 +16,13 @@ else if (ViewData.ContainsKey("ErrorMessage2"))
 
     <br>
     <a asp-controller="Personal" asp-action="MyRequests" class="nav">Go back</a>
+}
+else if (ViewData.ContainsKey("SetComplete"))
+{
+    <h3 class="text-danger">Sorry: @this.ViewData["SetComplete"]</h3>
 
+    <br>
+    <a asp-controller="Personal" asp-action="MyTravels" class="nav">Go back</a>
 }
 
 

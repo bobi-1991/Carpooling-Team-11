@@ -81,6 +81,11 @@ namespace CarPooling.Data.Repositories
         public async Task<string> DeleteAsync(int travelId)
         {
             var travelToDelete = await this.GetByIdAsync(travelId);
+            var driver = await this.userRepository.GetByIdAsync(travelToDelete.DriverId);
+
+            driver.TravelHistory.Remove(travelToDelete);
+
+            this.dbContext.Update(driver);
 
             travelToDelete.IsDeleted = true;
             travelToDelete.DeletedOn = DateTime.Now;

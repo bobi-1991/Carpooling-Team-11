@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services.Contracts;
+using Carpooling.BusinessLayer.Validation;
 using Carpooling.Models;
 using Carpooling.PaginationHelper;
 using CarPooling.Data.Data;
@@ -49,15 +50,15 @@ namespace Carpooling.Controllers
                 var getAllTravels = await travelService.GetAllTravelAsync();
                 if (string.IsNullOrEmpty(sortBy))
                 {
-                    sortBy = "id"; 
+                    sortBy = "id";
                 }
                 getAllTravels = await travelService.FilterTravelsAndSortForMVCAsync(sortBy);
                 if (!userRoles.Contains("Administrator"))
                 {
-                    getAllTravels = getAllTravels.Where(x=>x.IsCompleted==false && x.ArrivalTime > DateTime.Now).ToList();
+                    getAllTravels = getAllTravels.Where(x => x.IsCompleted == false && x.ArrivalTime > DateTime.Now).ToList();
                 }
                 var pageSize = 5;
-                
+
                 if (!string.IsNullOrEmpty(searchQuery))
                 {
                     getAllTravels = SearchTravels(getAllTravels.AsQueryable(), searchQuery);
@@ -168,5 +169,85 @@ namespace Carpooling.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> SetComplete(int travelId)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge();
+            }
+            try
+            {
+                var user = await userManager.Users.Include(c => c.Cars)
+                .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
+
+                await this.travelService.SetTravelToIsCompleteMVCAsync(user, travelId);
+
+                return RedirectToAction("MyTravels", "Personal", new { id = user.Id });
+            }
+            catch (EntityUnauthorizatedException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                this.ViewData["SetComplete"] = ex.Message;
+                return View("Error");
+            }
+            catch (EntityNotFoundException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
+            catch (Exception ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteTravelAsync(int travelId)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge();
+            }
+            try
+            {
+                var user = await userManager.Users.Include(c => c.Cars)
+                .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
+
+                await this.travelService.DeleteMVCAsync(user, travelId);
+
+                return RedirectToAction("MyTravels", "Personal");
+            }
+            catch (EntityUnauthorizatedException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                this.ViewData["SetComplete"] = ex.Message;
+                return View("Error");
+            }
+            catch (EntityNotFoundException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
+
+
+        }
     }
 }
