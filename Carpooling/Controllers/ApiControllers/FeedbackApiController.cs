@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Carpooling.Controllers.ApiControllers
 {
     //[Authorize(Roles = "Admin")]
-    [Route("api/[controller]")]
+    [Route("api/feedback")]
     [ApiController]
     public class FeedbackApiController : ControllerBase
     {

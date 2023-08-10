@@ -18,7 +18,7 @@ using System;
 
 namespace Carpooling.Controllers.ApiControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/car")]
     [ApiController]
     public class CarApiController : ControllerBase
     {

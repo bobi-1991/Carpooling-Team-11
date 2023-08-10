@@ -12,7 +12,7 @@ using Carpooling.BusinessLayer.Dto_s.Requests;
 
 namespace Carpooling.Controllers.ApiControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/address")]
     [ApiController]
     public class AddressApiController : ControllerBase
     {

@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Carpooling.Controllers.ApiControllers
 {
-    [Route("api/[controller]")]
+    [Route("api/country")]
     [ApiController]
     public class CountryApiController : ControllerBase
     {

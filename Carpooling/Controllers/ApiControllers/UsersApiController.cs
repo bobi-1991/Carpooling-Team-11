@@ -129,7 +129,44 @@ namespace Carpooling.Controllers.ApiControllers
                 return NotFound(e.Message);
             }
         }
+        [HttpGet("email/{email}")]
+        public async Task<IActionResult> GetByEmailAsync([FromHeader] string credentials, [FromRoute] string email)
+        {
+            try
+            {
+                User loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                var user = await userService.GetByEmailAsync(email);
+                
+                return Ok(user);
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
+        [HttpGet("phoneNumber/{phoneNumber}")]
+        public async Task<IActionResult> GetByPhoneNUmberAsync([FromHeader] string credentials, [FromRoute] string phoneNumber)
+        {
+            try
+            {
+                User loggedUser = await authValidator.ValidateCredentialAsync(credentials);
+                var user = await userService.GetByPhoneNumberAsync(phoneNumber);
 
+                return Ok(user);
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                return Unauthorized(e.Message);
+            }
+            catch (EntityNotFoundException e)
+            {
+                return NotFound(e.Message);
+            }
+        }
         [HttpGet("travel-history/{id}")]
         public async Task<IActionResult> TravelHistoryAsync([FromHeader] string credentials, string id)
         {
