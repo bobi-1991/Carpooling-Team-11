@@ -201,11 +201,11 @@ namespace Carpooling.BusinessLayer.Services
             return updatedTravelResponse;
         }
 
-        public async Task<TravelResponse> AddUserToTravelAsync(string driveId, int travelId, string passengerId)
+        public async Task<IEnumerable<Travel>> FilterTravelsAndSortForMVCAsync(string sortBy)
         {
-            throw new NotImplementedException();
+            var travels = await travelRepository.FilterTravelsAndSortAsync(sortBy); // can sort by create, startlocation, endlocation, departuretime, arrivaltime
+            return travels;
         }
-
         public async Task<IEnumerable<TravelResponse>> FilterTravelsAndSortAsync(string sortBy)
         {
             var travels = await travelRepository.FilterTravelsAndSortAsync(sortBy);

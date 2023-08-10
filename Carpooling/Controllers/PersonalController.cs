@@ -39,6 +39,10 @@ namespace Carpooling.Controllers
         [HttpGet]
         public async Task<IActionResult> DriverInfo([FromRoute] string id)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge();
+            }
             var cars = await carService.GetAllAsync();
             var feedbacks = await feedbackService.GetAllAsync();
             var driverFeedbacks = feedbacks.Where(x => x.DriverId == id);
@@ -62,8 +66,12 @@ namespace Carpooling.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> PassengerInfo(string id)
+        public async Task<IActionResult> PassengerInfo([FromRoute] string id)
         {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge();
+            }
             var user = await userService.GetByIdAsync(id);
             var feedbacks = await feedbackService.GetAllAsync();
             var passengerFeedbacks = feedbacks.Where(x => x.PassengerId == id);

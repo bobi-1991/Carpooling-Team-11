@@ -24,6 +24,6 @@ namespace Carpooling.BusinessLayer.Services.Contracts
         Task<IEnumerable<TravelResponse>> FilterTravelsAndSortAsync(string sortBy);
         Task<Travel> CreateTravelForMVCAsync(User loggedUser, Travel travel);
         Task<string> SetTravelToIsCompleteAsync(User loggedUser, int id);
-
+        Task<IEnumerable<Travel>> FilterTravelsAndSortForMVCAsync(string sortBy);
     }
 }

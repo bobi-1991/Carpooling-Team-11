@@ -20,13 +20,11 @@ namespace Carpooling.Controllers
     public class AdminController : Controller
     {
         private readonly IUserService _userService;
-        //private readonly IToastNotification _toast;
         private readonly IMapper _mapper;
         private readonly IAuthValidator _authValidator;
         public AdminController(IUserService userService, IMapper mapper, IAuthValidator authValidator)
         {
             _userService = userService;
-            //_toast = toast;
             _mapper = mapper;
             _authValidator = authValidator;
         }
