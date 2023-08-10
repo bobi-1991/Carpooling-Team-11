@@ -12,7 +12,12 @@ namespace Carpooling.Models
         public string CityEndDest { get; set; }
         [RegularExpression(@"^([A-Z][a-z]*(\s[A-Z][a-z]*)*)$", ErrorMessage = "Invalid country name format.")]
         public string Country { get; set; }
+        [Display(Name = "Departure Time")]
+        [DataType(DataType.DateTime)]
         public DateTime DepartureTime { get; set; }
+        [Display(Name = "Arrival Time")]
+        [DataType(DataType.DateTime)]
+        [ArrivalTimeAfterDepartureTime("DepartureTime", ErrorMessage = "Arrival time must be after departure time.")]
         public DateTime ArrivalTime { get; set; }
         [Range(0, int.MaxValue, ErrorMessage = "Available Seats must be a non-negative number.")]
         public int AvailableSeats { get; set; }
