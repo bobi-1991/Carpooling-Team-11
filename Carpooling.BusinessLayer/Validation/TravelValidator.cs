@@ -8,6 +8,7 @@ using CarPooling.Data.Data;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -26,9 +27,13 @@ namespace Carpooling.BusinessLayer.Validation
         private readonly CarPoolingDbContext dbContext;
         private readonly IAddressRepository addressRepository;
         private readonly ICarRepository carRepository;
+        private readonly UserManager<User> userManager;
 
 
-        public TravelValidator(IUserRepository userRepository, IIdentityHelper identityHelper, ITravelRepository travelRepository, CarPoolingDbContext dbContext, IAddressRepository addressRepository, ICarRepository carRepository)
+        public TravelValidator(IUserRepository userRepository, 
+            IIdentityHelper identityHelper, ITravelRepository travelRepository, 
+            CarPoolingDbContext dbContext, IAddressRepository addressRepository, 
+            ICarRepository carRepository, UserManager<User> userManager)
         {
             this.userRepository = userRepository;
             this.identityHelper = identityHelper;
@@ -36,6 +41,7 @@ namespace Carpooling.BusinessLayer.Validation
             this.dbContext = dbContext;
             this.addressRepository = addressRepository;
             this.carRepository = carRepository;
+            this.userManager = userManager;
         }
 
         public async Task<bool> ValidateIsNewTravelPossible(string driveId, DateTime currentDeparture, DateTime currentArrival)
@@ -61,17 +67,23 @@ namespace Carpooling.BusinessLayer.Validation
         }
         public async Task<bool> ValidateIsLoggedUserAreDriver(User loggedUser, string driverId)
         {
-            var role = await identityHelper.GetRole(loggedUser);
+            var roles = userManager.GetRolesAsync(loggedUser);
+            //var role = await identityHelper.GetRole(loggedUser);
 
-            if (!loggedUser.Id.Equals(driverId) && role != "Administrator")
+            if (!loggedUser.Id.Equals(driverId) && !roles.Result.Contains("Administrator"))
             {
                 throw new EntityUnauthorizatedException("I'm sorry, but you cannot create a travel because your details not match with the driver details in travel request.");
             }
 
-            if (role != "Driver" && role != "Administrator")
+            if (!roles.Result.Contains("Administrator") && !roles.Result.Contains("Driver"))
             {
                 throw new EntityUnauthorizatedException("I'm sorry, but you cannot create a travel because your role doesn't match the required role for it.");
             }
+
+            //if (role != "Driver" && role != "Administrator")
+            //{
+            //    throw new EntityUnauthorizatedException("I'm sorry, but you cannot create a travel because your role doesn't match the required role for it.");
+            //}
 
             return true;
         }
