@@ -70,10 +70,10 @@ namespace Carpooling.BusinessLayer.Validation
             var roles = userManager.GetRolesAsync(loggedUser);
             //var role = await identityHelper.GetRole(loggedUser);
 
-            if (!loggedUser.Id.Equals(driverId) && !roles.Result.Contains("Administrator"))
-            {
-                throw new EntityUnauthorizatedException("I'm sorry, but you cannot create a travel because your details not match with the driver details in travel request.");
-            }
+            //if (!loggedUser.Id.Equals(driverId) && !roles.Result.Contains("Administrator"))
+            //{
+            //    throw new EntityUnauthorizatedException("I'm sorry, but you cannot create a travel because your details not match with the driver details in travel request.");
+            //}
 
             if (!roles.Result.Contains("Administrator") && !roles.Result.Contains("Driver"))
             {
