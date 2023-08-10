@@ -44,11 +44,11 @@ public class Program
         //Helpers
         builder.Services.AddScoped<IJsonManager, JsonManager>();
         builder.Services.AddAutoMapper(typeof(Carpooling.Mapper));
-        builder.Services.AddScoped<IIdentityHelper,IdentityHelper>();
-       
+        builder.Services.AddScoped<IIdentityHelper, IdentityHelper>();
+
 
         // Add services to the container
-      //  builder.Services.AddRazorPages();
+        //  builder.Services.AddRazorPages();
         builder.Services.AddScoped<IUserService, UserService>();
         builder.Services.AddScoped<ICarService, CarService>();
         builder.Services.AddScoped<IAddressService, AddressService>();
@@ -77,8 +77,8 @@ public class Program
         builder.Services.AddScoped<IAddressRepository, AddressRepository>();
         builder.Services.AddScoped<ICarRepository, CarRepository>();
         builder.Services.AddScoped<ICountryRepository, CountryRepository>();
-        builder.Services.AddScoped<IFeedbackRepository,FeedbackRepository>();
-        
+        builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
+
 
 
 
@@ -87,6 +87,18 @@ public class Program
             options.SwaggerDoc("v1", new OpenApiInfo { Title = "Carpooling API", Version = "v1" });
             options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
         });
+
+        var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(name: MyAllowSpecificOrigins,
+                              policy =>
+                              {
+                                  policy.WithOrigins("https://kit.fontawesome.com/")
+                                  .AllowAnyHeader()
+                                  .AllowAnyMethod();
+                              });
+        }); ;
 
         var app = builder.Build();
 
@@ -102,7 +114,7 @@ public class Program
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "Carpooling API V1");
             options.RoutePrefix = "api/swagger";
-           
+
         });
 
         //Seed DB
@@ -115,7 +127,7 @@ public class Program
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-
+        app.UseCors(MyAllowSpecificOrigins);
         app.UseRouting();
         app.UseAuthentication();
 

@@ -20,14 +20,22 @@
 @if (User.Identity.IsAuthenticated)
 {
     <div class="create-request-button" style="text-align: left;">
-        @if (this.Model.AvailableSeats > 0)
+        @if (this.Model.IsComplete == true || this.Model.ArrivalTime < DateTime.Now)
         {
-            <a asp-controller="Personal" asp-action="CreateTripRequest" asp-route-id="@this.ViewBag.id" class="btn btn-success">Create Trip Request</a>
+            <p>Organised travel has already happened.</p>
         }
         else
         {
-            <p>Unfortunately there are no available seats :(</p>
+            @if (this.Model.AvailableSeats > 0)
+            {
+                <a asp-controller="Personal" asp-action="CreateTripRequest" asp-route-id="@this.ViewBag.id" class="btn btn-success">Create Trip Request</a>
+            }
+            else
+            {
+                <p>Unfortunately there are no available seats :(</p>
+            }
         }
+        <a asp-controller="Travels" asp-action="Index" class="btn btn-success">Go Back</a>
     </div>
 }
 

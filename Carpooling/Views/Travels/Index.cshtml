@@ -1,21 +1,49 @@
 ﻿@using CarPooling.Data.Models.Pagination;
 @using CarPooling.Data.Models;
+@using Carpooling.PaginationHelper;
 @using Carpooling.Service.Dto_s.Responses;
 
 @{
     this.ViewData["Title"] = "Travels";
+    Pager pager = new Pager();
+
+    int pageNo = 0;
+
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
+    }
 }
 
-@model PaginatedList<Travel>
-
-
+@model IEnumerable<Travel>
 <form asp-controller="Travels" asp-action="Index" method="get">
-    <input type="text" name="StartLocation" />
-    <input type="submit" value="Search" class="btn btn-primary" />
+    <div class="input-group mb-3">
+        <input type="text" name="searchQuery" class="form-control" placeholder="Search by Start Location, End Location, or UserName." />
+        <div class="input-group-append">
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
+        </div>
+    </div>
+    @if (User.IsInRole("Administrator"))
+    {
+        <div class="input-group mb-3">
+            <div class="input-group-prepend">
+                <label class="input-group-text" for="sortBySelect">Sort By</label>
+            </div>
+            <select class="custom-select" id="sortBySelect" name="sortBy">
+                <option value="id" selected>Default</option>
+                <option value="startlocation">Start Location</option>
+                <option value="endlocation">End Location</option>
+                <option value="departuretime">Departure Time</option>
+                <option value="arrivaltime">Arrival Time</option>
+            </select>
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="submit">Apply</button>
+            </div>
+        </div>
+    }
 </form>
-
-
-@if (Model == null || Model.Count == 0)
+@if (!Model.Any())
 {
     <br>
     <h3 class="no-results">No results</h3>
@@ -28,6 +56,7 @@ else
                 <div class="label">Start/</div>
                 <div class="label">End Location</div>
             </div>
+            <div class="label" style="text-align: center;">Arrival Time</div>
             <div class="label" style="text-align: right;">Departure Time</div>
             <div class="label" style="text-align: right;">Driver</div>
         </div>
@@ -39,60 +68,44 @@ else
                     <div class="divider">-</div>
                     <div class="location">@travel.EndLocation.City</div>
                 </div>
+                <div class="arrival-time" style="text-align: center;">@travel.ArrivalTime</div>
                 <div class="departure-time" style="text-align: right;">@travel.DepartureTime</div>
                 <div class="driver" style="text-align: right;">@travel.Driver?.UserName</div>
             </a>
         }
     </div>
+    <div class="container">
+        @if (pager.TotalPages > 0)
+        {
+            <ul class="pagination justify-content-end">
+                @if (pager.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Travels" asp-action="Index" asp-route-pg="1">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Travels" asp-action="Index" asp-route-pg="@(pager.CurrentPage - 1)">Previous</a>
+                    </li>
+                }
+                @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+                {
+                    <li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-controller="Travels" asp-action="Index" asp-route-pg="@pge">@pge</a>
+                    </li>
+                }
+                @if (pager.CurrentPage < pager.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Travels" asp-action="Index" asp-route-pg="@(pager.CurrentPage+1)">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Travels" asp-action="Index" asp-route-pg="@(pager.TotalPages)">Last</a>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
 }
 
 
-@*Pagination*@
-@{
-    string prevButtonState = this.Model.HasPrevPage ? "" : "disabled";
-    string nextButtonState = this.Model.HasNextPage ? "" : "disabled";
-}
 
-<a asp-controller="Travels" asp-action="Index" asp-route-PageNumber="@(this.Model.PageNumber - 1)" class="btn btn-link @prevButtonState">Prev</a>
-
-@{
-    int currentPageNumber = this.Model.PageNumber;
-    int totalPages = this.Model.TotalPages;
-    int pageRange = 3; // Брой страници, които да се показват преди и след текущата страница
-    int startPage = Math.Max(1, currentPageNumber - pageRange);
-    int endPage = Math.Min(totalPages, currentPageNumber + pageRange);
-
-    if (startPage > 1)
-    {
-        <span><a asp-controller="Travels" asp-action="Index" asp-route-PageNumber="1">1</a></span>
-        if (startPage > 2)
-        {
-            <span>...</span>
-        }
-    }
-
-    for (int i = startPage; i <= endPage; i++)
-    {
-        if (i == currentPageNumber)
-        {
-            <span>@i</span>
-        }
-        else
-        {
-            <span><a asp-controller="Travels" asp-action="Index" asp-route-PageNumber="@i">@i</a></span>
-        }
-    }
-
-    if (endPage < totalPages)
-    {
-        if (endPage < totalPages - 1)
-        {
-            <span>...</span>
-        }
-        <span><a asp-controller="Travels" asp-action="Index" asp-route-PageNumber="@totalPages">@totalPages</a></span>
-    }
-}
-<a asp-controller="Travels" asp-action="Index" asp-route-PageNumber="@(this.Model.PageNumber + 1)" class="btn btn-link @nextButtonState">Next</a>
-<br>
-<br>
-<a asp-controller="Travels" asp-action="Index" class="nav">See all travels</a>
