@@ -65,25 +65,14 @@ namespace Carpooling.BusinessLayer.Validation
 
             return true;
         }
-        public async Task<bool> ValidateIsLoggedUserAreDriver(User loggedUser, string driverId)
+        public async Task<bool> ValidateIsLoggedUserAreDriver(User loggedUser)
         {
             var roles = userManager.GetRolesAsync(loggedUser);
-            //var role = await identityHelper.GetRole(loggedUser);
-
-            //if (!loggedUser.Id.Equals(driverId) && !roles.Result.Contains("Administrator"))
-            //{
-            //    throw new EntityUnauthorizatedException("I'm sorry, but you cannot create a travel because your details not match with the driver details in travel request.");
-            //}
 
             if (!roles.Result.Contains("Administrator") && !roles.Result.Contains("Driver"))
             {
                 throw new EntityUnauthorizatedException("I'm sorry, but you cannot create a travel because your role doesn't match the required role for it.");
             }
-
-            //if (role != "Driver" && role != "Administrator")
-            //{
-            //    throw new EntityUnauthorizatedException("I'm sorry, but you cannot create a travel because your role doesn't match the required role for it.");
-            //}
 
             return true;
         }

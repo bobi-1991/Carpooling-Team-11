@@ -55,7 +55,7 @@ namespace Carpooling.BusinessLayer.Services
         }
         public async Task<Travel> CreateTravelForMVCAsync(User loggedUser, Travel travel)
         {
-            await this.travelValidator.ValidateIsLoggedUserAreDriver(loggedUser, travel.DriverId);
+            await this.travelValidator.ValidateIsLoggedUserAreDriver(loggedUser);
             if (loggedUser.IsBlocked)
             {
                 throw new UnauthorizedOperationException($"You can't create travel because you're banned.");
@@ -77,7 +77,7 @@ namespace Carpooling.BusinessLayer.Services
         }
         public async Task<TravelResponse> CreateTravelAsync(User loggedUser, TravelRequest travelRequest)
         {
-            await this.travelValidator.ValidateIsLoggedUserAreDriver(loggedUser, travelRequest.DriverId);
+            await this.travelValidator.ValidateIsLoggedUserAreDriver(loggedUser);
             //  var driverCar = loggedUser.Cars.FirstOrDefault();
 
             var car = await this.carRepository.GetByIdAsync(travelRequest.CarId);

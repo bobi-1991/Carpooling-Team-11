@@ -99,7 +99,7 @@ public class Program
                                   .AllowAnyMethod();
                               });
         }); ;
-
+        builder.Services.AddRouting(l => l.LowercaseUrls = true);
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -114,7 +114,7 @@ public class Program
         {
             options.SwaggerEndpoint("/swagger/v1/swagger.json", "Carpooling API V1");
             options.RoutePrefix = "api/swagger";
-
+            
         });
 
         //Seed DB

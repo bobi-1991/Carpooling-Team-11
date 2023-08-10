@@ -260,5 +260,29 @@ namespace Carpooling.BusinessLayer.Services
         {
             await userRepository.ConvertToAdministrator(id);
         }
+
+        public async Task<UserResponse> GetByEmailAsync(string email)
+        {
+            var user = await this.userRepository.GetByEmailAsync(email);
+
+            return new UserResponse(
+               user.FirstName,
+               user.LastName,
+               user.UserName,
+               user.Email,
+               user.AverageRating);
+        }
+
+        public async Task<UserResponse> GetByPhoneNumberAsync(string email)
+        {
+            var user = await this.userRepository.GetByPhoneNumberAsync(email);
+
+            return new UserResponse(
+               user.FirstName,
+               user.LastName,
+               user.UserName,
+               user.Email,
+               user.AverageRating);
+        }
     }
 }

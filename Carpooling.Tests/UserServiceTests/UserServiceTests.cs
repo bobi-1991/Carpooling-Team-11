@@ -117,7 +117,7 @@ namespace Carpooling.Tests.UserServiceTests
             //Verify
             userRepositoryMock.Verify(x => x.GetByUsernameAsync("Gosho"), Times.Once);
         }
-
+        
         [TestMethod]
 
         public async Task DeleteAsync_ShouldInvoke()

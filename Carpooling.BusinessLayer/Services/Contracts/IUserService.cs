@@ -18,6 +18,8 @@ namespace Carpooling.BusinessLayer.Services.Contracts
         Task<UserResponse> GetByIdAsync(string id);
         Task<User> GetUserByIdAsync(string id);
         Task<UserResponse> GetByUsernameAsync(string username);
+        Task<UserResponse> GetByEmailAsync(string email);
+        Task<UserResponse> GetByPhoneNumberAsync(string email);
         Task<string> DeleteUserWhenAdminAsync(string id);
         Task<User> GetByUsernameAuthAsync(string username);
         Task<IEnumerable<TravelResponse>> TravelHistoryAsync(User loggedUser, string userId);
