@@ -1,6 +1,7 @@
 ﻿using Carpooling.Service.Dto_s.Requests;
 using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Models;
+using CarPooling.Data.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,8 +18,11 @@ namespace Carpooling.BusinessLayer.Services.Contracts
         Task<TripRequestResponse> CreateAsync(User loggedUser, TripRequestRequest tripReqeust);
         Task<string> DeleteAsync(User loggedUser, int tripRequestId);
         Task<string> EditRequestAsync(User loggedUser, int tripId, string answer);
+        Task<string> EditRequestMVCAsync(User loggedUser, int tripId, string answer);
         Task<IEnumerable<TripRequestResponse>> SeeAllHisDriverRequestsAsync(User loggedUser, string userId);
+        Task<IEnumerable<TripRequestViewResponseModel>> SeeAllHisDriverRequestsMVCAsync(User loggedUser, string userId);
+
         Task<IEnumerable<TripRequestResponse>> SeeAllHisPassengerRequestsAsync(User loggedUser, string userId);
-        Task<IEnumerable<TripRequestResponse>> SeeAllHisPassengerRequestsMVCAsync(User loggedUser, string userId);
+        Task<IEnumerable<TripRequestViewResponseModel>> SeeAllHisPassengerRequestsMVCAsync(User loggedUser, string userId);
     }
 }

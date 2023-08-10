@@ -141,7 +141,8 @@ namespace CarPooling.Data.Repositories
             this.dbContext.Travels.Update(travel);
             travel.AvailableSeats--;
             //NEW
-            passenger.TravelHistory.Add(travel);
+            //May be wrong
+           // passenger.TravelHistory.Add(travel);
             this.dbContext.Users.Update(passenger);
 
 

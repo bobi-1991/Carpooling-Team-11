@@ -5,6 +5,7 @@ using Carpooling.Service.Dto_s.Requests;
 using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
+using CarPooling.Data.Models.ViewModels;
 using CarPooling.Data.Repositories.Contracts;
 using System.Diagnostics;
 
@@ -132,7 +133,7 @@ namespace Carpooling.BusinessLayer.Services
             }
             else if (currentAnswer.Equals("approve") && travel.AvailableSeats == 0)
             {
-                return "I'm sorry, but there are no seats available for this trip";
+                return "There are no seats available for this trip.";
             }
             else if (currentAnswer.Equals("decline") && tripRequestToUpdate.Status.ToString().ToLower() == "approved")
             {
@@ -143,6 +144,34 @@ namespace Carpooling.BusinessLayer.Services
                 return await this.tripRequestRepository.EditRequestAsync(tripRequestToUpdate, currentAnswer);
 
         }
+
+        public async Task<string> EditRequestMVCAsync(User loggedUser, int tripId, string answer)
+        {
+            var tripRequestToUpdate = await this.tripRequestRepository.GetByIdAsync(tripId);
+            var driverId = tripRequestToUpdate.Travel.DriverId;
+            var travel = await this.travelRepository.GetByIdAsync(tripRequestToUpdate.TravelId);
+
+            await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, driverId);
+
+            var currentAnswer = await this.tripRequestValidator.ValidateStatusOfTripRequest(tripRequestToUpdate, answer);
+
+            if (currentAnswer.Equals("approve") && travel.AvailableSeats > 0)
+            {
+                await this.travelRepository.AddUserToTravelAsync(travel.Id, tripRequestToUpdate.PassengerId);
+            }
+            else if (currentAnswer.Equals("approve") && travel.AvailableSeats == 0)
+            {
+                throw new UnauthorizedAccessException("I'm sorry, but there are no seats available for this trip");
+            }
+            else if (currentAnswer.Equals("decline") && tripRequestToUpdate.Status.ToString().ToLower() == "approved")
+            {
+                await this.travelRepository.RemoveUserToTravelAsync(travel.Id, tripRequestToUpdate.PassengerId);
+            }
+
+
+            return await this.tripRequestRepository.EditRequestAsync(tripRequestToUpdate, currentAnswer);
+
+        }
         public async Task<IEnumerable<TripRequestResponse>> SeeAllHisDriverRequestsAsync(User loggedUser, string driverId)
         {
             await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, driverId);
@@ -151,6 +180,23 @@ namespace Carpooling.BusinessLayer.Services
             var tripRequests = await this.tripRequestRepository.SeeAllHisDriverRequestsAsync(driverId);
 
             return tripRequests.Select(x => new TripRequestResponse(
+               x.Passenger.UserName,
+               x.Driver.UserName,
+               x.Travel.StartLocation.Details,
+               x.Travel.EndLocation.Details, (DateTime)
+               x.Travel.DepartureTime,
+               x.Status.ToString()));
+        }
+
+        public async Task<IEnumerable<TripRequestViewResponseModel>> SeeAllHisDriverRequestsMVCAsync(User loggedUser, string driverId)
+        {
+            await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, driverId);
+
+
+            var tripRequests = await this.tripRequestRepository.SeeAllHisDriverRequestsMVCAsync(driverId);
+
+            return tripRequests.Select(x => new TripRequestViewResponseModel(
+               x.Id,
                x.Passenger.UserName,
                x.Driver.UserName,
                x.Travel.StartLocation.Details,
@@ -174,14 +220,15 @@ namespace Carpooling.BusinessLayer.Services
                x.Travel.DepartureTime,
                x.Status.ToString()));
         }
-        public async Task<IEnumerable<TripRequestResponse>> SeeAllHisPassengerRequestsMVCAsync(User loggedUser, string passengerId)
+        public async Task<IEnumerable<TripRequestViewResponseModel>> SeeAllHisPassengerRequestsMVCAsync(User loggedUser, string passengerId)
         {
             await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, passengerId);
 
 
             var tripRequests = await this.tripRequestRepository.SeeAllHisPassengerRequestsMVCAsync(passengerId);
 
-            return tripRequests.Select(x => new TripRequestResponse(
+            return tripRequests.Select(x => new TripRequestViewResponseModel(
+               x.Id,
                x.Passenger.UserName,
                x.Driver.UserName,
                x.Travel.StartLocation.Details,
