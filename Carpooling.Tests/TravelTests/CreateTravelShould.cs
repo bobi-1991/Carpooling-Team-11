@@ -189,7 +189,7 @@ namespace Carpooling.Tests.TravelTests
             var loggedUser = TestHelpers.TestHelper.GetTestUserFourBlocked();
             var travel = new Travel();
 
-            travelValidatorMock.Setup(validator => validator.ValidateIsLoggedUserAreDriver(loggedUser, travel.DriverId))
+            travelValidatorMock.Setup(validator => validator.ValidateIsLoggedUserAreDriver(loggedUser))
                 .ThrowsAsync(new UnauthorizedOperationException("User is not allowed to create travel"));
 
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
@@ -217,12 +217,13 @@ namespace Carpooling.Tests.TravelTests
                 ArrivalTime = DateTime.Now.AddDays(2)
             };
 
-            travelValidatorMock.Setup(validator => validator.ValidateIsLoggedUserAreDriver(loggedUser, travel.DriverId))
+            travelValidatorMock.Setup(validator => validator.ValidateIsLoggedUserAreDriver(loggedUser))
                 .ReturnsAsync(true);
 
             travelRepositoryMock.Setup(repo => repo.CreateTravelAsync(travel))
                 .ReturnsAsync(travel);
-
+            travelValidatorMock.Setup(validator => validator.ValidateIsNewTravelPossible(loggedUser.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+                .ReturnsAsync(true);
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
                 addressRepositoryMock.Object, carRepositoryMock.Object,
                 travelValidatorMock.Object, userValidationMock.Object);
@@ -252,7 +253,7 @@ namespace Carpooling.Tests.TravelTests
                 ArrivalTime = DateTime.Now.AddDays(2)
             };
 
-            travelValidatorMock.Setup(validator => validator.ValidateIsLoggedUserAreDriver(loggedUser, travel.DriverId))
+            travelValidatorMock.Setup(validator => validator.ValidateIsLoggedUserAreDriver(loggedUser))
                 .ReturnsAsync(true);
 
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,

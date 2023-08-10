@@ -123,12 +123,12 @@ namespace Carpooling.Tests.TripRequestTests
             tripRequestValidatorMock.Setup(validator => validator.ValidateStatusOfTripRequest(tripRequestToUpdate, answer))
                 .ReturnsAsync("approve");
             tripRequestRepositoryMock.Setup(repo => repo.EditRequestAsync(tripRequestToUpdate, answer))
-                .ReturnsAsync("I'm sorry, but there are no seats available for this trip");
+                .ReturnsAsync("There are no seats available for this trip.");
             // Act
             var result = await tripRequestService.EditRequestAsync(loggedUser, tripId, answer);
 
             // Assert
-            Assert.AreEqual("I'm sorry, but there are no seats available for this trip", result);
+            Assert.AreEqual("There are no seats available for this trip.", result);
             travelRepositoryMock.Verify(repo => repo.AddUserToTravelAsync(travel.Id, tripRequestToUpdate.PassengerId), Times.Never);
             tripRequestRepositoryMock.Verify(repo => repo.EditRequestAsync(tripRequestToUpdate, "approve"), Times.Never);
         }
@@ -156,7 +156,7 @@ namespace Carpooling.Tests.TripRequestTests
                     AvailableSeats = 2
                 },
                 TravelId = 1,
-                Status = TripRequestEnum.Pending
+                Status = TripRequestEnum.Approved
             };
             var travel = tripRequestToUpdate.Travel;
 
@@ -170,6 +170,7 @@ namespace Carpooling.Tests.TripRequestTests
                 .ReturnsAsync("decline");
             tripRequestRepositoryMock.Setup(repo => repo.EditRequestAsync(tripRequestToUpdate, answer   ))
                 .ReturnsAsync("decline");
+            travelRepositoryMock.Setup(repo => repo.RemoveUserToTravelAsync(It.IsAny<int>(), "2"));
             var result = await tripRequestService.EditRequestAsync(loggedUser, tripId, answer);
 
             // Assert

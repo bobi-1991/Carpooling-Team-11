@@ -72,6 +72,7 @@ namespace Carpooling.BusinessLayer.Services
                 .FirstOrDefault();
             travel.Car = car;
             travel.Driver = loggedUser;
+            travel.IsCompleted = false;
             travel.DriverId = loggedUser.Id;
             return await travelRepository.CreateTravelAsync(travel);
         }

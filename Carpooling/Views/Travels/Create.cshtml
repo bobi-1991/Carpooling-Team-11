@@ -10,6 +10,10 @@
 @{
     var user = await UserManager.GetUserAsync(User);
 }
+@if (user.IsBlocked == true)
+{
+    <h1>You have been blocked and you do not have permission to create a travel.</h1>
+}
 <h2>Create Travel</h2>
 
 @if (!ViewData.ModelState.IsValid)
@@ -69,7 +73,7 @@
     </br>
     @if (user.IsBlocked == true)
     {
-        <p>You have been blocked and you do not have permission to create a travel.</p>
+        <p></p>
     }
     else
     {

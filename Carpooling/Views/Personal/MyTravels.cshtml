@@ -1,5 +1,4 @@
-﻿
-@using Carpooling.Models;
+﻿@using Carpooling.Models;
 @model List<TravelViewResponseWithId>
 
 @{
@@ -30,17 +29,19 @@ else
                 <p><i class="fas fa-chair"></i> <span class="property">Available Seats:</span> @travel.AvailableSeats</p>
                 <p><i class="fas fa-check-circle"></i> <span class="property">Is Complete:</span> @(travel.IsComplete ? "Yes" : "No")</p>
                 <p><i class="fas fa-car"></i> <span class="property">Car Registration:</span> @travel.CarRegistration</p>
-
-                <div>
-                    <form asp-controller="Travels" asp-action="SetComplete" method="post">
-                        <input type="hidden" name="travelId" value="@travel.Id">
-                        <button type="submit" name="complete" value="complete">Мark as complete</button>
-                    </form>
-                </div>
+                @if (travel.IsComplete == false)
+                {
+                    <div>
+                        <form asp-controller="Travels" asp-action="SetComplete" method="post">
+                            <input type="hidden" name="travelId" value="@travel.Id">
+                            <button type="submit" name="complete" value="complete">Мark as complete</button>
+                        </form>
+                    </div>
+                }
                 <div>
                     <form asp-controller="Travels" asp-action="DeleteTravel" method="post">
                         <input type="hidden" name="travelId" value="@travel.Id">
-                        <button type="submit" name="delete" value="delete">Cancel a trip</button>
+                        <button type="submit" name="delete" value="delete">Cancel/Remove a trip</button>
                     </form>
                     <br>
                 </div>
