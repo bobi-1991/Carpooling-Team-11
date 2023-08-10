@@ -129,6 +129,7 @@ namespace CarPooling.Data.Repositories
             var tripRequests = await dbContext.TripRequests
                      .Where(x => !x.IsDeleted)
                      .Include(x => x.Travel)
+                            .ThenInclude(x=>x.EndLocation)
                      .Include(x=>x.Driver)
                      .Include(x => x.Travel)
                           .ThenInclude(x => x.StartLocation)
@@ -142,6 +143,24 @@ namespace CarPooling.Data.Repositories
             {
                 throw new EntityNotFoundException($"Driver with Id: {userId} does not have any recipient requests");
             }
+
+            return tripRequests;
+        }
+
+        public async Task<IEnumerable<TripRequest>> SeeAllHisDriverRequestsMVCAsync(string userId)
+        {
+            var tripRequests = await dbContext.TripRequests
+                     .Where(x => !x.IsDeleted)
+                     .Include(x => x.Travel)
+                            .ThenInclude(x => x.EndLocation)
+                     .Include(x => x.Driver)
+                     .Include(x => x.Travel)
+                          .ThenInclude(x => x.StartLocation)
+                     .Include(x => x.Passenger)
+                          .ThenInclude(x => x.Address)
+                     .Where(x => x.DriverId == userId)
+                     .ToListAsync() ?? Enumerable.Empty<TripRequest>();
+
 
             return tripRequests;
         }
@@ -172,6 +191,7 @@ namespace CarPooling.Data.Repositories
             var tripRequests = await dbContext.TripRequests
                  .Where(x => !x.IsDeleted)
                  .Include(x => x.Travel)
+                      .ThenInclude (x => x.EndLocation)
                  .Include(x => x.Driver)
                  .Include(x => x.Travel)
                       .ThenInclude(x => x.StartLocation)

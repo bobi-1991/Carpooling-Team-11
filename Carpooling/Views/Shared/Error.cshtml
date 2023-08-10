@@ -2,8 +2,37 @@
     ViewData["Title"] = "Error";
 }
 
+@if (ViewData.ContainsKey("ErrorMessage"))
+{
+    <h1 class="text-danger">Error.</h1>
+    <h2 class="text-danger">Oops...something went wrong :(</h2>
+    <p>
+        Message: @this.ViewData["ErrorMessage"]
+    </p>
+}
+else if (ViewData.ContainsKey("ErrorMessage2"))
+{
+    <h3 class="text-danger">Sorry: @this.ViewData["ErrorMessage2"]</h3>
+
+    <br>
+    <a asp-controller="Personal" asp-action="MyRequests" class="nav">Go back</a>
+
+}
+
+
+
+
+
+
+
+
+@*@{
+    ViewData["Title"] = "Error";
+}
+
+
 <h1 class="text-danger">Error.</h1>
 <h2 class="text-danger">Oops...something went wrong :(</h2>
 <p>
     Message: @this.ViewData["ErrorMessage"]
-</p>
+</p>*@

@@ -2,10 +2,12 @@
 using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services;
 using Carpooling.BusinessLayer.Services.Contracts;
+using Carpooling.BusinessLayer.Validation;
 using Carpooling.Models;
 using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
+using CarPooling.Data.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -122,7 +124,7 @@ namespace Carpooling.Controllers
                 this.ViewData["ErrorMessage"] = ex.Message;
                 return View("Error");
             }
-            catch (DuplicateEntityException ex)
+            catch (DublicateEntityException ex)
             {
                 HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
                 this.ViewData["ErrorMessage"] = ex.Message;
@@ -161,10 +163,10 @@ namespace Carpooling.Controllers
                 var createdTripRequest = await tripRequestService.CreateTripRequestForMVCAsync(user, tripRequest);
                 return this.RedirectToAction("DriverInfo", "Personal", new { id = user.Id });
             }
-            catch (EntityNotFoundException ex)
+            catch (EntityNotFoundException e)
             {
                 HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
-                this.ViewData["ErrorMessage"] = ex.Message;
+                this.ViewData["ErrorMessage"] = e.Message;
                 return View("Error");
             }
             catch (UnauthorizedOperationException ex)
@@ -173,9 +175,9 @@ namespace Carpooling.Controllers
                 this.ViewData["ErrorMessage"] = ex.Message;
                 return View("Error");
             }
-            catch (DuplicateEntityException ex)
+            catch (DublicateEntityException ex)
             {
-                HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+                this.Response.StatusCode = StatusCodes.Status403Forbidden;
                 this.ViewData["ErrorMessage"] = ex.Message;
                 return View("Error");
             }
@@ -268,7 +270,7 @@ namespace Carpooling.Controllers
                     .Include(t => t.DriverTripRequests)
                     .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
 
-                IEnumerable<TripRequestResponse> result = await this.tripRequestService.SeeAllHisPassengerRequestsMVCAsync(user, user.Id);
+                IEnumerable<TripRequestViewResponseModel> result = await this.tripRequestService.SeeAllHisPassengerRequestsMVCAsync(user, user.Id);
 
 
                 return this.View(result);
@@ -285,45 +287,110 @@ namespace Carpooling.Controllers
 
         }
 
+        [HttpGet]
+        public async Task<IActionResult> MyRequests()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge();
+            }
+            try
+            {
+                var user = await userManager.Users
+                    .Include(c => c.Cars)
+                    .Include(t => t.PassengerTripRequests)
+                    .Include(t => t.DriverTripRequests)
+                    .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
+
+                IEnumerable<TripRequestViewResponseModel> result = await this.tripRequestService.SeeAllHisDriverRequestsMVCAsync(user, user.Id);
 
 
-        //[HttpPost]
-        //public async Task<IActionResult> EditTripRequest(int tripRequestId, string newStatus)
-        //{
-        //    if (!User.Identity.IsAuthenticated)
-        //    {
-        //        return Challenge();
-        //    }
+                return this.View(result);
 
-        //    try
-        //    {
-        //        var user = await userManager.Users.Include(c => c.Cars).Include(t=>t.PassengerTripRequests).Include(t=>t.DriverTripRequests)
-        //            .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
 
-        //        await tripRequestService.EditRequestAsync(user, tripRequestId, newStatus);
+            }
+            catch (UnauthorizedOperationException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
 
-        //        return RedirectToAction("DriverInfo", "Personal", new { id = user.Id });
-        //    }
-        //    catch (EntityNotFoundException ex)
-        //    {
-        //        HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
-        //        this.ViewData["ErrorMessage"] = ex.Message;
-        //        return View("Error");
-        //    }
-        //    catch (UnauthorizedOperationException ex)
-        //    {
-        //        HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
-        //        this.ViewData["ErrorMessage"] = ex.Message;
-        //        return View("Error");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Handle other exceptions here
-        //        HttpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
-        //        this.ViewData["ErrorMessage"] = "An error occurred while updating the trip request.";
-        //        return View("Error");
-        //    }
-        //}
+            }
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteRequest(int id)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge();
+            }
+            try
+            {
+                var user = await userManager.Users
+                 .Include(c => c.Cars)
+                 .Include(t => t.PassengerTripRequests)
+                 .Include(t => t.DriverTripRequests)
+                 .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
+
+                var result = await tripRequestService.DeleteAsync(user, id);
+
+                return RedirectToAction("MyBookings","Personal");
+            }
+            catch (EntityUnauthorizatedException e)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                this.ViewData["ErrorMessage"] = e.Message;
+                return View("Error");
+            }
+            catch (EntityNotFoundException e)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                this.ViewData["ErrorMessage"] = e.Message;
+                return View("Error");
+            }
+
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> EditTripRequest(int tripRequestId, string response)
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge();
+            }
+
+            try
+            {
+                var user = await userManager.Users.Include(c => c.Cars).Include(t => t.PassengerTripRequests).Include(t => t.DriverTripRequests)
+                    .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
+
+                await tripRequestService.EditRequestAsync(user, tripRequestId, response);
+
+                return RedirectToAction("MyRequests", "Personal", new { id = user.Id });
+            }
+            catch (EntityNotFoundException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                this.ViewData["ErrorMessage2"] = ex.Message;
+                return View("Error");
+            }
+            catch (UnauthorizedOperationException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
+        }
     }
 }
 
