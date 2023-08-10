@@ -368,7 +368,7 @@ namespace Carpooling.Controllers
                 var user = await userManager.Users.Include(c => c.Cars).Include(t => t.PassengerTripRequests).Include(t => t.DriverTripRequests)
                     .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
 
-                await tripRequestService.EditRequestAsync(user, tripRequestId, response);
+                await tripRequestService.EditRequestMVCAsync(user, tripRequestId, response);
 
                 return RedirectToAction("MyRequests", "Personal", new { id = user.Id });
             }

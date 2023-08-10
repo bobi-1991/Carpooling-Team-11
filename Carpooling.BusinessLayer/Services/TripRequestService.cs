@@ -133,7 +133,7 @@ namespace Carpooling.BusinessLayer.Services
             }
             else if (currentAnswer.Equals("approve") && travel.AvailableSeats == 0)
             {
-                return "I'm sorry, but there are no seats available for this trip";
+                return "There are no seats available for this trip.";
             }
             else if (currentAnswer.Equals("decline") && tripRequestToUpdate.Status.ToString().ToLower() == "approved")
             {
