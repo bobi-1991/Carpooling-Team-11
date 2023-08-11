@@ -5,18 +5,10 @@
 }
 
 
-
-
 <div class="user-menu">
     <ul>
         <li><a asp-controller="Personal" asp-action="MyTravels">My Travels</a></li>
-
         <li><a asp-controller="Personal" asp-action="MyBookings">My Bookings</a></li>
-        @* }*@
-        @*   @if (User.IsInRole("driver"))
-        {
-        <li><a asp-controller="Personal" asp-action="">My requests</a></li>
-        }*@
         @if (User.IsInRole("Driver") || User.IsInRole("Administrator"))
         {
             <li><a asp-controller="Personal" asp-action="MyRequests">My Requests</a></li>

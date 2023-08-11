@@ -222,7 +222,8 @@ namespace Carpooling.Tests.TravelTests
 
             travelRepositoryMock.Setup(repo => repo.CreateTravelAsync(travel))
                 .ReturnsAsync(travel);
-
+            travelValidatorMock.Setup(validator => validator.ValidateIsNewTravelPossible(loggedUser.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+                .ReturnsAsync(true);
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
                 addressRepositoryMock.Object, carRepositoryMock.Object,
                 travelValidatorMock.Object, userValidationMock.Object);

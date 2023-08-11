@@ -74,6 +74,11 @@ namespace CarPooling.Data.Repositories
         public async Task<string> DeleteAsync(int travelId)
         {
             var travelToDelete = await this.GetByIdAsync(travelId);
+            var driver = await this.userRepository.GetByIdAsync(travelToDelete.DriverId);
+
+            driver.TravelHistory.Remove(travelToDelete);
+
+            this.dbContext.Update(driver);
 
             travelToDelete.IsDeleted = true;
             travelToDelete.DeletedOn = DateTime.Now;
@@ -121,8 +126,6 @@ namespace CarPooling.Data.Repositories
            .Include(x => x.Car)
            .Include(x => x.StartLocation)
            .Include(x => x.EndLocation)
-
-
            // .Include(x => x.Passengers)
            .FirstOrDefaultAsync(x => x.Id == travelId);
 
@@ -135,7 +138,7 @@ namespace CarPooling.Data.Repositories
             travel.AvailableSeats--;
             //NEW
             //May be wrong
-           // passenger.TravelHistory.Add(travel);
+            //passenger.TravelHistory.Add(travel);
             this.dbContext.Users.Update(passenger);
 
 

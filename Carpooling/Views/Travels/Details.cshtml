@@ -1,6 +1,10 @@
-﻿@using Carpooling.Service.Dto_s.Responses;
+﻿@using CarPooling.Data.Models;
+@using Carpooling.Service.Dto_s.Responses;
+@using Microsoft.AspNetCore.Identity;
+@inject UserManager<User> UserManager
 @{
     this.ViewData["Title"] = "Details";
+    var user = await UserManager.GetUserAsync(User);
 }
 @model TravelResponse
 
@@ -26,13 +30,20 @@
         }
         else
         {
-            @if (this.Model.AvailableSeats > 0)
+            @if (user.IsBlocked == true)
             {
-                <a asp-controller="Personal" asp-action="CreateTripRequest" asp-route-id="@this.ViewBag.id" class="btn btn-success">Create Trip Request</a>
+                <h3>You have been blocked! You cannot create trip requests!</h3>
             }
             else
             {
-                <p>Unfortunately there are no available seats :(</p>
+                @if (this.Model.AvailableSeats > 0)
+                {
+                    <a asp-controller="Personal" asp-action="CreateTripRequest" asp-route-id="@this.ViewBag.id" class="btn btn-success">Create Trip Request</a>
+                }
+                else
+                {
+                    <p>Unfortunately there are no available seats :(</p>
+                }
             }
         }
         <a asp-controller="Travels" asp-action="Index" class="btn btn-success">Go Back</a>

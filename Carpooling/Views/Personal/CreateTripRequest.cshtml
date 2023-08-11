@@ -1,22 +1,31 @@
-﻿@using Carpooling.Models
+﻿@using CarPooling.Data.Models;
+@using Carpooling.Models
+@using Microsoft.AspNetCore.Identity;
+@inject UserManager<User> UserManager
 @model TripRequestViewModel
 @{
     this.ViewData["Title"] = "TripRequest";
+    var user = await UserManager.GetUserAsync(User);
 }
+@if (user.IsBlocked == false)
+{
+    <h2>Confirm Trip Request</h2>
 
-<h2>Confirm Trip Request</h2>
-
-<p>Are you sure you want to make this request?</p>
+    <p>Are you sure you want to make this request?</p>
 
 
-<form asp-controller="Personal" asp-action="CreateTripRequest" method="post">
-    @Html.AntiForgeryToken()
+    <form asp-controller="Personal" asp-action="CreateTripRequest" method="post">
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.TravelId)
+        @Html.HiddenFor(model => model.Status)
 
-    @Html.HiddenFor(model => model.TravelId)
-    @Html.HiddenFor(model => model.Status)
-
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Confirm</button>
-        <a asp-controller="Travels" asp-action="Index" class="btn btn-link">Cancel</a>
-    </div>
-</form>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Confirm</button>
+            <a asp-controller="Travels" asp-action="Index" class="btn btn-link">Cancel</a>
+        </div>
+    </form>
+}
+else
+{
+    <h1>You are blocked you cannot create trip requests!</h1>
+}

@@ -68,6 +68,7 @@ namespace Carpooling.BusinessLayer.Services
                 .FirstOrDefault();
             travel.Car = car;
             travel.Driver = loggedUser;
+            travel.IsCompleted = false;
             travel.DriverId = loggedUser.Id;
             return await travelRepository.CreateTravelAsync(travel);
         }
@@ -134,6 +135,17 @@ namespace Carpooling.BusinessLayer.Services
 
             return await this.travelRepository.DeleteAsync(travelId);
         }
+        public async Task<string> DeleteMVCAsync(User loggedUser, int travelId)
+        {
+            var travel = await this.travelRepository.GetByIdAsync(travelId);
+            if (travel.IsDeleted)
+            {
+                throw new UnauthorizedAccessException("This travel is already deleted.");
+            }
+            await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, travel.DriverId);
+
+            return await this.travelRepository.DeleteAsync(travelId);
+        }
         public async Task<string> SetTravelToIsCompleteAsync(User loggedUser, int id)
         {
             var travel = await this.travelRepository.GetByIdAsync(id);
@@ -143,6 +155,20 @@ namespace Carpooling.BusinessLayer.Services
             if (travel.IsCompleted == true)
             {
                 return "This travel is already completed.";
+            }
+
+            return await this.travelRepository.SetTravelToIsCompleteAsync(travel);
+
+        }
+        public async Task<string> SetTravelToIsCompleteMVCAsync(User loggedUser, int id)
+        {
+            var travel = await this.travelRepository.GetByIdAsync(id);
+
+            await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, travel.DriverId);
+
+            if (travel.IsCompleted == true)
+            {
+                throw new UnauthorizedAccessException("This travel is already completed.");
             }
 
             return await this.travelRepository.SetTravelToIsCompleteAsync(travel);
