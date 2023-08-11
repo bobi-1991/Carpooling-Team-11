@@ -20,8 +20,8 @@ namespace Carpooling.BusinessLayer.Services
 
         public async Task GetDirection()
         {
-            var startLocaionUrl = GetLocationUrl("BG", "Sofia");
-            var endLocationUrl = GetLocationUrl("BG", "Varna");
+            var startLocaionUrl = GetLocationUrl("Bulgaria", "Sofia");
+            var endLocationUrl = GetLocationUrl("Bulgaria", "Varna");
 
             var startLocationCoordinates = await GetLocationCoordinates(startLocaionUrl);
             var endLocationCoordinates = await GetLocationCoordinates(endLocationUrl);
@@ -73,7 +73,7 @@ namespace Carpooling.BusinessLayer.Services
         {
             var startCoordinates = startLocationCoordinates.ResourceSets[0].Resources[0].Point.Coordinates;
             var endCoordinates = endLocationCoordinates.ResourceSets[0].Resources[0].Point.Coordinates;
-            var reqStartTime = startTime.ToString("yyyy-mm-dd"); //Formatting? 
+            var reqStartTime = startTime.ToString("yyyy-MM-dd"); //Formatting? 
 
             var req = new DistanceMatrix
             {
