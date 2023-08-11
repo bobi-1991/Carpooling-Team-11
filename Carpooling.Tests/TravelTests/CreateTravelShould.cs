@@ -1,19 +1,12 @@
 ﻿using AutoMapper;
 using Carpooling.BusinessLayer.Validation.Contracts;
 using CarPooling.Data.Models;
-using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Repositories.Contracts;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Carpooling.BusinessLayer.Services;
 using Carpooling.Service.Dto_s.Requests;
 using Carpooling.BusinessLayer.Exceptions;
-using CarPooling.Data.Exceptions;
-using Carpooling.Models;
+using Carpooling.BusinessLayer.Services.Contracts;
 
 namespace Carpooling.Tests.TravelTests
 {
@@ -26,6 +19,7 @@ namespace Carpooling.Tests.TravelTests
         private Mock<ICarRepository> carRepositoryMock;
         private Mock<ITravelValidator> travelValidatorMock;
         private Mock<IUserValidation> userValidationMock;
+        private Mock<IMapService> mapServiceMock;
 
         [TestInitialize]
         public void Initialize()
@@ -36,6 +30,7 @@ namespace Carpooling.Tests.TravelTests
             carRepositoryMock = new Mock<ICarRepository>();
             travelValidatorMock = new Mock<ITravelValidator>();
             userValidationMock = new Mock<IUserValidation>();
+            mapServiceMock = new Mock<IMapService>();
         }
         [TestMethod]
         public async Task CreateTravelAsync_BannedUser_ThrowsUnauthorizedOperationException()
@@ -69,7 +64,7 @@ namespace Carpooling.Tests.TravelTests
 
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
                 addressRepositoryMock.Object, carRepositoryMock.Object,
-                travelValidatorMock.Object, userValidationMock.Object);
+                travelValidatorMock.Object, userValidationMock.Object, mapServiceMock.Object);
 
             // Act & Assert
 
@@ -112,7 +107,7 @@ namespace Carpooling.Tests.TravelTests
 
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
                 addressRepositoryMock.Object, carRepositoryMock.Object,
-                travelValidatorMock.Object, userValidationMock.Object);
+                travelValidatorMock.Object, userValidationMock.Object, mapServiceMock.Object);
 
             // Act & Assert
 
@@ -166,7 +161,7 @@ namespace Carpooling.Tests.TravelTests
 
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
                 addressRepositoryMock.Object, carRepositoryMock.Object,
-                travelValidatorMock.Object, userValidationMock.Object);
+                travelValidatorMock.Object, userValidationMock.Object, mapServiceMock.Object);
 
             // Act
             var result = await travelService.CreateTravelAsync(loggedUser, travelRequest);
@@ -194,7 +189,7 @@ namespace Carpooling.Tests.TravelTests
 
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
                 addressRepositoryMock.Object, carRepositoryMock.Object,
-                travelValidatorMock.Object, userValidationMock.Object);
+                travelValidatorMock.Object, userValidationMock.Object, mapServiceMock.Object);
 
             // Act & Assert
             await Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(async () =>
@@ -223,10 +218,11 @@ namespace Carpooling.Tests.TravelTests
 
             travelRepositoryMock.Setup(repo => repo.CreateTravelAsync(travel))
                 .ReturnsAsync(travel);
-
+            travelValidatorMock.Setup(validator => validator.ValidateIsNewTravelPossible(loggedUser.Id, It.IsAny<DateTime>(), It.IsAny<DateTime>()))
+                .ReturnsAsync(true);
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
                 addressRepositoryMock.Object, carRepositoryMock.Object,
-                travelValidatorMock.Object, userValidationMock.Object);
+                travelValidatorMock.Object, userValidationMock.Object, mapServiceMock.Object);
 
             // Act
             var result = await travelService.CreateTravelForMVCAsync(loggedUser, travel);
@@ -260,7 +256,7 @@ namespace Carpooling.Tests.TravelTests
 
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
                 addressRepositoryMock.Object, carRepositoryMock.Object,
-                travelValidatorMock.Object, userValidationMock.Object);
+                travelValidatorMock.Object, userValidationMock.Object, mapServiceMock.Object);
 
             // Act & Assert
             await Assert.ThrowsExceptionAsync<EntityUnauthorizatedException>(async () =>

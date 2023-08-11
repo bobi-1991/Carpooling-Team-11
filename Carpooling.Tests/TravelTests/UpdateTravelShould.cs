@@ -2,6 +2,7 @@
 using Carpooling.BusinessLayer.Dto_s.UpdateModels;
 using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services;
+using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
@@ -24,6 +25,7 @@ namespace Carpooling.Tests.TravelTests
         private Mock<ICarRepository> carRepositoryMock;
         private Mock<ITravelValidator> travelValidatorMock;
         private Mock<IUserValidation> userValidationMock;
+        private Mock<IMapService> mapServiceMock;
 
         [TestInitialize]
         public void Initialize()
@@ -34,6 +36,7 @@ namespace Carpooling.Tests.TravelTests
             carRepositoryMock = new Mock<ICarRepository>();
             travelValidatorMock = new Mock<ITravelValidator>();
             userValidationMock = new Mock<IUserValidation>();
+            mapServiceMock = new Mock<IMapService>();
         }
         [TestMethod]
         public async Task UpdateAsync_InvalidUpdateData_ThrowsUnauthorizedOperationException()
@@ -68,7 +71,7 @@ namespace Carpooling.Tests.TravelTests
                 .ThrowsAsync(new UnauthorizedOperationException("Please put correct input data for update."));
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
                 addressRepositoryMock.Object, carRepositoryMock.Object,
-                travelValidatorMock.Object, userValidationMock.Object);
+                travelValidatorMock.Object, userValidationMock.Object, mapServiceMock.Object);
 
             // Act & Assert
             Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(async () =>
@@ -88,7 +91,7 @@ namespace Carpooling.Tests.TravelTests
 
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object, 
                 addressRepositoryMock.Object, carRepositoryMock.Object, travelValidatorMock.Object, 
-                userValidationMock.Object);
+                userValidationMock.Object, mapServiceMock.Object);
 
             // Act & Assert
             await Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(async () =>
@@ -163,7 +166,7 @@ namespace Carpooling.Tests.TravelTests
 
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
                 addressRepositoryMock.Object, carRepositoryMock.Object,
-                travelValidatorMock.Object, userValidationMock.Object);
+                travelValidatorMock.Object, userValidationMock.Object, mapServiceMock.Object);
 
             // Act
             var result = await travelService.UpdateAsync(loggedUser, travelId, travelDataForUpdate);

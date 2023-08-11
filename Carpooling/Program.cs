@@ -45,7 +45,7 @@ public class Program
         builder.Services.AddScoped<IJsonManager, JsonManager>();
         builder.Services.AddAutoMapper(typeof(Carpooling.Mapper));
         builder.Services.AddScoped<IIdentityHelper, IdentityHelper>();
-
+        builder.Services.AddScoped<HttpClient>();
 
         // Add services to the container
         //  builder.Services.AddRazorPages();
@@ -57,6 +57,7 @@ public class Program
         builder.Services.AddScoped<ITravelService, TravelService>();
         builder.Services.AddScoped<ITripRequestService, TripRequestService>();
         builder.Services.AddScoped<IFileUploadService, FileUploadService>();
+        builder.Services.AddScoped<IMapService, MapService>();
         //Add identity services
         builder.Services.AddScoped<UserManager<User>>();
 

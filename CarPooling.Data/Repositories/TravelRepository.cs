@@ -4,13 +4,6 @@ using CarPooling.Data.Models;
 using CarPooling.Data.Models.Pagination;
 using CarPooling.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.ConstrainedExecution;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CarPooling.Data.Repositories
 {
@@ -148,8 +141,6 @@ namespace CarPooling.Data.Repositories
            .Include(x => x.Car)
            .Include(x => x.StartLocation)
            .Include(x => x.EndLocation)
-
-
            // .Include(x => x.Passengers)
            .FirstOrDefaultAsync(x => x.Id == travelId);
 
@@ -162,7 +153,7 @@ namespace CarPooling.Data.Repositories
             travel.AvailableSeats--;
             //NEW
             //May be wrong
-           // passenger.TravelHistory.Add(travel);
+            //passenger.TravelHistory.Add(travel);
             this.dbContext.Users.Update(passenger);
 
 
