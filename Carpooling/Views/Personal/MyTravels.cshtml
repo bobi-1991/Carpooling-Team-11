@@ -17,7 +17,7 @@
 }
 else
 {
-    @if (!Model.Any(t => !t.IsComplete))
+    @if (!Model.Any(t => !t.IsCompleted))
     {
         <br>
         <h3> At the moment, you still have no incomplete travels. </h3>
@@ -32,7 +32,7 @@ else
         <br>
         <div>
             <h3>Incomplete Travels:</h3>
-            @foreach (var travel in @Model.Where(t => !t.IsComplete))
+            @foreach (var travel in @Model.Where(t => !t.IsCompleted))
             {
                 <div class="travel-container">
                     <h2>Travel Details</h2>
@@ -42,7 +42,7 @@ else
                     <p><i class="fas fa-calendar"></i> <span class="property">Departure Time:</span> @travel.DepartureTime</p>
                     <p><i class="fas fa-clock"></i> <span class="property">Arrival Time:</span> @travel.ArrivalTime</p>
                     <p><i class="fas fa-chair"></i> <span class="property">Available Seats:</span> @travel.AvailableSeats</p>
-                    <p><i class="fas fa-check-circle"></i> <span class="property">Is Complete:</span> @(travel.IsComplete ? "Yes" : "No")</p>
+                    <p><i class="fas fa-check-circle"></i> <span class="property">Is Complete:</span> @(travel.IsCompleted ? "Yes" : "No")</p>
                     <p><i class="fas fa-car"></i> <span class="property">Car Registration:</span> @travel.CarRegistration</p>
 
                     <div>
@@ -65,7 +65,7 @@ else
     }
     <br>
     <br>
-    @if (!Model.Any(t => t.IsComplete))
+    @if (!Model.Any(t => t.IsCompleted))
     {
         <br>
         <h3> At the moment, you still have no completed travels. </h3>
@@ -75,7 +75,7 @@ else
 
         <div>
             <h3>Complete Travels:</h3>
-            @foreach (var travel in @Model.Where(t => t.IsComplete))
+            @foreach (var travel in @Model.Where(t => t.IsCompleted))
             {
                 <div class="travel-container">
                     <h2>Travel Details</h2>
@@ -86,7 +86,7 @@ else
                     <p><i class="fas fa-clock"></i> <span class="property">Arrival Time:</span> @travel.ArrivalTime</p>
                     <p><i class="fas fa-chair"></i> <span class="property">Available Seats:</span> @travel.AvailableSeats</p>
                     <p><i class="fas fa-check-circle"></i> <span class="property">Is Complete:</span> @(
-            travel.IsComplete ? "Yes" : "No"
+            travel.IsCompleted ? "Yes" : "No"
             )</p>
                     <p><i class="fas fa-car"></i> <span class="property">Car Registration:</span> @travel.CarRegistration</p>
                 </div>
