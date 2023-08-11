@@ -5,6 +5,7 @@ using Carpooling.Service.Dto_s.Requests;
 using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
+using CarPooling.Data.Models.Enums;
 using CarPooling.Data.Models.ViewModels;
 using CarPooling.Data.Repositories.Contracts;
 using System.Diagnostics;
@@ -14,7 +15,7 @@ namespace Carpooling.BusinessLayer.Services
     public class TripRequestService : ITripRequestService
     {
         private readonly ITravelRepository travelRepository;
-         private readonly IMapper mapper;
+        private readonly IMapper mapper;
         //  private readonly IAddressRepository addressRepository;
         //  private readonly ICarRepository carRepository;
         //  private readonly ITravelValidator travelValidator;
@@ -40,7 +41,7 @@ namespace Carpooling.BusinessLayer.Services
                 x.Passenger.UserName,
                 x.Driver.UserName,
                 x.Travel.StartLocation.Details,
-                x.Travel.EndLocation.Details,(DateTime)
+                x.Travel.EndLocation.Details, (DateTime)
                 x.Travel.DepartureTime,
                 x.Status.ToString()));
         }
@@ -114,10 +115,10 @@ namespace Carpooling.BusinessLayer.Services
                 await this.travelRepository.RemoveUserToTravelAsync(travelId, tripRequest.PassengerId);
             }
 
-            return await this.tripRequestRepository.DeleteAsync(tripRequestId);   
+            return await this.tripRequestRepository.DeleteAsync(tripRequestId);
         }
 
-        public async Task<string> EditRequestAsync(User loggedUser,int tripId,  string answer)
+        public async Task<string> EditRequestAsync(User loggedUser, int tripId, string answer)
         {
             var tripRequestToUpdate = await this.tripRequestRepository.GetByIdAsync(tripId);
             var driverId = tripRequestToUpdate.Travel.DriverId;
@@ -125,7 +126,7 @@ namespace Carpooling.BusinessLayer.Services
 
             await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, driverId);
 
-            var currentAnswer = await this.tripRequestValidator.ValidateStatusOfTripRequest(tripRequestToUpdate,answer);
+            var currentAnswer = await this.tripRequestValidator.ValidateStatusOfTripRequest(tripRequestToUpdate, answer);
 
             if (currentAnswer.Equals("approve") && travel.AvailableSeats > 0)
             {
@@ -141,7 +142,7 @@ namespace Carpooling.BusinessLayer.Services
             }
 
 
-                return await this.tripRequestRepository.EditRequestAsync(tripRequestToUpdate, currentAnswer);
+            return await this.tripRequestRepository.EditRequestAsync(tripRequestToUpdate, currentAnswer);
 
         }
 
@@ -186,6 +187,36 @@ namespace Carpooling.BusinessLayer.Services
                x.Travel.EndLocation.Details, (DateTime)
                x.Travel.DepartureTime,
                x.Status.ToString()));
+        }
+
+        public async Task<IEnumerable<PassengersListViewModel>> SeeAllHisDriverPassengersMVCAsync(User loggedUser, string driverId)
+        {
+            await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, driverId);
+
+            var tripRequests = await this.tripRequestRepository.SeeAllHisDriverRequestsMVCAsync(driverId);
+
+            var passengers = tripRequests
+                  .Select(tripRequest => tripRequest.Passenger)
+                  .Where(passenger => passenger != null && !passenger.IsDeleted)
+                  .ToList();
+
+            var passengerViewModel = new List<PassengersListViewModel>();
+
+            foreach (var trip in tripRequests.Where(x=> x.Status == TripRequestEnum.Approved))
+            {
+                passengerViewModel.Add(new PassengersListViewModel
+                {
+                    DepartureTime = (DateTime)trip.Travel.DepartureTime,
+                    DepartureCity = trip.Travel.StartLocation.City,
+                    DepartureAddress = trip.Travel.StartLocation.Details,
+                    ArrivalCity = trip.Travel.EndLocation.City,
+                    ArrivalAddress = trip.Travel.EndLocation.Details,
+                    Username = trip.Passenger.UserName,
+                    AverageRating = trip.Passenger.AverageRating
+                });             
+            }
+
+            return passengerViewModel;
         }
 
         public async Task<IEnumerable<TripRequestViewResponseModel>> SeeAllHisDriverRequestsMVCAsync(User loggedUser, string driverId)

@@ -1,5 +1,4 @@
-﻿
-@using Carpooling.Models;
+﻿@using Carpooling.Models;
 @model List<TravelViewResponseWithId>
 
 @{
@@ -11,44 +10,88 @@
 {
     <br>
     <h3> You currently have no trips yet.  </h3>
-
 }
 else
 {
-    <h2>My Travel(s):</h2>
-    <br>
-    <div>
-        @foreach (var travel in @Model)
-        {
-            <div class="travel-container">
-                <h2>Travel Details</h2>
-                <br>
-                <p><i class="fas fa-map-marker-alt"></i> <span class="property">Start city:</span> @travel.StartLocationName</p>
-                <p><i class="fas fa-flag"></i> <span class="property">Destination city:</span> @travel.DestinationName</p>
-                <p><i class="fas fa-calendar"></i> <span class="property">Departure Time:</span> @travel.DepartureTime</p>
-                <p><i class="fas fa-clock"></i> <span class="property">Arrival Time:</span> @travel.ArrivalTime</p>
-                <p><i class="fas fa-chair"></i> <span class="property">Available Seats:</span> @travel.AvailableSeats</p>
-                <p><i class="fas fa-check-circle"></i> <span class="property">Is Complete:</span> @(travel.IsComplete ? "Yes" : "No")</p>
-                <p><i class="fas fa-car"></i> <span class="property">Car Registration:</span> @travel.CarRegistration</p>
+    @if (!Model.Any(t => !t.IsComplete))
+    {
+        <br>
+        <h3> At the moment, you still have no incomplete travels. </h3>
+        <br>
+        <br>       
+        <hr>
+    }
+    else
+    {
 
-                <div>
-                    <form asp-controller="Travels" asp-action="SetComplete" method="post">
-                        <input type="hidden" name="travelId" value="@travel.Id">
-                        <button type="submit" name="complete" value="complete">Мark as complete</button>
-                    </form>
-                </div>
-                <div>
-                    <form asp-controller="Travels" asp-action="DeleteTravel" method="post">
-                        <input type="hidden" name="travelId" value="@travel.Id">
-                        <button type="submit" name="delete" value="delete">Cancel a trip</button>
-                    </form>
+        <h2>My Travel(s):</h2>
+        <br>
+        <div>
+            <h3>Incomplete Travels:</h3>
+            @foreach (var travel in @Model.Where(t => !t.IsComplete))
+            {
+                <div class="travel-container">
+                    <h2>Travel Details</h2>
                     <br>
-                </div>
+                    <p><i class="fas fa-map-marker-alt"></i> <span class="property">Start city:</span> @travel.StartLocationName</p>
+                    <p><i class="fas fa-flag"></i> <span class="property">Destination city:</span> @travel.DestinationName</p>
+                    <p><i class="fas fa-calendar"></i> <span class="property">Departure Time:</span> @travel.DepartureTime</p>
+                    <p><i class="fas fa-clock"></i> <span class="property">Arrival Time:</span> @travel.ArrivalTime</p>
+                    <p><i class="fas fa-chair"></i> <span class="property">Available Seats:</span> @travel.AvailableSeats</p>
+                    <p><i class="fas fa-check-circle"></i> <span class="property">Is Complete:</span> @(travel.IsComplete ? "Yes" : "No")</p>
+                    <p><i class="fas fa-car"></i> <span class="property">Car Registration:</span> @travel.CarRegistration</p>
 
-            </div>
-            <br>
-        }
-    </div>
+                    <div>
+                        <form asp-controller="Travels" asp-action="SetComplete" method="post">
+                            <input type="hidden" name="travelId" value="@travel.Id">
+                            <button type="submit" name="complete" value="complete">Мark as complete</button>
+                        </form>
+                    </div>
+                    <div>
+                        <form asp-controller="Travels" asp-action="DeleteTravel" method="post">
+                            <input type="hidden" name="travelId" value="@travel.Id">
+                            <button type="submit" name="delete" value="delete">Cancel a trip</button>
+                        </form>
+                        <br>
+                    </div>
+                </div>
+                <br>
+            }
+        </div>
+    }
+    <br>
+    <br>
+    @if (!Model.Any(t => t.IsComplete))
+    {
+        <br>
+        <h3> At the moment, you still have no completed travels. </h3>
+    }
+    else
+    {
+
+        <div>
+            <h3>Complete Travels:</h3>
+            @foreach (var travel in @Model.Where(t => t.IsComplete))
+            {
+                <div class="travel-container">
+                    <h2>Travel Details</h2>
+                    <br>
+                    <p><i class="fas fa-map-marker-alt"></i> <span class="property">Start city:</span> @travel.StartLocationName</p>
+                    <p><i class="fas fa-flag"></i> <span class="property">Destination city:</span> @travel.DestinationName</p>
+                    <p><i class="fas fa-calendar"></i> <span class="property">Departure Time:</span> @travel.DepartureTime</p>
+                    <p><i class="fas fa-clock"></i> <span class="property">Arrival Time:</span> @travel.ArrivalTime</p>
+                    <p><i class="fas fa-chair"></i> <span class="property">Available Seats:</span> @travel.AvailableSeats</p>
+                    <p><i class="fas fa-check-circle"></i> <span class="property">Is Complete:</span> @(
+            travel.IsComplete ? "Yes" : "No"
+            )</p>
+                    <p><i class="fas fa-car"></i> <span class="property">Car Registration:</span> @travel.CarRegistration</p>
+                </div>
+                <br>
+            }
+        </div>
+    }
 }
 <br>
 <a asp-controller="Personal" asp-action="Menu" class="nav">Go back</a>
+
+

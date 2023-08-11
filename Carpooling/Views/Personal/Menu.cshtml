@@ -13,7 +13,10 @@
         {
             <li><a asp-controller="Personal" asp-action="MyRequests">My Requests</a></li>
         }
-        <li><a href="#">My Passengers</a></li>
+        @if (User.IsInRole("Driver") || User.IsInRole("Administrator"))
+        {
+            <li><a asp-controller="Personal" asp-action="MyPassengers">My Passengers</a></li>
+        }
         <li><a asp-controller="Personal" asp-action="MyCars">My Vehicles</a></li>
         <li><a href="#">My Received Ratings</a></li>
         <li><a href="#">My Given Ratings</a></li>

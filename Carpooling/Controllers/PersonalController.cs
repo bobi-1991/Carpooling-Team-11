@@ -248,7 +248,7 @@ namespace Carpooling.Controllers
 
                 var history = user.TravelHistory;
                 var trips = new List<TravelViewResponseWithId>();
-                
+
 
                 foreach (var travel in history)
                 {
@@ -419,6 +419,39 @@ namespace Carpooling.Controllers
                 HttpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 this.ViewData["ErrorMessage"] = ex.Message;
                 return View("Error");
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> MyPassengers()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge();
+            }
+            try
+            {
+                var user = await userManager.Users
+                    .Include(c => c.Cars)
+                    .Include(t => t.PassengerTripRequests)
+                    .Include(t => t.DriverTripRequests)
+                    .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
+
+
+
+                var result = await this.tripRequestService.SeeAllHisDriverPassengersMVCAsync(user, user.Id);
+
+
+                return this.View(result);
+
+
+            }
+            catch (UnauthorizedOperationException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+
             }
         }
     }

@@ -24,5 +24,6 @@ namespace Carpooling.BusinessLayer.Services.Contracts
 
         Task<IEnumerable<TripRequestResponse>> SeeAllHisPassengerRequestsAsync(User loggedUser, string userId);
         Task<IEnumerable<TripRequestViewResponseModel>> SeeAllHisPassengerRequestsMVCAsync(User loggedUser, string userId);
+        Task<IEnumerable<PassengersListViewModel>> SeeAllHisDriverPassengersMVCAsync(User loggedUser, string driverId);
     }
 }
