@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Net.Http;
 using System.Text;
 
@@ -19,19 +20,17 @@ namespace Carpooling.BusinessLayer.Services
 
         public async Task GetDirection()
         {
-            var startLocaionUrl = GetLocationUrl("Bulgaria", "Sofia");
-            var endLocationUrl = GetLocationUrl("Bulgaria", "Varna");
+            var startLocaionUrl = GetLocationUrl("BG", "Sofia");
+            var endLocationUrl = GetLocationUrl("BG", "Varna");
 
             var startLocationCoordinates = await GetLocationCoordinates(startLocaionUrl);
             var endLocationCoordinates = await GetLocationCoordinates(endLocationUrl);
 
             var matrixRequest = GetDistanceMatrixRequest(startLocationCoordinates, endLocationCoordinates, DateTime.Now);
 
-
             var result = await GetTravelInfo(matrixRequest);
 
             //return Distance and Duration of the trip?
-
         }
 
         private async Task<CoordinatesResult> GetLocationCoordinates(string url)
@@ -48,7 +47,7 @@ namespace Carpooling.BusinessLayer.Services
             }
         }
 
-        private async Task<DistanceMatrixResult> GetTravelInfo(string request)
+        private async Task<(double travelDistance, double travelDuration)> GetTravelInfo(string request)
         {
             var url = GetDistanceMatrixUrl();
 
@@ -59,9 +58,13 @@ namespace Carpooling.BusinessLayer.Services
                 using (HttpContent content = response.Content)
                 {
                     var json = content.ReadAsStringAsync().GetAwaiter().GetResult();
+
                     var result = JsonConvert.DeserializeObject<DistanceMatrixResult>(json);
 
-                    return result;
+                    var travelDistance = result.ResourceSets[0].Resources[0].Results[0].TravelDistance;
+                    var travelDuration = result.ResourceSets[0].Resources[0].Results[0].TravelDuration;
+
+                    return (travelDistance, travelDuration);
                 }
             }
         }

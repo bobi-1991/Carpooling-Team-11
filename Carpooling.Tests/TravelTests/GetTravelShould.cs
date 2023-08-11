@@ -10,6 +10,7 @@ using AutoMapper;
 using Carpooling.BusinessLayer.Validation.Contracts;
 using CarPooling.Data.Repositories.Contracts;
 using Moq;
+using Carpooling.BusinessLayer.Services.Contracts;
 
 namespace Carpooling.Tests.TravelTests
 {
@@ -22,6 +23,7 @@ namespace Carpooling.Tests.TravelTests
         private Mock<ICarRepository> carRepositoryMock;
         private Mock<ITravelValidator> travelValidatorMock;
         private Mock<IUserValidation> userValidationMock;
+        private Mock<IMapService> mapServiceMock;
         
         [TestInitialize]
         public void Initialize()
@@ -32,6 +34,7 @@ namespace Carpooling.Tests.TravelTests
             carRepositoryMock = new Mock<ICarRepository>();
             travelValidatorMock = new Mock<ITravelValidator>();
             userValidationMock = new Mock<IUserValidation>();
+            mapServiceMock = new Mock<IMapService>();
         }
         [TestMethod]
         public async Task GetByIdAsync_ReturnsTravelResponse()
@@ -59,7 +62,8 @@ namespace Carpooling.Tests.TravelTests
                 addressRepositoryMock.Object,
                 carRepositoryMock.Object,
                 travelValidatorMock.Object,
-                userValidationMock.Object);
+                userValidationMock.Object,
+                mapServiceMock.Object);
 
             // Act
             var result = await travelService.GetByIdAsync(1);

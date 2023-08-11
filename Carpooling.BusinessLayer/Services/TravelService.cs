@@ -18,9 +18,9 @@ namespace Carpooling.BusinessLayer.Services
         private readonly ICarRepository carRepository;
         private readonly ITravelValidator travelValidator;
         private readonly IUserValidation userValidation;
-        //private readonly IMapService mapService;
+        private readonly IMapService mapService;
 
-        public TravelService(ITravelRepository travelRepository, IMapper mapper, IAddressRepository addressRepository, ICarRepository carRepository, ITravelValidator travelValidator, IUserValidation userValidation) //IMapService mapService)
+        public TravelService(ITravelRepository travelRepository, IMapper mapper, IAddressRepository addressRepository, ICarRepository carRepository, ITravelValidator travelValidator, IUserValidation userValidation, IMapService mapService)
         {
             this.travelRepository = travelRepository;
             this.mapper = mapper;
@@ -28,13 +28,13 @@ namespace Carpooling.BusinessLayer.Services
             this.carRepository = carRepository;
             this.travelValidator = travelValidator;
             this.userValidation = userValidation;
-            //this.mapService = mapService;
+            this.mapService = mapService;
         }
 
         public async Task<IEnumerable<TravelResponse>> GetAllAsync()
         {
             var travels = await this.travelRepository.GetAllAsync();
-            
+
             return travels.Select(x => mapper.Map<TravelResponse>(x));
         }
 
@@ -48,7 +48,7 @@ namespace Carpooling.BusinessLayer.Services
         }
         public async Task<Travel> CreateTravelForMVCAsync(User loggedUser, Travel travel)
         {
-            //mapService.GetDirection();
+            mapService.GetDirection();
             //Add Duration/Trip to travel ? or smth else
 
             await this.travelValidator.ValidateIsLoggedUserAreDriver(loggedUser);
@@ -93,7 +93,7 @@ namespace Carpooling.BusinessLayer.Services
             var destination = await this.addressRepository.GetByIdAsync(travelRequest.DestionationId);
 
             var travel = new Travel
-            {               
+            {
                 DriverId = travelRequest.DriverId,
                 DepartureTime = travelRequest.DepartureTime,
                 ArrivalTime = travelRequest.ArrivalTime,
@@ -244,7 +244,7 @@ namespace Carpooling.BusinessLayer.Services
             });
             return travelResponses;
         }
-   
+
 
     }
 }
