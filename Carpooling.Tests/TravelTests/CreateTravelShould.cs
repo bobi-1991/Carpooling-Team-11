@@ -197,6 +197,7 @@ namespace Carpooling.Tests.TravelTests
                 await travelService.CreateTravelForMVCAsync(loggedUser, travel);
             });
         }
+
         [TestMethod]
         public async Task CreateTravelForMVCAsync_ValidData_CreatesTravel()
         {
@@ -233,6 +234,8 @@ namespace Carpooling.Tests.TravelTests
 
             travelRepositoryMock.Verify(repo => repo.CreateTravelAsync(travel), Times.Once);
         }
+
+
         [TestMethod]
         public async Task CreateTravelForMVCAsync_UnauthorizedCar_ThrowsEntityUnauthorizatedException()
         {

@@ -11,11 +11,13 @@ namespace CarPooling.Data.Repositories
     {
         private readonly CarPoolingDbContext dbContext;
         private readonly IUserRepository userRepository;
+        private readonly ITripRequestRepository tripRequestRepository;
 
-        public TravelRepository(CarPoolingDbContext dbContext, IUserRepository userRepository)
+        public TravelRepository(CarPoolingDbContext dbContext, IUserRepository userRepository, ITripRequestRepository tripRequestRepository)
         {
             this.dbContext = dbContext;
             this.userRepository = userRepository;
+            this.tripRequestRepository = tripRequestRepository;
         }
 
         public async Task<IEnumerable<Travel>> GetAllAsync()
@@ -75,6 +77,7 @@ namespace CarPooling.Data.Repositories
         {
             var travelToDelete = await this.GetByIdAsync(travelId);
             var driver = await this.userRepository.GetByIdAsync(travelToDelete.DriverId);
+            
 
             driver.TravelHistory.Remove(travelToDelete);
 
@@ -82,6 +85,18 @@ namespace CarPooling.Data.Repositories
 
             travelToDelete.IsDeleted = true;
             travelToDelete.DeletedOn = DateTime.Now;
+
+            //NEW
+            var tripRequests = await this.tripRequestRepository.GetAllAsync();
+            var tripRequestsForDelete = tripRequests.Where(x => x.Travel.IsDeleted);
+
+
+
+            foreach (var trip in tripRequestsForDelete)
+            {
+                trip.IsDeleted = true;
+                dbContext.TripRequests.Update(trip);
+            }
 
             await dbContext.SaveChangesAsync();
 
