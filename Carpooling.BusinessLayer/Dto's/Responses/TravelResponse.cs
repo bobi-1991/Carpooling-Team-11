@@ -14,7 +14,7 @@ namespace Carpooling.Service.Dto_s.Responses
         public DateTime ArrivalTime { get; set; }
         public int AvailableSeats { get; set; }
         public bool IsCompleted { get; set; }
-        public double DistanceBetweenDestinations { get; set; }
+        public int DistanceBetweenDestinations { get; set; }
         public string CarRegistration { get; set; }
     }
 }

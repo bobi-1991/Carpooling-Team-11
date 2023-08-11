@@ -159,7 +159,8 @@ namespace Carpooling.Controllers
                 var travel = mapper.Map<Travel>(travelViewModel);
 
                 travel.EstimatedTravelDuration = travelDuration;
-                travel.TravelDistance = travelDistance;
+                int convertedToIntTravelDistance = (int)Math.Floor(travelDistance);
+                travel.TravelDistance = convertedToIntTravelDistance;
                 TimeSpan duration = TimeSpan.FromMinutes(travelDuration);
                 travel.ArrivalTime = travelViewModel.DepartureTime.Add(duration);
 
