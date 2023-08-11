@@ -12,7 +12,9 @@ namespace Carpooling.BusinessLayer.Services
         private readonly UserManager<User> _userManager;
         private readonly ITravelRepository travelRepository;
 
-        public FeedbackService(IFeedbackRepository feedbackRepository, UserManager<User> userManager, ITravelRepository travelRepository)
+        public FeedbackService(IFeedbackRepository feedbackRepository, 
+            UserManager<User> userManager, 
+            ITravelRepository travelRepository)
         {
             _feedbackRepository = feedbackRepository;
             _userManager = userManager;
@@ -29,7 +31,7 @@ namespace Carpooling.BusinessLayer.Services
             }
             if (currentTravel.IsCompleted == false)
             {
-                throw new UnauthorizedOperationException("Фeedback can only be left on completed trips!");
+                throw new UnauthorizedOperationException("Feedback can only be left on completed trips!");
             }
 
             feedback.Passenger = user;

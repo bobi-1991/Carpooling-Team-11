@@ -6,16 +6,7 @@ using Carpooling.BusinessLayer.Validation.Contracts;
 using Carpooling.Service.Dto_s.Requests;
 using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Models;
-using CarPooling.Data.Models.Pagination;
-using CarPooling.Data.Repositories;
 using CarPooling.Data.Repositories.Contracts;
-using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Carpooling.BusinessLayer.Services
 {
@@ -27,8 +18,9 @@ namespace Carpooling.BusinessLayer.Services
         private readonly ICarRepository carRepository;
         private readonly ITravelValidator travelValidator;
         private readonly IUserValidation userValidation;
+        //private readonly IMapService mapService;
 
-        public TravelService(ITravelRepository travelRepository, IMapper mapper, IAddressRepository addressRepository, ICarRepository carRepository, ITravelValidator travelValidator, IUserValidation userValidation)
+        public TravelService(ITravelRepository travelRepository, IMapper mapper, IAddressRepository addressRepository, ICarRepository carRepository, ITravelValidator travelValidator, IUserValidation userValidation) //IMapService mapService)
         {
             this.travelRepository = travelRepository;
             this.mapper = mapper;
@@ -36,6 +28,7 @@ namespace Carpooling.BusinessLayer.Services
             this.carRepository = carRepository;
             this.travelValidator = travelValidator;
             this.userValidation = userValidation;
+            //this.mapService = mapService;
         }
 
         public async Task<IEnumerable<TravelResponse>> GetAllAsync()
@@ -55,6 +48,9 @@ namespace Carpooling.BusinessLayer.Services
         }
         public async Task<Travel> CreateTravelForMVCAsync(User loggedUser, Travel travel)
         {
+            //mapService.GetDirection();
+            //Add Duration/Trip to travel ? or smth else
+
             await this.travelValidator.ValidateIsLoggedUserAreDriver(loggedUser);
             if (loggedUser.IsBlocked)
             {
