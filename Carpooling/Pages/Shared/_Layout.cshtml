@@ -71,15 +71,11 @@
                                     <li class="nav-item">
                                         <a class="nav-link text-dark" asp-controller="Admin" asp-action="ListUsers">See Users</a>
                                     </li>
-                                }
-
-                                @if (roles.Contains("Administrator"))
-                                {
-                                    <li class="nav-item">
-                                        <a class="nav-link text-dark" href="/api/swagger">Swagger Documentation</a>
-                                    </li>
-                                }
+                                } 
                             }
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" href="/api/swagger">Swagger Documentation</a>
+                            </li>
                         }
                     </ul>
                 </div>
