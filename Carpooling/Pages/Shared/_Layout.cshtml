@@ -1,6 +1,11 @@
 ﻿@using CarPooling.Data.Models;
 @using Microsoft.AspNetCore.Identity;
-@inject UserManager<User> userManager
+@using Microsoft.EntityFrameworkCore;
+@inject UserManager<User> UserManager
+@{
+    var user = await UserManager.GetUserAsync(User);
+
+}
 <!DOCTYPE html>
 
 <html lang="en">
@@ -21,7 +26,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Carpooling</a>
+                <a class="navbar-brand" href="/">Carpooling</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -36,35 +41,45 @@
                         </li>
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <li>
-                                <a class="nav-link text-dark" asp-controller="Personal" asp-action="DriverInfo" asp-route-id="@userManager.GetUserId(User)">Profile Information</a>
-                            </li>
-                        }
-                        
-                        @if (User.Identity.IsAuthenticated)
-                        {
+                            var user1 = UserManager.Users.Include(c => c.Cars)
+                            .Single(x => x.UserName.Equals(User.Identity.Name));
+                            if (user1.Cars.Count != 0)
+                            {
+                                <li>
+                                    <a class="nav-link text-dark" asp-controller="Personal" asp-action="DriverInfo" asp-route-id="@UserManager.GetUserId(User)">Profile Information</a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li>
+                                    <a class="nav-link text-dark" asp-controller="Personal" asp-action="PassengerInfo" asp-route-id="@UserManager.GetUserId(User)">Profile Information</a>
+                                </li>
+                            }
+
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-action="Menu" asp-controller="Personal">Travel panel</a>
                             </li>
-                        }
-                        
-                        @if (User.Identity.IsAuthenticated)
-                        {
+
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-controller="Travels" asp-action="Index">Search for Travels</a>
                             </li>
-                        } 
-                        @if (User.IsInRole("Administrator"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-controller="Admin" asp-action="ListUsers">See Users</a>
-                            </li>
-                        }
-                        @if (User.IsInRole("Administrator"))
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" href="/api/swagger">Swagger Documentation</a>
-                            </li>
+                            if (user != null)
+                            {
+                                var roles = await UserManager.GetRolesAsync(user);
+                                @if (roles.Contains("Administrator"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" asp-controller="Admin" asp-action="ListUsers">See Users</a>
+                                    </li>
+                                }
+
+                                @if (roles.Contains("Administrator"))
+                                {
+                                    <li class="nav-item">
+                                        <a class="nav-link text-dark" href="/api/swagger">Swagger Documentation</a>
+                                    </li>
+                                }
+                            }
                         }
                     </ul>
                 </div>

@@ -70,7 +70,7 @@ namespace Carpooling.Controllers.ApiControllers
             }
         }
 
-        [HttpPut("coplete/{id}")]
+        [HttpPut("complete/{id}")]
         public async Task<IActionResult> SetTravelToIsCompleteAsync([FromHeader] string credentials, int id)
         {
             try
