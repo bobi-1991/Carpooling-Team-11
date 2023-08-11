@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Carpooling.BusinessLayer.Services;
+using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
@@ -22,6 +23,7 @@ namespace Carpooling.Tests.TravelTests
         private Mock<ICarRepository> carRepositoryMock;
         private Mock<ITravelValidator> travelValidatorMock;
         private Mock<IUserValidation> userValidationMock;
+        private Mock<IMapService> mapServiceMock;
 
         [TestInitialize]
         public void Setup()
@@ -32,6 +34,7 @@ namespace Carpooling.Tests.TravelTests
             carRepositoryMock = new Mock<ICarRepository>();
             travelValidatorMock = new Mock<ITravelValidator>();
             userValidationMock = new Mock<IUserValidation>();
+            mapServiceMock = new Mock<IMapService>();
         }
 
         [TestMethod]
@@ -57,7 +60,7 @@ namespace Carpooling.Tests.TravelTests
 
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
                 addressRepositoryMock.Object, carRepositoryMock.Object,
-                travelValidatorMock.Object, userValidationMock.Object);
+                travelValidatorMock.Object, userValidationMock.Object, mapServiceMock.Object);
 
             // Act
             var result = await travelService.DeleteAsync(loggedUser, travelToDelete.Id);
@@ -78,7 +81,7 @@ namespace Carpooling.Tests.TravelTests
 
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object, 
                 addressRepositoryMock.Object, carRepositoryMock.Object, 
-                travelValidatorMock.Object, userValidationMock.Object);
+                travelValidatorMock.Object, userValidationMock.Object, mapServiceMock.Object);
 
             // Act & Assert
             await Assert.ThrowsExceptionAsync<EntityNotFoundException>(async () =>

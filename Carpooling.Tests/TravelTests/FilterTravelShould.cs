@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Carpooling.BusinessLayer.Services;
+using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
 using Carpooling.Service.Dto_s.Responses;
 using CarPooling.Data.Data;
@@ -23,6 +24,7 @@ namespace Carpooling.Tests.TravelTests
         private Mock<ICarRepository> carRepositoryMock;
         private Mock<ITravelValidator> travelValidatorMock;
         private Mock<IUserValidation> userValidationMock;
+        private Mock<IMapService> mapServiceMock;
 
         [TestInitialize]
         public void Initialize()
@@ -33,6 +35,7 @@ namespace Carpooling.Tests.TravelTests
             carRepositoryMock = new Mock<ICarRepository>();
             travelValidatorMock = new Mock<ITravelValidator>();
             userValidationMock = new Mock<IUserValidation>();
+            mapServiceMock = new Mock<IMapService>();
         }
 
         [TestMethod]
@@ -55,7 +58,8 @@ namespace Carpooling.Tests.TravelTests
                 addressRepositoryMock.Object,
                 carRepositoryMock.Object,
                 travelValidatorMock.Object,
-                userValidationMock.Object);
+                userValidationMock.Object,
+                mapServiceMock.Object);
 
             // Act
             var result = await travelService.FilterTravelsAndSortAsync((It.IsAny<string>()));

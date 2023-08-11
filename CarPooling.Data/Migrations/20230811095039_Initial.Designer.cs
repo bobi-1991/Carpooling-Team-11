@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarPooling.Data.Migrations
 {
     [DbContext(typeof(CarPoolingDbContext))]
-    [Migration("20230810195134_Initial")]
+    [Migration("20230811095039_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
