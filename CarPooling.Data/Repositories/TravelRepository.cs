@@ -4,13 +4,6 @@ using CarPooling.Data.Models;
 using CarPooling.Data.Models.Pagination;
 using CarPooling.Data.Repositories.Contracts;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Runtime.ConstrainedExecution;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CarPooling.Data.Repositories
 {

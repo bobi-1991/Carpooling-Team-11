@@ -189,7 +189,7 @@ namespace Carpooling.Tests.TravelTests
             var loggedUser = TestHelpers.TestHelper.GetTestUserFourBlocked();
             var travel = new Travel();
 
-            travelValidatorMock.Setup(validator => validator.ValidateIsLoggedUserAreDriver(loggedUser, travel.DriverId))
+            travelValidatorMock.Setup(validator => validator.ValidateIsLoggedUserAreDriver(loggedUser))
                 .ThrowsAsync(new UnauthorizedOperationException("User is not allowed to create travel"));
 
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
@@ -217,7 +217,7 @@ namespace Carpooling.Tests.TravelTests
                 ArrivalTime = DateTime.Now.AddDays(2)
             };
 
-            travelValidatorMock.Setup(validator => validator.ValidateIsLoggedUserAreDriver(loggedUser, travel.DriverId))
+            travelValidatorMock.Setup(validator => validator.ValidateIsLoggedUserAreDriver(loggedUser))
                 .ReturnsAsync(true);
 
             travelRepositoryMock.Setup(repo => repo.CreateTravelAsync(travel))
@@ -252,7 +252,7 @@ namespace Carpooling.Tests.TravelTests
                 ArrivalTime = DateTime.Now.AddDays(2)
             };
 
-            travelValidatorMock.Setup(validator => validator.ValidateIsLoggedUserAreDriver(loggedUser, travel.DriverId))
+            travelValidatorMock.Setup(validator => validator.ValidateIsLoggedUserAreDriver(loggedUser))
                 .ReturnsAsync(true);
 
             var travelService = new TravelService(travelRepositoryMock.Object, mapperMock.Object,
