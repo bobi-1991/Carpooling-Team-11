@@ -6,10 +6,6 @@
     ViewData["Title"] = "Passenger Info";
 }
 
-@*@if (User.Identity?.IsAuthenticated == true)
-{*@
-
-
 
 <div>
     <h2>User, @Model.Username!</h2>
@@ -28,10 +24,10 @@
             <p>@feedback.Comment</p>
             <p class="feedback-date">@feedback.CreatedOn.ToString("dd. MMM. yyyy.")</p>
         </div>
-        <hr /> <!-- Добавете линия между отзивите, за да ги разделите -->
+        <hr /> 
     }
-
-    <a asp-controller="Home" asp-action="Index" class="nav">Go back</a>
+@*    <a asp-controller="Home" asp-action="Index" class="nav">Go back</a>*@
+    <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Go Back</a>
 </div>
 
 

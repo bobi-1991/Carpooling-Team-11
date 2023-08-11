@@ -96,7 +96,7 @@ namespace Carpooling.Controllers
         [HttpGet]
         public async Task<IActionResult> Menu()
         {
-            return View();
+            return View("~/Views/Shared/_MenuPartial.cshtml");
         }
 
         [HttpGet]

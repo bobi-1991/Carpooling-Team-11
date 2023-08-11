@@ -5,6 +5,10 @@
     ViewData["Title"] = "My Travels";
 }
 
+@{
+    await Html.RenderPartialAsync("_MenuPartial");
+}
+
 
 @if (Model is null || Model.Count() == 0)
 {
@@ -92,6 +96,7 @@ else
     }
 }
 <br>
-<a asp-controller="Personal" asp-action="Menu" class="nav">Go back</a>
+<a asp-action="Menu" asp-controller="Personal" class="btn btn-secondary">Go Back</a>
+
 
 

@@ -7,9 +7,17 @@
 @{
     ViewData["Title"] = "Create";
 }
+
+@{
+    await Html.RenderPartialAsync("_MenuPartial");
+}
+
 @{
     var user = await UserManager.GetUserAsync(User);
 }
+
+
+<div><br></div>
 @if (user.IsBlocked == true)
 {
     <h1>You have been blocked and you do not have permission to create a travel.</h1>

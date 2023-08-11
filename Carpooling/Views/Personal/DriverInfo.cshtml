@@ -6,8 +6,7 @@
     ViewData["Title"] = "Driver Info";
 }
 
-@*@if (User.Identity?.IsAuthenticated == true)
-{*@
+
     <div>
         <h2>User, @Model.Username!</h2>
         <h5>Profile Details:</h5>
@@ -41,15 +40,12 @@
             <p>@feedback.Comment</p>
             <p class="feedback-date">@feedback.CreatedOn.ToString("dd. MMM. yyyy.")</p>
         </div>
-        <hr /> <!-- Добавете линия между отзивите, за да ги разделите -->
+        <hr /> 
     }
 
 
         <br>
-        <a asp-controller="Home" asp-action="Index" class="nav">Go back</a>
+       @* <a asp-controller="Home" asp-action="Index" class="nav">Go back</a>*@
+    <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Go Back</a>
+
     </div>
-@*}
-else
-{
-    <a asp-page="/Identity/Account/Login" class="nav">Login</a>
-}*@
