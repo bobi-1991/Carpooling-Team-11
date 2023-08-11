@@ -168,7 +168,7 @@ namespace Carpooling.Tests.TripRequestTests
                 .ReturnsAsync(travel);
             tripRequestValidatorMock.Setup(validator => validator.ValidateStatusOfTripRequest(tripRequestToUpdate, answer))
                 .ReturnsAsync("decline");
-            tripRequestRepositoryMock.Setup(repo => repo.EditRequestAsync(tripRequestToUpdate, answer   ))
+            tripRequestRepositoryMock.Setup(repo => repo.EditRequestAsync(tripRequestToUpdate, answer))
                 .ReturnsAsync("decline");
             travelRepositoryMock.Setup(repo => repo.RemoveUserToTravelAsync(It.IsAny<int>(), "2"));
             var result = await tripRequestService.EditRequestAsync(loggedUser, tripId, answer);
