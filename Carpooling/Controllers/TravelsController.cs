@@ -39,6 +39,58 @@ namespace Carpooling.Controllers
             this.mapService = mapService;
         }
 
+        //[HttpGet]
+        //public async Task<IActionResult> Index(int? pg, string searchQuery, string sortBy)
+        //{
+        //    try
+        //    {
+        //        if (!User.Identity.IsAuthenticated)
+        //        {
+        //            return Challenge();
+        //        }
+        //        var loggedUser = await userManager.GetUserAsync(User);
+        //        var userRoles = await userManager.GetRolesAsync(loggedUser);
+        //        var getAllTravels = await travelService.GetAllTravelAsync();
+        //        if (string.IsNullOrEmpty(sortBy))
+        //        {
+        //            sortBy = "id";
+        //        }
+        //        getAllTravels = await travelService.FilterTravelsAndSortForMVCAsync(sortBy);
+        //        if (!userRoles.Contains("Administrator"))
+        //        {
+        //            getAllTravels = getAllTravels.Where(x => x.IsCompleted == false && x.ArrivalTime > DateTime.Now).ToList();
+        //        }
+        //        var pageSize = 5;
+
+        //        if (!string.IsNullOrEmpty(searchQuery))
+        //        {
+        //            getAllTravels = SearchTravels(getAllTravels.AsQueryable(), searchQuery);
+        //        }
+        //        if (pg < 1)
+        //        {
+        //            pg = 1;
+        //        }
+
+        //        int recsCount = getAllTravels.Count();
+
+        //        var pager = new Pager(recsCount, pg ?? 1, pageSize);
+
+        //        int recSkip = (pager.CurrentPage - 1) * pageSize;
+        //        var data = getAllTravels
+        //           .Skip(recSkip)
+        //           .Take(pager.PageSize)
+        //           .ToList();
+        //        ViewBag.Pager = pager;
+        //        return this.View(data);
+        //    }
+        //    catch (EmptyListException e)
+        //    {
+        //        this.Response.StatusCode = StatusCodes.Status404NotFound;
+        //        this.ViewData["ErrorMessage"] = e.Message;
+
+        //        return this.View("Error");
+        //    }
+        //}
         [HttpGet]
         public async Task<IActionResult> Index(int? pg, string searchQuery, string sortBy)
         {
@@ -48,6 +100,7 @@ namespace Carpooling.Controllers
                 {
                     return Challenge();
                 }
+
                 var loggedUser = await userManager.GetUserAsync(User);
                 var userRoles = await userManager.GetRolesAsync(loggedUser);
                 var getAllTravels = await travelService.GetAllTravelAsync();
@@ -55,17 +108,25 @@ namespace Carpooling.Controllers
                 {
                     sortBy = "id";
                 }
+                
+                // Apply sorting to all travels
                 getAllTravels = await travelService.FilterTravelsAndSortForMVCAsync(sortBy);
+
                 if (!userRoles.Contains("Administrator"))
                 {
-                    getAllTravels = getAllTravels.Where(x => x.IsCompleted == false && x.ArrivalTime > DateTime.Now).ToList();
+                    getAllTravels = getAllTravels
+                        .Where(x => x.IsCompleted == false && x.ArrivalTime > DateTime.Now)
+                        .ToList();
                 }
-                var pageSize = 5;
 
+                // Apply search query filtering
                 if (!string.IsNullOrEmpty(searchQuery))
                 {
-                    getAllTravels = SearchTravels(getAllTravels.AsQueryable(), searchQuery);
+                    getAllTravels = SearchTravels(getAllTravels.AsQueryable(), searchQuery).ToList();
                 }
+                ViewBag.SortBy = sortBy;
+                var pageSize = 5;
+
                 if (pg < 1)
                 {
                     pg = 1;
@@ -77,18 +138,19 @@ namespace Carpooling.Controllers
 
                 int recSkip = (pager.CurrentPage - 1) * pageSize;
                 var data = getAllTravels
-                   .Skip(recSkip)
-                   .Take(pager.PageSize)
-                   .ToList();
+                    .Skip(recSkip)
+                    .Take(pager.PageSize)
+                    .ToList();
+
                 ViewBag.Pager = pager;
-                return this.View(data);
+                return View(data);
             }
             catch (EmptyListException e)
             {
-                this.Response.StatusCode = StatusCodes.Status404NotFound;
-                this.ViewData["ErrorMessage"] = e.Message;
+                Response.StatusCode = StatusCodes.Status404NotFound;
+                ViewData["ErrorMessage"] = e.Message;
 
-                return this.View("Error");
+                return View("Error");
             }
         }
         private IQueryable<Travel> SearchTravels(IQueryable<Travel> travels, string searchQuery)
@@ -96,12 +158,14 @@ namespace Carpooling.Controllers
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 travels = travels.Where(travel =>
-                    travel.StartLocation.Details.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
-                    travel.StartLocation.City.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
-                    travel.EndLocation.Details.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
-                    travel.EndLocation.City.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
-                    travel.Driver.UserName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase)
-                );
+           (travel.StartLocation != null && (
+               travel.StartLocation.Details != null && travel.StartLocation.Details.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+               travel.StartLocation.City != null && travel.StartLocation.City.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))) ||
+           (travel.EndLocation != null && (
+               travel.EndLocation.Details != null && travel.EndLocation.Details.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+               travel.EndLocation.City != null && travel.EndLocation.City.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))) ||
+           (travel.Driver != null && travel.Driver.UserName != null && travel.Driver.UserName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))
+       );
             }
             return travels;
         }

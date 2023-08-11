@@ -14,6 +14,7 @@
         pager = ViewBag.Pager;
         pageNo = pager.CurrentPage;
     }
+    
 }
 
 @model IEnumerable<Travel>
@@ -31,12 +32,13 @@
                 <label class="input-group-text" for="sortBySelect">Sort By</label>
             </div>
             <select class="custom-select" id="sortBySelect" name="sortBy">
-                <option value="id" selected>Default</option>
-                <option value="startlocation">Start Location</option>
-                <option value="endlocation">End Location</option>
-                <option value="departuretime">Departure Time</option>
-                <option value="arrivaltime">Arrival Time</option>
+                <option value="id" selected="@(ViewBag.SortBy == "id")">Default</option>
+                <option value="startlocation" selected="@(ViewBag.SortBy == "startlocation")">Start Location</option>
+                <option value="endlocation" selected="@(ViewBag.SortBy == "endlocation")">End Location</option>
+                <option value="departuretime" selected="@(ViewBag.SortBy == "departuretime")">Departure Time</option>
+                <option value="arrivaltime" selected="@(ViewBag.SortBy == "arrivaltime")">Arrival Time</option>
             </select>
+            <input type="hidden" name="sortBy" value = "@ViewBag.SortBy" />
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="submit">Apply</button>
             </div>
@@ -56,8 +58,8 @@ else
                 <div class="label">Start/</div>
                 <div class="label">End Location</div>
             </div>
-            <div class="label" style="text-align: center;">Arrival Time</div>
-            <div class="label" style="text-align: right;">Departure Time</div>
+            <div class="label" style="text-align: center;">Departure Time</div>
+            <div class="label" style="text-align: right;">Arrival Time</div>   
             <div class="label" style="text-align: right;">Driver</div>
         </div>
         @foreach (var travel in Model)
@@ -68,15 +70,15 @@ else
                     <div class="divider">-</div>
                     <div class="location">@travel.EndLocation.City</div>
                 </div>
-                <div class="arrival-time" style="text-align: center;">@travel.ArrivalTime</div>
-                <div class="departure-time" style="text-align: right;">@travel.DepartureTime</div>
+                <div class="departure-time" style="text-align: center;">@travel.DepartureTime</div>
+                <div class="arrival-time" style="text-align: right;">@travel.ArrivalTime</div>      
                 <div class="driver" style="text-align: right;">@travel.Driver?.UserName</div>
             </a>
         }
     </div>
     <div class="container">
         @if (pager.TotalPages > 0)
-        {
+        {    
             <ul class="pagination justify-content-end">
                 @if (pager.CurrentPage > 1)
                 {
@@ -90,7 +92,7 @@ else
                 @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
                 {
                     <li class="page-item @(pge == pager.CurrentPage ? "active" : "")">
-                        <a class="page-link" asp-controller="Travels" asp-action="Index" asp-route-pg="@pge">@pge</a>
+                        <a class="page-link" asp-controller="Travels" asp-action="Index" asp-route-pg="@pge" asp-route-sortBy="@ViewBag.SortBy">@pge</a>
                     </li>
                 }
                 @if (pager.CurrentPage < pager.TotalPages)
