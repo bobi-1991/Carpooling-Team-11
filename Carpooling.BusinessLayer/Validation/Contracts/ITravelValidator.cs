@@ -11,7 +11,7 @@ namespace Carpooling.BusinessLayer.Validation.Contracts
 {
     public interface ITravelValidator
     {
-        Task<bool> ValidateIsNewTravelPossible(string driverId, DateTime currentDeparture,DateTime currentArrival);
+        Task<bool> ValidateIsNewTravelPossible(string driverId, DateTime currentDeparture, DateTime currentArrival);
         Task<bool> ValidateIsLoggedUserAreDriver(User loggedUser);
         Task<bool> CheckIsUpdateDataAreValid(Travel travelToUpdate, TravelUpdateDto travelDataForUpdate);
 

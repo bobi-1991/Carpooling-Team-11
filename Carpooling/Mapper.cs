@@ -38,6 +38,7 @@ namespace Carpooling
                 .ForMember(dest => dest.StartLocationName, opt => opt.MapFrom(src => src.StartLocation.City))
                 .ForMember(dest => dest.DestinationName, opt => opt.MapFrom(src => src.EndLocation.City))
                 .ForMember(dest => dest.AvailableSeats, opt => opt.MapFrom(src => src.AvailableSeats))
+                .ForMember(dest=> dest.DistanceBetweenDestinations, opt=>opt.MapFrom(src=>src.TravelDistance))
                 //.ForMember(dest => dest.IsComplete, opt => opt.MapFrom(src => src.IsCompleted.HasValue ? src.IsCompleted.Value : false))
                 .ForMember(dest => dest.CarRegistration, opt => opt.MapFrom(src => src.Car != null ? src.Car.Registration : string.Empty))
                 .ReverseMap();
@@ -51,8 +52,6 @@ namespace Carpooling
                 .ForPath(c => c.CarRegistration, opt => opt.MapFrom(src => src.Car.Registration))
                 .ForPath(c => c.CityEndDest, opt => opt.MapFrom(src => src.EndLocation.City))
                 .ForPath(c => c.CityStartDest, opt => opt.MapFrom(src => src.StartLocation.City))
-                .ForPath(c => c.EndDestination, opt => opt.MapFrom(src => src.EndLocation.Details))
-                .ForPath(c => c.StartDestination, opt => opt.MapFrom(src => src.StartLocation.Details))
                 .ForPath(c => c.Country, opt => opt.MapFrom(src => src.StartLocation.Country.Name))
                 .ForPath(c => c.Country, opt => opt.MapFrom(src => src.EndLocation.Country.Name))
                 .ReverseMap();

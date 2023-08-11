@@ -18,18 +18,20 @@ namespace Carpooling.BusinessLayer.Services
             this.client = httpClient;
         }
 
-        public async Task GetDirection()
+        public async Task<(double travelDistance, double travelDuration)> GetDirection(string originCity, string destinationCity, string country, DateTime departureTime)
         {
-            var startLocaionUrl = GetLocationUrl("Bulgaria", "Sofia");
-            var endLocationUrl = GetLocationUrl("Bulgaria", "Varna");
+            //var startLocaionUrl = GetLocationUrl("Bulgaria", "Sofia");
+            //var endLocationUrl = GetLocationUrl("Bulgaria", "Varna");
+            var startLocaionUrl = GetLocationUrl(country, originCity);
+            var endLocationUrl = GetLocationUrl(country, destinationCity);
 
             var startLocationCoordinates = await GetLocationCoordinates(startLocaionUrl);
             var endLocationCoordinates = await GetLocationCoordinates(endLocationUrl);
 
-            var matrixRequest = GetDistanceMatrixRequest(startLocationCoordinates, endLocationCoordinates, DateTime.Now);
+            var matrixRequest = GetDistanceMatrixRequest(startLocationCoordinates, endLocationCoordinates, departureTime);
 
             var result = await GetTravelInfo(matrixRequest);
-
+            return result;
             //return Distance and Duration of the trip?
         }
 

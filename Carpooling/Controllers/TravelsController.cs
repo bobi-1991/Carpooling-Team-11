@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Carpooling.BusinessLayer.Exceptions;
+using Carpooling.BusinessLayer.Services;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation;
 using Carpooling.Models;
@@ -24,8 +25,9 @@ namespace Carpooling.Controllers
         private readonly UserManager<User> userManager;
         private readonly IMapper mapper;
         private readonly CarPoolingDbContext dbContext;
+        private readonly IMapService mapService;
         public TravelsController(IUserService userService, ICarService carService, IFeedbackService feedbackService,
-            ITravelService travelService, UserManager<User> userManager, IMapper mapper, CarPoolingDbContext dbContext)
+            ITravelService travelService, UserManager<User> userManager, IMapper mapper, CarPoolingDbContext dbContext, IMapService mapService)
         {
             this.userService = userService;
             this.carService = carService;
@@ -34,6 +36,7 @@ namespace Carpooling.Controllers
             this.userManager = userManager;
             this.mapper = mapper;
             this.dbContext = dbContext;
+            this.mapService = mapService;
         }
 
         [HttpGet]
@@ -145,8 +148,23 @@ namespace Carpooling.Controllers
             {
                 var user = await userManager.Users.Include(c => c.Cars)
                     .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
+
+                var originCity = travelViewModel.CityStartDest;
+                var destCity = travelViewModel.CityEndDest;
+                var country = travelViewModel.Country;
+                var departureTime = travelViewModel.DepartureTime;
+
+                var (travelDistance, travelDuration) = await mapService.GetDirection(originCity, destCity, country, departureTime);
+
                 var travel = mapper.Map<Travel>(travelViewModel);
+
+                travel.EstimatedTravelDuration = travelDuration;
+                travel.TravelDistance = travelDistance;
+                TimeSpan duration = TimeSpan.FromMinutes(travelDuration);
+                travel.ArrivalTime = travelViewModel.DepartureTime.Add(duration);
+
                 var createdTravel = await travelService.CreateTravelForMVCAsync(user, travel);
+                
                 return this.RedirectToAction("Details", "Travels", new { id = travel.Id });
             }
             catch (UnauthorizedOperationException ex)

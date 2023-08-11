@@ -1,4 +1,5 @@
 ﻿@using CarPooling.Data.Models;
+@using Carpooling.Models;
 @using Carpooling.Service.Dto_s.Responses;
 @using Microsoft.AspNetCore.Identity;
 @inject UserManager<User> UserManager
@@ -15,16 +16,17 @@
     <p><i class="fas fa-map-marker-alt"></i> <span class="property">Start Location:</span> @Model.StartLocationName</p>
     <p><i class="fas fa-flag"></i> <span class="property">Destination:</span> @Model.DestinationName</p>
     <p><i class="fas fa-calendar"></i> <span class="property">Departure Time:</span> @Model.DepartureTime.ToString("yyyy-MM-dd HH:mm")</p>
-    <p><i class="fas fa-clock"></i> <span class="property">Arrival Time:</span> @Model.ArrivalTime.ToString("yyyy-MM-dd HH:mm")</p>
+    <p><i class="fas fa-clock"></i> <span class="property">Estimated Arrival Time:</span> @Model.ArrivalTime.ToString("yyyy-MM-dd HH:mm")</p>
     <p><i class="fas fa-chair"></i> <span class="property">Available Seats:</span> @Model.AvailableSeats</p>
-    <p><i class="fas fa-check-circle"></i> <span class="property">Is Complete:</span> @(Model.IsComplete ? "Yes" : "No")</p>
+    <p><i class="fas fa-check-circle"></i> <span class="property">Is Complete:</span> @(Model.IsCompleted ? "Yes" : "No")</p>
     <p><i class="fas fa-car"></i> <span class="property">Car Registration:</span> @Model.CarRegistration</p>
+    <p><i class="fas fa-car"></i> <span class="property">Distance Between Destinations In Kms:</span> @Model.DistanceBetweenDestinations KM</p>
 </div>
 </br>
 @if (User.Identity.IsAuthenticated)
 {
     <div class="create-request-button" style="text-align: left;">
-        @if (this.Model.IsComplete == true || this.Model.ArrivalTime < DateTime.Now)
+        @if (this.Model.IsCompleted == true || this.Model.ArrivalTime < DateTime.Now)
         {
             <p>Organised travel has already happened.</p>
         }

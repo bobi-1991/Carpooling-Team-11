@@ -25,8 +25,9 @@ namespace CarPooling.Data.Models
         public Address? EndLocation { get; set; }
 
         public DateTime? DepartureTime { get; set; }
+        public double EstimatedTravelDuration { get; set; }
         public DateTime? ArrivalTime { get; set; }
-
+        public double TravelDistance { get; set; }
 
         //  public bool? IsCompleted { get; set; }
         public bool? IsCompleted { get; set; }

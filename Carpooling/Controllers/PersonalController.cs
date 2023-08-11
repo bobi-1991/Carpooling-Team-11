@@ -263,7 +263,7 @@ namespace Carpooling.Controllers
                         DepartureTime = trip.DepartureTime,
                         ArrivalTime = trip.ArrivalTime,
                         AvailableSeats = trip.AvailableSeats,
-                        IsComplete = (bool)isCompleted,
+                        IsCompleted = (bool)isCompleted,
                         CarRegistration = trip.CarRegistration,
                     });
                 }

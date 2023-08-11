@@ -2,6 +2,6 @@
 {
     public interface IMapService
     {
-        Task GetDirection();
+        Task<(double travelDistance, double travelDuration)> GetDirection(string originCity, string destinationCity, string country, DateTime departureTime);
     }
 }

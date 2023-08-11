@@ -48,7 +48,7 @@ namespace Carpooling.BusinessLayer.Services
         }
         public async Task<Travel> CreateTravelForMVCAsync(User loggedUser, Travel travel)
         {
-            mapService.GetDirection();
+            //mapService.GetDirection();
             //Add Duration/Trip to travel ? or smth else
 
             await this.travelValidator.ValidateIsLoggedUserAreDriver(loggedUser);
@@ -119,7 +119,7 @@ namespace Carpooling.BusinessLayer.Services
                 DepartureTime = (DateTime)createdTravel.DepartureTime,
                 ArrivalTime = (DateTime)createdTravel.ArrivalTime,
                 AvailableSeats = (int)createdTravel.AvailableSeats,
-                IsComplete = false,
+                IsCompleted = false,
                 CarRegistration = createdTravel.Car.Registration
             };
         }
@@ -214,7 +214,7 @@ namespace Carpooling.BusinessLayer.Services
                 DestinationName = updatedTravel.EndLocation.City,
                 DepartureTime = (DateTime)updatedTravel.DepartureTime,
                 ArrivalTime = (DateTime)updatedTravel.ArrivalTime,
-                IsComplete = (bool)updatedTravel.IsCompleted,
+                IsCompleted = (bool)updatedTravel.IsCompleted,
                 AvailableSeats = (int)updatedTravel.AvailableSeats,
                 CarRegistration = updatedTravel.Car.Registration
             };
@@ -239,7 +239,7 @@ namespace Carpooling.BusinessLayer.Services
                 DepartureTime = (DateTime)x.DepartureTime,
                 ArrivalTime = (DateTime)x.ArrivalTime,
                 AvailableSeats = (int)x.AvailableSeats,
-                IsComplete = (bool)x.IsCompleted,
+                IsCompleted = (bool)x.IsCompleted,
                 CarRegistration = x.Car.Registration
             });
             return travelResponses;

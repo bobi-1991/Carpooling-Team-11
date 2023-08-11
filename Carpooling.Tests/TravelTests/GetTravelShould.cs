@@ -85,7 +85,7 @@ namespace Carpooling.Tests.TravelTests
                 DepartureTime = (DateTime)travel.DepartureTime,
                 ArrivalTime = (DateTime)travel.ArrivalTime,
                 AvailableSeats = (int)travel.AvailableSeats,
-                IsComplete = (bool)travel.IsCompleted,
+                IsCompleted = (bool)travel.IsCompleted,
                 CarRegistration = travel.Car.Registration
             };
 
