@@ -49,6 +49,11 @@ namespace Carpooling.Controllers
             {
                 return Challenge();
             }
+            if (id == null)
+            {
+                var user1 = await userManager.GetUserAsync(User);
+                id = user1.Id;
+            }
             var cars = await carService.GetAllAsync();
             var feedbacks = await feedbackService.GetAllAsync();
             var driverFeedbacks = feedbacks.Where(x => x.DriverId == id);
@@ -77,6 +82,11 @@ namespace Carpooling.Controllers
             if (!User.Identity.IsAuthenticated)
             {
                 return Challenge();
+            }
+            if (id == null)
+            {
+                var user1 = await userManager.GetUserAsync(User);
+                id = user1.Id;
             }
             var user = await userService.GetByIdAsync(id);
             var feedbacks = await feedbackService.GetAllAsync();
