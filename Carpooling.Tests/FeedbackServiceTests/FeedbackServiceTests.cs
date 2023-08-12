@@ -15,6 +15,7 @@ namespace Carpooling.Tests.FeedbackServiceTests
         private Mock<IFeedbackRepository> feedbackRepositoryMock;
         private Mock<UserManager<User>> userManagerMock;
         private Mock<IUserStore<User>> userStoreMock;
+        private Mock<ITravelRepository> travelRepositoryMock;
 
         [TestInitialize]
 
@@ -23,6 +24,7 @@ namespace Carpooling.Tests.FeedbackServiceTests
             feedbackRepositoryMock = new Mock<IFeedbackRepository>();
             userStoreMock = new Mock<IUserStore<User>>();
             userManagerMock = new Mock<UserManager<User>>(userStoreMock.Object, null, null, null, null, null, null, null, null);
+            travelRepositoryMock = new Mock<ITravelRepository>();
 
             feedbackRepositoryMock
                 .Setup(x => x.CreateAsync(It.IsAny<Feedback>()))
@@ -36,7 +38,9 @@ namespace Carpooling.Tests.FeedbackServiceTests
                 .Setup(x => x.GetAllAsync())
                 .Returns(Task.FromResult(new List<Feedback>()));
 
-            //sut = new FeedbackService(feedbackRepositoryMock.Object, userManagerMock.Object);
+            sut = new FeedbackService(feedbackRepositoryMock.Object, 
+                userManagerMock.Object, 
+                travelRepositoryMock.Object);
         }
 
         [TestMethod]
@@ -47,11 +51,37 @@ namespace Carpooling.Tests.FeedbackServiceTests
             //Arrange
             var feedback = new Feedback { Passenger = new User { Id = "123" } };
 
+            travelRepositoryMock
+                .Setup(x => x.GetByIdAsync(It.IsAny<int>()))
+                .Returns(Task.FromResult(new Travel() { IsCompleted = true }));
+
             //Act
             var result = await sut.CreateAsync(feedback, new User{ IsBlocked = false});
 
             //verify
+            travelRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
+
             feedbackRepositoryMock.Verify(x => x.CreateAsync(feedback), Times.Once);
+        }
+
+        [TestMethod]
+
+        public async Task CreateAsync_WhenTravelNotCompleted_ShouldThrow()
+        {
+            //Arrange
+            var feedback = new Feedback { Passenger = new User { Id = "123" } };
+
+            travelRepositoryMock
+                .Setup(x => x.GetByIdAsync(It.IsAny<int>()))
+                .Returns(Task.FromResult(new Travel() { IsCompleted = false }));
+
+            //Act
+            var exception = await Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(
+                () => sut.CreateAsync(feedback, new User { IsBlocked = false }));
+
+            //Verify
+            Assert.AreEqual("Feedback can only be left on completed trips!", exception.Message);
+
         }
 
         [TestMethod]
