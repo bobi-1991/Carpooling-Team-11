@@ -7,6 +7,7 @@ using Carpooling.BusinessLayer.Validation.Contracts;
 using Carpooling.Service.Dto_s.Requests;
 using CarPooling.Data.Data;
 using CarPooling.Data.Models;
+using CarPooling.Data.Repositories;
 using CarPooling.Data.Repositories.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Moq;
@@ -347,34 +348,6 @@ namespace Carpooling.Tests.UserServiceTests
 
         }
 
-        //[TestMethod]
-
-        //public async Task UpdateAsync_WhenPasswordExists_ShouldHash()
-        //{
-        //    userRepositoryMock
-        //        .Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<User>()))
-        //        .Returns(Task.FromResult(new User()));
-
-        //    //var hashedPassword = _userManager.PasswordHasher.HashPassword(userDataToUpdate, userUpdateDto.Password);
-
-        //    userManagerMock
-        //        .Setup(x => x.PasswordHasher.HashPassword(It.IsAny<User>(), It.IsAny<string>()))
-        //        .Returns(It.IsAny<string>());
-
-        //    //Act
-        //    var result = await sut.UpdateAsync(new User(), "123", new UserUpdateDto() { Password = "Password2@"});
-
-        //    //Verify
-        //    userValidatorMock.Verify(x => x.ValidateUserLoggedAndAdmin(It.IsAny<User>(), "123"), Times.Once);
-
-        //    userRepositoryMock.Verify(x => x.GetByIdAsync("123"), Times.Once);
-
-        //    userManagerMock.Verify(x => x.PasswordHasher.HashPassword(It.IsAny<User>(), "123"), Times.Once);
-
-        //    userRepositoryMock.Verify(x => x.UpdateAsync("123", It.IsAny<User>()), Times.Once);
-        //}
-
-
         [TestMethod]
 
         public async Task UpdateAsync_ShouldInvoke()
@@ -392,6 +365,154 @@ namespace Carpooling.Tests.UserServiceTests
             userRepositoryMock.Verify(x => x.GetByIdAsync("123"), Times.Once);
 
             userRepositoryMock.Verify(x => x.UpdateAsync("123", It.IsAny<User>()), Times.Once);
+        }
+
+        [TestMethod]
+
+        public async Task DeleteUserWhenAdminAsync_ShouldInvoke()
+        {
+            //Act
+            var result = await sut.DeleteUserWhenAdminAsync(It.IsAny<string>());
+
+            //Verify
+            userRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<string>()), Times.Once);
+
+            userRepositoryMock.Verify(x => x.DeleteAsync(It.IsAny<string>()), Times.Once);
+
+            userManagerMock.Verify(x => x.DeleteAsync(It.IsAny<User>()), Times.Once);
+        }
+       
+        [TestMethod]
+
+        public async Task GetAllUsersAsync_ShouldInvoke()
+        {
+            //Act
+            var result = await sut.GetAllUsersAsync();
+
+            //Verify
+            userRepositoryMock.Verify(x => x.GetAllAsync(), Times.Once);
+        }
+
+        [TestMethod]
+
+        public async Task GetUserByIdAsync_ShouldInvoke()
+        {
+            //Act
+            var result = await sut.GetUserByIdAsync(It.IsAny<string>());
+
+            //Verify
+            userRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<string>()), Times.Once);
+        }
+
+        [TestMethod]
+
+        public async Task BanUserById_ShouldInvoke()
+        {
+            //Act
+            var result = await sut.BanUserById(It.IsAny<string>());
+
+            //Verify
+            userRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<string>()), Times.Once);
+
+            userRepositoryMock.Verify(x => x.BanUser(It.IsAny<User>()), Times.Once);
+        }
+
+        [TestMethod]
+
+        public async Task UnbanUserById_ShouldInvoke()
+        {
+            //Act
+            var result = await sut.UnbanUserById(It.IsAny<string>());
+
+            //Verify
+            userRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<string>()), Times.Once);
+
+            userRepositoryMock.Verify(x => x.UnBanUser(It.IsAny<User>()), Times.Once);
+        }
+
+        [TestMethod]
+
+        public async Task CovertToAdministrator_ShouldInvoke()
+        {
+            //Arrage
+            userRepositoryMock
+                .Setup(x => x.ConvertToAdministrator(It.IsAny<string>()));
+
+            //Act
+            await sut.ConvertToAdministrator(It.IsAny<string>());
+                
+            //Verify
+            userRepositoryMock.Verify(x => x.ConvertToAdministrator(It.IsAny<string>()), Times.Once);
+        }
+
+        [TestMethod]
+
+        public async Task TopPassengers_ShouldInvoke()
+        {
+            //Arrange
+            userRepositoryMock
+                .Setup(x => x.GetTopPassengers(It.IsAny<List<User>>(), 2))
+                .ReturnsAsync(new List<User>());
+
+            identityHelperMock
+                .Setup(x => x.GetRole(It.IsAny<User>()));
+
+            //Act
+            var result = await sut.TopPassengers(2);
+
+            //Verify
+            userRepositoryMock.Verify(x => x.GetAllAsync(), Times.Once);
+
+            //identityHelperMock.Verify(x => x.GetRole(It.IsAny<User>()), Times.Exactly(2));
+
+            userRepositoryMock.Verify(x => x.GetTopPassengers(It.IsAny<List<User>>(), It.IsAny<int>()), Times.Once);
+        }
+
+        //public async Task<IEnumerable<User>> TopTravelOrganizers(int count)
+        //{
+        //    var users = await this.userRepository.GetAllAsync();
+        //    var result = new List<User>();
+
+        //    foreach (var user in users)
+        //    {
+        //        var role = await this.identityHelper.GetRole(user);
+
+        //        if (role == "Driver")
+        //        {
+        //            result.Add(user);
+        //        }
+
+        //        if (result.Count() == 10)
+        //        {
+        //            break;
+        //        }
+
+        //    }
+
+        //    return await this.userRepository.GetTopTravelOrganizers(result, count);
+        //}
+
+        [TestMethod]
+
+        public async Task TopTravelOrganizers_ShouldInvoke()
+        {
+            //Arrange
+            userRepositoryMock
+                .Setup(x => x.GetTopTravelOrganizers(It.IsAny<List<User>>(), 2))
+                .ReturnsAsync(new List<User>());
+
+            identityHelperMock
+                .Setup(x => x.GetRole(It.IsAny<User>()));
+
+            //Act
+            var result = await sut.TopTravelOrganizers(2);
+
+            //Verify
+            userRepositoryMock.Verify(x => x.GetAllAsync(), Times.Once);
+
+            //identityHelperMock.Verify(x => x.GetRole(It.IsAny<User>()), Times.Exactly(2));
+
+            userRepositoryMock.Verify(x => x.GetTopTravelOrganizers(It.IsAny<List<User>>(), It.IsAny<int>()), Times.Once);
         }
     }
 }
