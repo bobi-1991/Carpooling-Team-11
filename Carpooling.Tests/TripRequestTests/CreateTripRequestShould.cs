@@ -55,8 +55,8 @@ namespace Carpooling.Tests.TripRequestTests
             };
 
             var loggedUser = TestHelpers.TestHelper.GetTestUserOne();
-            var passenger = TestHelpers.TestHelper.GetTestUserTwo() ;
-            var travel = new Travel 
+            var passenger = TestHelpers.TestHelper.GetTestUserTwo();
+            var travel = new Travel
             {
                 Id = 1,
                 Driver = TestHelpers.TestHelper.GetTestUserOne(),
@@ -71,8 +71,8 @@ namespace Carpooling.Tests.TripRequestTests
             var tripRequest = new TripRequest
             {
                 Passenger = passenger,
-                Driver= TestHelpers.TestHelper.GetTestUserOne(),
-                DriverId= "1",
+                Driver = TestHelpers.TestHelper.GetTestUserOne(),
+                DriverId = "1",
                 Travel = travel,
                 Status = TripRequestEnum.Pending
             };
@@ -90,7 +90,7 @@ namespace Carpooling.Tests.TripRequestTests
                 .ReturnsAsync(true);
             tripRequestService = new TripRequestService(
                 tripRequestRepositoryMock.Object,
-                userValidationMock.Object, 
+                userValidationMock.Object,
                 travelRepositoryMock.Object,
                 userRepositoryMock.Object,
                 tripRequestValidatorMock.Object);
@@ -106,7 +106,7 @@ namespace Carpooling.Tests.TripRequestTests
             Assert.AreEqual(travel.DepartureTime, result.DepartureTime);
             Assert.AreEqual(tripRequest.Status.ToString(), result.Status);
         }
-       
+
         [TestMethod]
         public async Task CreateAsync_PassengerIsBlocked_ThrowsUnauthorizedOperationException()
         {
@@ -119,8 +119,8 @@ namespace Carpooling.Tests.TripRequestTests
             };
 
             var loggedUser = TestHelpers.TestHelper.GetTestUserOne();
-            var passenger = TestHelpers.TestHelper.GetTestUserFourBlocked() ;
-            var travel = new Travel 
+            var passenger = TestHelpers.TestHelper.GetTestUserFourBlocked();
+            var travel = new Travel
             {
                 Id = 1,
                 Driver = TestHelpers.TestHelper.GetTestUserOne(),
@@ -150,7 +150,7 @@ namespace Carpooling.Tests.TripRequestTests
                 .ReturnsAsync(false);
 
             var tripRequestService = new TripRequestService(
-                null, 
+                null,
                 null,
                 travelRepositoryMock.Object,
                 userRepositoryMock.Object,
@@ -219,5 +219,43 @@ namespace Carpooling.Tests.TripRequestTests
                 await tripRequestService.CreateAsync(passenger, It.IsAny<TripRequestRequest>());
             });
         }
+       
+        [TestMethod]
+        public async Task CreateTripRequestForMVCAsync_SameDriverAndPassenger_ThrowsDriverPassengerMatchingException()
+        {
+            // Arrange
+            var travelId = 1;
+            var passengerId = "2";
+
+            var loggedUser = new User { Id = passengerId };
+
+            var travel = new Travel
+            {
+                Id = travelId,
+                DriverId = passengerId
+            };
+
+            var request = new TripRequest
+            {
+                PassengerId = passengerId,
+                TravelId = travelId
+            };
+
+            tripRequestRepositoryMock.Setup(repo => repo.GetAllAsync())
+                .ReturnsAsync(new List<TripRequest>());
+
+            travelRepositoryMock.Setup(repo => repo.GetByIdAsync(travelId))
+                .ReturnsAsync(travel);
+
+            userValidationMock.Setup(validator => validator.ValidateUserLoggedAndAdmin(loggedUser, loggedUser.Id))
+                .ReturnsAsync(true);
+
+            // Act & Assert
+            await Assert.ThrowsExceptionAsync<DriverPassengerMachingException>(async () =>
+            {
+                await tripRequestService.CreateTripRequestForMVCAsync(loggedUser, request);
+            });
+        }
     }
+
 }

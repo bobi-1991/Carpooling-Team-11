@@ -171,7 +171,6 @@ namespace Carpooling.BusinessLayer.Services
 
 
             return await this.tripRequestRepository.EditRequestAsync(tripRequestToUpdate, currentAnswer);
-
         }
         public async Task<IEnumerable<TripRequestResponse>> SeeAllHisDriverRequestsAsync(User loggedUser, string driverId)
         {
