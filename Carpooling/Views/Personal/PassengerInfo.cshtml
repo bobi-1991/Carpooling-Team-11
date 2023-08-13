@@ -108,15 +108,29 @@
 
 @{
     ViewData["Title"] = "Passenger Info";
+    decimal? rating = 0;
+    int count = 0;
 }
 
+@foreach (var item in Model.Feedbacks)
+{
+    count = count + 1;
+    rating = rating + item.Rating;
+}
 
 
 <div>
     <h2>User, @Model.Username!</h2>
     <h5>Profile Details:</h5>
     <br>
-    <p><i class="fas fa-star"></i> Rating: @Model.AverageRating</p>
+    @if (rating == 0)
+    {
+        <p><i class="fas fa-star"></i> Rating: No ratings yet</p>
+    }
+    else
+    {
+        <p><i class="fas fa-star"></i> Rating: @string.Format("{0:0.00}", rating)</p>
+    }
     <p><i class="fas fa-comments"></i> Feedbacks: @Model.Feedbacks.Count()</p>
     <br>
     <hr>
