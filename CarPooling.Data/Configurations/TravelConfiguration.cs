@@ -35,6 +35,9 @@ namespace CarPooling.Data.Configurations
                 .HasForeignKey(t => t.DriverId)
                 .OnDelete(DeleteBehavior.NoAction);
 
+            builder.HasMany(t => t.Passengers)
+            .WithMany(t => t.PassengersTravelHistory);
+
             //builder.HasOne(t => t.Car);
 
 

@@ -8,9 +8,10 @@ namespace CarPooling.Data.Models.ViewModels
 {
     public class TripRequestViewResponseModel
     {
-        public TripRequestViewResponseModel(int id, string passengerUsername, string driverUsername, string startLocationDetails, string endLoacitonDetails, DateTime departureTime, string status)
+        public TripRequestViewResponseModel(int id,string passengerId, string passengerUsername, string driverUsername, string startLocationDetails, string endLoacitonDetails, DateTime departureTime, string status)
         {
             Id = id;
+            PassengerId = passengerId;
             PassengerUsername = passengerUsername;
             DriverUsername = driverUsername;
             StartLocationDetails = startLocationDetails;
@@ -19,6 +20,8 @@ namespace CarPooling.Data.Models.ViewModels
             Status = status;
         }
         public int Id { get; set; }
+        public string PassengerId { get; set; }
+
         public string PassengerUsername { get; set; }
         public string DriverUsername { get; set; }
         public string StartLocationDetails { get; set; }

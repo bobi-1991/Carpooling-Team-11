@@ -90,10 +90,13 @@ namespace Carpooling.Controllers
             }
             var user = await userService.GetByIdAsync(id);
             var feedbacks = await feedbackService.GetAllAsync();
-            var passengerFeedbacks = feedbacks.Where(x => x.PassengerId == id);
+            var passengerFeedbacks = feedbacks.Where(x => x.DriverId == id);
+            
+          //  var currentUser = new User();
 
             var passengerModel = new PassengerViewInfoModel
             {
+                
                 Username = user.Username,
                 AverageRating = user.AverageRating,
                 Feedbacks = passengerFeedbacks
@@ -240,6 +243,7 @@ namespace Carpooling.Controllers
                 return View("Error");
             }
         }
+
         [HttpGet]
         public async Task<IActionResult> MyTravels()
         {
@@ -253,29 +257,65 @@ namespace Carpooling.Controllers
                 {
                     return Challenge();
                 }
-                var user = await userManager.Users.Include(x => x.TravelHistory)
+                var user = await userManager.Users.Include(x => x.TravelHistory).ThenInclude(x => x.Passengers)
+                    .Include(x => x.PassengersTravelHistory)
                        .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
 
-                var history = user.TravelHistory;
                 var trips = new List<TravelViewResponseWithId>();
+                var history = new List<Travel>();
+                var driverHistory = user.TravelHistory.ToList();
+                var passengerHistory = user.PassengersTravelHistory.ToList();
 
-
-                foreach (var travel in history)
+                if (driverHistory.Count() != 0)
                 {
-                    var isCompleted = travel.IsCompleted;
-                    var trip = await this.travelService.GetByIdAsync(travel.Id);
+                    history = user.TravelHistory.ToList();
 
-                    trips.Add(new TravelViewResponseWithId
+                    foreach (var travel in history)
                     {
-                        Id = travel.Id,
-                        StartLocationName = trip.StartLocationName,
-                        DestinationName = trip.DestinationName,
-                        DepartureTime = trip.DepartureTime,
-                        ArrivalTime = trip.ArrivalTime,
-                        AvailableSeats = trip.AvailableSeats,
-                        IsCompleted = (bool)isCompleted,
-                        CarRegistration = trip.CarRegistration,
-                    });
+                        var isCompleted = travel.IsCompleted;
+                        var trip = await this.travelService.GetByIdAsync(travel.Id);
+                        var passengers = travel.Passengers;
+
+                        trips.Add(new TravelViewResponseWithId
+                        {
+                            Id = travel.Id,
+                            StartLocationName = trip.StartLocationName,
+                            DestinationName = trip.DestinationName,
+                            DepartureTime = trip.DepartureTime,
+                            ArrivalTime = trip.ArrivalTime,
+                            AvailableSeats = trip.AvailableSeats,
+                            IsCompleted = (bool)isCompleted,
+                            CarRegistration = trip.CarRegistration,
+                            Participants = passengers
+                        });
+                    }
+                }
+                else if (passengerHistory.Count() != 0)
+                {
+                    history = user.PassengersTravelHistory.ToList();
+
+                    foreach (var travel in history)
+                    {
+                        var isCompleted = travel.IsCompleted;
+                        var trip = await this.travelService.GetByIdAsync(travel.Id);
+
+                        var drivers = new List<User>();
+                        var driver = await this.userService.GetUserByIdAsync(travel.DriverId);
+                        drivers.Add(driver);
+
+                        trips.Add(new TravelViewResponseWithId
+                        {
+                            Id = travel.Id,
+                            StartLocationName = trip.StartLocationName,
+                            DestinationName = trip.DestinationName,
+                            DepartureTime = trip.DepartureTime,
+                            ArrivalTime = trip.ArrivalTime,
+                            AvailableSeats = trip.AvailableSeats,
+                            IsCompleted = (bool)isCompleted,
+                            CarRegistration = trip.CarRegistration,
+                            Participants = drivers
+                        });
+                    }
                 }
 
                 return this.View(trips);
@@ -292,8 +332,8 @@ namespace Carpooling.Controllers
                 this.ViewData["ErrorMessage"] = ex.Message;
                 return View("Error");
             }
-
         }
+
 
         [HttpGet]
         public async Task<IActionResult> MyBookings()

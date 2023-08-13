@@ -1,0 +1,60 @@
+﻿@using Carpooling.Models
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@using CarPooling.Data.Models;
+@inject UserManager<User> UserManager
+@model FeedbackViewModel
+@{
+    ViewData["Title"] = "Create Feedback";
+}
+
+@{
+    await Html.RenderPartialAsync("_MenuPartial");
+}
+
+@{
+    var user = await UserManager.GetUserAsync(User);
+}
+
+
+<div><br></div>
+@if (user.IsBlocked == true)
+{
+    <h1>You have been blocked and you do not have permission to leave feedback.</h1>
+}
+<h2>Create Feedback</h2>
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger">
+        <p><strong>Validation Error:</strong> Please correct the errors and try again.</p>
+    </div>
+}
+
+<form asp-controller="Feedback" asp-action="Create" method="post">
+    <input type="hidden" name="participantId" value="@Model.ParticipantId">
+    <input type="hidden" name="travelId" value="@Model.TravelId">
+    <div class="form-group">
+        <label asp-for="Comment">Comment</label>
+        <input asp-for="Comment" class="form-control" />
+        <span asp-validation-for="Comment" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Rating">Rating</label>
+        <input asp-for="Rating" class="form-control" />
+        <span asp-validation-for="Rating" class="text-danger"></span>
+    </div>
+    </br>
+    </br>
+    @if (user.IsBlocked == true)
+    {
+        <p></p>
+    }
+    else
+    {
+        <button type="submit" class="btn btn-primary">Create Feedback</button>
+    }
+    <a asp-action="MyTravels" asp-controller="Personal" class="btn btn-secondary">Go Back</a>
+</form>
+
+

@@ -25,7 +25,10 @@ else
         {
             <div class="travel-container">
                 <br>
-                <p><i class="fas fa-user"></i> <span class="property">Passenger :</span> @request.PassengerUsername</p>
+                <a asp-action="PassengerInfo" asp-controller="Personal" asp-route-id="@request.PassengerId" class="passenger-link">
+                    <p><i class="fas fa-user"></i> <span class="property">Username :</span> @request.PassengerUsername</p>
+                </a>
+                @*<p><i class="fas fa-user"></i> <span class="property">Passenger :</span> @request.PassengerUsername</p>*@
                 <p><i class="fas fa-map-marker-alt"></i> <span class="property">Departure :</span> @request.StartLocationDetails</p>
                 <p><i class="fas fa-flag"></i> <span class="property">Destination :</span> @request.EndLocationDetails</p>
                 <p><i class="fas fa-calendar"></i> <span class="property">Departure Time :</span> @request.DepartureTime</p>

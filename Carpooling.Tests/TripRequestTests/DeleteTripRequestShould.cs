@@ -21,6 +21,7 @@ namespace Carpooling.Tests.TripRequestTests
         private Mock<IUserValidation> userValidationMock;
         private TripRequestService tripRequestService;
         private Mock<ITravelRepository> travelRepositoryMock;
+        private Mock<IFeedbackRepository> feedbackRepositoryMock;
 
         [TestInitialize]
         public void Initialize()
@@ -28,12 +29,14 @@ namespace Carpooling.Tests.TripRequestTests
             tripRequestRepositoryMock = new Mock<ITripRequestRepository>();
             userValidationMock = new Mock<IUserValidation>();
             travelRepositoryMock = new Mock<ITravelRepository>();
+            feedbackRepositoryMock = new Mock<IFeedbackRepository>();
             tripRequestService = new TripRequestService(
                 tripRequestRepositoryMock.Object,
                 userValidationMock.Object,
                 travelRepositoryMock.Object, // Mock other required dependencies as needed or pass null
                 null,
-                null);
+                null,
+                feedbackRepositoryMock.Object);
         }
 
         [TestMethod]

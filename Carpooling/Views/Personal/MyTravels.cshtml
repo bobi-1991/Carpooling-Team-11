@@ -1,4 +1,7 @@
-﻿@using Carpooling.Models;
+﻿@inject UserManager<User> UserManager;
+@using CarPooling.Data.Models;
+@using Carpooling.Models;
+@using Microsoft.AspNetCore.Identity;
 @model List<TravelViewResponseWithId>
 
 @{
@@ -9,6 +12,9 @@
     await Html.RenderPartialAsync("_MenuPartial");
 }
 
+@{
+    var loggedUser = await UserManager.GetUserAsync(User);
+}
 
 @if (Model is null || Model.Count() == 0)
 {
@@ -22,7 +28,7 @@ else
         <br>
         <h3> At the moment, you still have no incomplete travels. </h3>
         <br>
-        <br>       
+        <br>
         <hr>
     }
     else
@@ -44,20 +50,22 @@ else
                     <p><i class="fas fa-chair"></i> <span class="property">Available Seats:</span> @travel.AvailableSeats</p>
                     <p><i class="fas fa-check-circle"></i> <span class="property">Is Complete:</span> @(travel.IsCompleted ? "Yes" : "No")</p>
                     <p><i class="fas fa-car"></i> <span class="property">Car Registration:</span> @travel.CarRegistration</p>
-
-                    <div>
-                        <form asp-controller="Travels" asp-action="SetComplete" method="post">
-                            <input type="hidden" name="travelId" value="@travel.Id">
-                            <button type="submit" name="complete" value="complete">Мark as complete</button>
-                        </form>
-                    </div>
-                    <div>
-                        <form asp-controller="Travels" asp-action="DeleteTravel" method="post">
-                            <input type="hidden" name="travelId" value="@travel.Id">
-                            <button type="submit" name="delete" value="delete">Cancel a trip</button>
-                        </form>
-                        <br>
-                    </div>
+                    @if (loggedUser.TravelHistory.Count() != 0)
+                    {
+                        <div>
+                            <form asp-controller="Travels" asp-action="SetComplete" method="post">
+                                <input type="hidden" name="travelId" value="@travel.Id">
+                                <button type="submit" name="complete" value="complete">Мark as complete</button>
+                            </form>
+                        </div>
+                        <div>
+                            <form asp-controller="Travels" asp-action="DeleteTravel" method="post">
+                                <input type="hidden" name="travelId" value="@travel.Id">
+                                <button type="submit" name="delete" value="delete">Cancel a trip</button>
+                            </form>
+                            <br>
+                        </div>
+                    }
                 </div>
                 <br>
             }
@@ -85,18 +93,32 @@ else
                     <p><i class="fas fa-calendar"></i> <span class="property">Departure Time:</span> @travel.DepartureTime</p>
                     <p><i class="fas fa-clock"></i> <span class="property">Arrival Time:</span> @travel.ArrivalTime</p>
                     <p><i class="fas fa-chair"></i> <span class="property">Available Seats:</span> @travel.AvailableSeats</p>
-                    <p><i class="fas fa-check-circle"></i> <span class="property">Is Complete:</span> @(
-            travel.IsCompleted ? "Yes" : "No"
-            )</p>
+                    <p><i class="fas fa-check-circle"></i> <span class="property">Is Complete:</span> @(travel.IsCompleted ? "Yes" : "No")</p>
                     <p><i class="fas fa-car"></i> <span class="property">Car Registration:</span> @travel.CarRegistration</p>
+                    <br>
+                    <div class="participants-container">
+                        <h5>Participant(s):</h5>
+                        <br>
+                        @foreach (var participant in travel.Participants)
+                        {
+                            <div class="participant">
+                                <p><i class="fas fa-user"></i> <span class="property">Participant:</span> @participant.UserName</p>
+                                <form asp-controller="Feedback" asp-action="Create" method="get">
+                                    <input type="hidden" name="ParticipantId" value="@participant.Id">
+                                    <input type="hidden" name="TravelId" value="@travel.Id">
+                                    <button type="submit" class="submit-button">Leave Feedback</button>
+                                </form>
+                            </div>
+                            <br>
+                        }
+                    </div>
                 </div>
                 <br>
+
+
             }
         </div>
     }
 }
 <br>
 <a asp-action="Menu" asp-controller="Personal" class="btn btn-secondary">Go Back</a>
-
-
-

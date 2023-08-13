@@ -26,6 +26,8 @@ namespace Carpooling.Tests.TripRequestTests
         private Mock<IUserRepository> userRepositoryMock;
         private Mock<ITripRequestValidator> tripRequestValidatorMock;
         private TripRequestService tripRequestService;
+        private Mock<IFeedbackRepository> feedbackRepositoryMock;
+
 
         [TestInitialize]
         public void Initialize()
@@ -35,13 +37,15 @@ namespace Carpooling.Tests.TripRequestTests
             travelRepositoryMock = new Mock<ITravelRepository>();
             userRepositoryMock = new Mock<IUserRepository>();
             tripRequestValidatorMock = new Mock<ITripRequestValidator>();
+            feedbackRepositoryMock = new Mock<IFeedbackRepository>();
 
             tripRequestService = new TripRequestService(
                 tripRequestRepositoryMock.Object,
                 userValidationMock.Object,
                 travelRepositoryMock.Object,
                 userRepositoryMock.Object,
-                tripRequestValidatorMock.Object);
+                tripRequestValidatorMock.Object,
+                feedbackRepositoryMock.Object);
         }
         [TestMethod]
         public async Task CreateAsync_ValidRequest_ReturnsCreatedTripRequest()
@@ -93,7 +97,8 @@ namespace Carpooling.Tests.TripRequestTests
                 userValidationMock.Object, 
                 travelRepositoryMock.Object,
                 userRepositoryMock.Object,
-                tripRequestValidatorMock.Object);
+                tripRequestValidatorMock.Object,
+                feedbackRepositoryMock.Object);
 
             // Act
             var result = await tripRequestService.CreateAsync(loggedUser, tripRequestRequest);
@@ -154,7 +159,8 @@ namespace Carpooling.Tests.TripRequestTests
                 null,
                 travelRepositoryMock.Object,
                 userRepositoryMock.Object,
-                null);
+                null,
+                feedbackRepositoryMock.Object);
 
             // Act & Assert
 
@@ -210,7 +216,8 @@ namespace Carpooling.Tests.TripRequestTests
                 null,
                 travelRepositoryMock.Object,
                 userRepositoryMock.Object,
-                null);
+                null,
+                feedbackRepositoryMock.Object);
 
             // Act & Assert
 

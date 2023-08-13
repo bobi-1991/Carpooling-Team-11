@@ -22,15 +22,31 @@ namespace CarPooling.Data.Repositories
 
         public async Task<IEnumerable<Travel>> GetAllAsync()
         {
-            var result = await this.dbContext.Travels
-                    .Include(x => x.Car)
-                    .Include(x => x.Driver)
-                    .Include(x => x.StartLocation)
-                    .Include(x => x.EndLocation)
-                    .Where(x => x.IsCompleted == false && !x.IsDeleted)
-                    .ToListAsync();
+            //var result = await this.dbContext.Travels
+            //        .Include(x => x.Car)
+            //        .Include(x => x.Driver)
+            //        .Include(x => x.StartLocation)
+            //        .Include(x => x.EndLocation)
+            //        .Where(x => x.IsCompleted == false && !x.IsDeleted)
+            //        .ToListAsync();
 
-            if(result.Count()  == 0) {
+
+                       var result = await this.dbContext.Travels
+               .Include(x => x.Car)
+               .Include(x => x.Driver)
+               .Include(x => x.StartLocation)
+               .Include(x => x.EndLocation)
+               .Include(x => x.Passengers) // Добавете този ред
+               .Where(x => x.IsCompleted == false && !x.IsDeleted)
+               .ToListAsync();
+
+
+
+
+
+
+            if (result.Count() == 0)
+            {
                 throw new EmptyListException("No travels yet!");
             }
             return result;
@@ -44,7 +60,7 @@ namespace CarPooling.Data.Repositories
                   .ThenInclude(x => x.Country)
                .Include(x => x.EndLocation)
                     .ThenInclude(x => x.Country)
-             //  .Where(x => x.IsCompleted == false)
+               //  .Where(x => x.IsCompleted == false)
                .Where(x => !x.IsDeleted)
                .FirstOrDefaultAsync(x => x.Id == travelId);
 
@@ -77,7 +93,7 @@ namespace CarPooling.Data.Repositories
         {
             var travelToDelete = await this.GetByIdAsync(travelId);
             var driver = await this.userRepository.GetByIdAsync(travelToDelete.DriverId);
-            
+
 
             driver.TravelHistory.Remove(travelToDelete);
 
@@ -141,7 +157,7 @@ namespace CarPooling.Data.Repositories
            .Include(x => x.Car)
            .Include(x => x.StartLocation)
            .Include(x => x.EndLocation)
-           // .Include(x => x.Passengers)
+           .Include(x => x.Passengers)
            .FirstOrDefaultAsync(x => x.Id == travelId);
 
             var passenger = await this.dbContext.Users
@@ -149,15 +165,17 @@ namespace CarPooling.Data.Repositories
 
             travel.Passengers.Add(passenger);
             //NEW
-            this.dbContext.Travels.Update(travel);
+            this.dbContext.Update(travel);
+          await  this.dbContext.SaveChangesAsync();
+
             travel.AvailableSeats--;
             //NEW
             //May be wrong
-            //passenger.TravelHistory.Add(travel);
+          //  passenger.PassengersTravelHistory.Add(travel);
             this.dbContext.Users.Update(passenger);
 
 
-            await this.dbContext.SaveChangesAsync();
+          await  this.dbContext.SaveChangesAsync();
 
         }
 
@@ -325,7 +343,7 @@ namespace CarPooling.Data.Repositories
             }
         }
 
-   
+
 
     }
 }

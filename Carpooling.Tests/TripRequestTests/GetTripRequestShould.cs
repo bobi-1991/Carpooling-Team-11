@@ -20,20 +20,25 @@ namespace Carpooling.Tests.TripRequestTests
         private Mock<ITripRequestRepository> tripRequestRepositoryMock;
         private Mock<IUserValidation> userValidationMock;
         private TripRequestService tripRequestService;
+        private Mock<IFeedbackRepository> feedbackRepositoryMock;
+
 
         [TestInitialize]
         public void Initialize()
         {
             tripRequestRepositoryMock = new Mock<ITripRequestRepository>();
             userValidationMock = new Mock<IUserValidation>();
-            tripRequestService = new TripRequestService(
+            feedbackRepositoryMock = new Mock<IFeedbackRepository>();
+
+           var tripRequestService = new TripRequestService(
                 tripRequestRepositoryMock.Object,
                 userValidationMock.Object,
-                null, 
                 null,
-                null);
+                null,
+                null,
+                 feedbackRepositoryMock.Object
+               );
         }
-        [TestMethod]
         public async Task GetByIdAsync_ValidId_ReturnsTripRequestResponse()
         {
             // Arrange
@@ -57,7 +62,7 @@ namespace Carpooling.Tests.TripRequestTests
             var tripRequestService = new TripRequestService(
                 tripRequestRepositoryMock.Object,
                 userValidationMock.Object,
-                null, null, null);
+                null, null, null, feedbackRepositoryMock.Object);
             // Act
             var result = await tripRequestService.GetByIdAsync(1);
 
@@ -77,7 +82,7 @@ namespace Carpooling.Tests.TripRequestTests
             var tripRequestService = new TripRequestService(
                 tripRequestRepositoryMock.Object,
                 userValidationMock.Object,
-                null, null, null);
+                null, null, null, feedbackRepositoryMock.Object);
             // Act and Assert
             await Assert.ThrowsExceptionAsync<EntityNotFoundException>(async () => await tripRequestService.GetByIdAsync(It.IsAny<int>()));
         }

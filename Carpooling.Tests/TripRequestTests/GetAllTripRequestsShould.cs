@@ -19,18 +19,22 @@ namespace Carpooling.Tests.TripRequestTests
         private Mock<ITripRequestRepository> tripRequestRepositoryMock;
         private Mock<IUserValidation> userValidationMock;
         private TripRequestService tripRequestService;
+        private Mock<IFeedbackRepository> feedbackRepositoryMock;
+
 
         [TestInitialize]
         public void Initialize()
         {
             tripRequestRepositoryMock = new Mock<ITripRequestRepository>();
             userValidationMock = new Mock<IUserValidation>();
+            feedbackRepositoryMock = new Mock<IFeedbackRepository>();
             tripRequestService = new TripRequestService(
                 tripRequestRepositoryMock.Object,
                 userValidationMock.Object,
                 null,
                 null,
-                null);
+                null,
+                feedbackRepositoryMock.Object);
         }
         [TestMethod]
         public async Task GetAllAsync_ValidRequest_ReturnsTripRequestResponses()
@@ -72,7 +76,7 @@ namespace Carpooling.Tests.TripRequestTests
             var tripRequestService = new TripRequestService(
                 tripRequestRepositoryMock.Object,
                 userValidationMock.Object,
-                null, null, null);
+                null, null, null, feedbackRepositoryMock.Object);
             // Act
             var result = await tripRequestService.GetAllAsync();
 
@@ -104,7 +108,7 @@ namespace Carpooling.Tests.TripRequestTests
             var tripRequestService = new TripRequestService(
                 tripRequestRepositoryMock.Object,
                 userValidationMock.Object,
-                null, null, null);
+                null, null, null, feedbackRepositoryMock.Object);
             // Act && Assert
             await Assert.ThrowsExceptionAsync<EmptyListException>(() =>
                 tripRequestService.GetAllAsync());

@@ -40,6 +40,11 @@ namespace Carpooling.BusinessLayer.Services
             return await _feedbackRepository.CreateAsync(feedback);
         }
 
+        public async Task<Feedback> CreateMVCAsync(Feedback feedback)
+        {
+            return await _feedbackRepository.CreateAsync(feedback);
+        }
+
         public async Task<Feedback> DeleteAsync(int id, User user)
         {
             Feedback feedbackToDelete = await GetByIdAsync(id);

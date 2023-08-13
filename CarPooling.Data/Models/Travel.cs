@@ -42,7 +42,8 @@ namespace CarPooling.Data.Models
             get; set;
         }
 
-        public List<User>? Passengers = new List<User>();
+      //  public List<User>? Passengers = new List<User>();
+        public ICollection<User> Passengers { get; set; } = new List<User>();
         public List<Feedback>? Feedbacks { get; set; } = new List<Feedback>();
     }
 

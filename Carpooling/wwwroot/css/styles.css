@@ -242,5 +242,52 @@ body {
     }
 
 
+/*// Стилове за бутоните, които правят фийдбек*/
+.participants-container {
+    position: relative;
+}
+
+.participant {
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.submit-button {
+    position: absolute;
+    right: 580px; /* Променете стойността на "right" според вашите нужди */
+    top: 0;
+}
+
+
+.feedback-star {
+    color: yellow;
+}
+
+/* Стилове за подравняване на feedback-comment контейнера */
+.feedback-comment {
+    display: flex;
+    align-items: center; /* Вертикално центриране на елементите */
+}
+
+.feedback-username {
+    margin-right: 10px; /* Отстояние между името на пътника и надписа */
+}
+
+.feedback-label {
+    margin-right: 10px; /* Отстояние между надписа и звездичките */
+}
+
+.feedback-star {
+    display: inline-block; /* За да се подравни вертикално с другите елементи */
+    vertical-align: middle; /* За да се подравни вертикално с другите елементи */
+    color: yellow; /* Цвят на звездичките */
+    font-size: 16px; /* Размер на звездичките */
+}
+
+
+
+
+
+
 
 

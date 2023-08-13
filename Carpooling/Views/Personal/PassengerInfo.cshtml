@@ -1,4 +1,4 @@
-﻿@using Carpooling.Models;
+﻿@*@using Carpooling.Models;
 
 @model PassengerViewInfoModel
 
@@ -18,17 +18,125 @@
     {
         <div class="feedback-container">
             <div class="feedback-details">
-                <p class="feedback-comment">@feedback.Passenger.UserName - feedback based on realised ride:</p>
+                <p class="feedback-comment">@feedback.Driver.UserName - feedback based on realised ride:</p>
                
             </div>
             <p>@feedback.Comment</p>
+            <p>@feedback.Rating</p>
             <p class="feedback-date">@feedback.CreatedOn.ToString("dd. MMM. yyyy.")</p>
         </div>
         <hr /> 
     }
 @*    <a asp-controller="Home" asp-action="Index" class="nav">Go back</a>*@
+  @*  <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Go Back</a>
+</div>*@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*
+@using Carpooling.Models;
+
+@model PassengerViewInfoModel
+
+@{
+    ViewData["Title"] = "Passenger Info";
+}
+
+<div>
+    <h2>User, @Model.Username!</h2>
+    <h5>Profile Details:</h5>
+    <br>
+    <p><i class="fas fa-star"></i> Rating: @Model.AverageRating</p>
+    <p><i class="fas fa-comments"></i> Feedbacks: @Model.Feedbacks.Count()</p>
+    <br>
+    <hr>
+    @foreach (var feedback in Model.Feedbacks)
+    {
+        <div class="feedback-container">
+            <div class="feedback-details">
+                <p class="feedback-comment">@feedback.Driver.UserName - feedback based on realised ride:</p>
+            </div>
+            <p>@feedback.Comment</p>
+            <div class="feedback-rating">
+                <p class="feedback-rating-value">
+                    @for (int i = 0; i < 5; i++)
+                    {
+                        if (i < feedback.Rating)
+                        {
+                            <i class="fas fa-star"></i>
+                        }
+                        else
+                        {
+                            <i class="far fa-star"></i>
+                        }
+                    }
+                </p>
+            </div>
+            <p class="feedback-date">@feedback.CreatedOn.ToString("dd. MMM. yyyy.")</p>
+        </div>
+        <hr />
+    }
     <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Go Back</a>
 </div>
+*@
 
 
 
+
+
+
+
+@using Carpooling.Models;
+
+@model PassengerViewInfoModel
+
+@{
+    ViewData["Title"] = "Passenger Info";
+}
+
+
+
+<div>
+    <h2>User, @Model.Username!</h2>
+    <h5>Profile Details:</h5>
+    <br>
+    <p><i class="fas fa-star"></i> Rating: @Model.AverageRating</p>
+    <p><i class="fas fa-comments"></i> Feedbacks: @Model.Feedbacks.Count()</p>
+    <br>
+    <hr>
+    @foreach (var feedback in Model.Feedbacks)
+    {
+        <div class="feedback-container">
+            <div class="feedback-comment">
+                <span class="feedback-username">@feedback.Passenger.UserName</span>
+                <span class="feedback-label">feedback based on realised ride:</span>
+                <div class="feedback-rating">
+                    <p class="feedback-rating-value">
+                        @for (int i = 0; i < 5; i++)
+                        {
+                            <i class="@(i < feedback.Rating ? "fas" : "far") fa-star feedback-star"></i>
+                        }
+                    </p>
+                </div>
+            </div>
+            <p>@feedback.Comment</p>
+            <p class="feedback-date">@feedback.CreatedOn.ToString("dd. MMM. yyyy.")</p>
+        </div>
+        <hr />
+    }

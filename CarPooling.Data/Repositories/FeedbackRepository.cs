@@ -45,6 +45,8 @@ namespace CarPooling.Data.Repositories
         {
             return await _context.Feedbacks
                 .Where(c => c.IsDeleted == false)
+                .Include(x=>x.Driver)
+                .Include(x=>x.Passenger)
                 .ToListAsync();
         }
 

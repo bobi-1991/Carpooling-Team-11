@@ -6,46 +6,69 @@
     ViewData["Title"] = "Driver Info";
 }
 
+<style>
+    .feedback-comment {
+        display: inline-block;
+        vertical-align: top;
+        margin-right: 5px;
+        font-weight: bold;
+    }
 
-    <div>
-        <h2>User, @Model.Username!</h2>
-        <h5>Profile Details:</h5>
-        <br>
-        <p><i class="fas fa-star"></i> Rating: @Model.AverageRating</p>
-        <p><i class="fas fa-comments"></i> Feedbacks: @Model.Feedbacks.Count()</p>
+    .feedback-rating {
+        display: inline-block;
+        vertical-align: top;
+    }
 
-        <div class="car-container">
-            @foreach (var car in Model.Cars)
-            {
-                <div class="car-card">
-                    <h3>@car.Brand @car.Model</h3>
-                    <div class="car-details">
-                        <p><i class="fas fa-user"></i> Capacity: @car.AvailableSeats</p>
-                        <p><i class="fas fa-paint-brush"></i> Colour: @car.Color</p>
-                        <p><i class="fas fa-id-badge"></i> Plate number: @car.Registration</p>
-                        <p><i class="fas fa-user-tag"></i> Can smoke: @(car.CanSmoke ? "Yes" : "No")</p>
-                    </div>
+    .feedback-rating-value {
+        color: yellow;
+    }
+</style>
+
+
+<div>
+    <h2>User, @Model.Username!</h2>
+    <h5>Profile Details:</h5>
+    <br>
+    <p><i class="fas fa-star"></i> Rating: @Model.AverageRating</p>
+    <p><i class="fas fa-comments"></i> Feedbacks: @Model.Feedbacks.Count()</p>
+
+    <div class="car-container">
+        @foreach (var car in Model.Cars)
+        {
+            <div class="car-card">
+                <h3>@car.Brand @car.Model</h3>
+                <div class="car-details">
+                    <p><i class="fas fa-user"></i> Capacity: @car.AvailableSeats</p>
+                    <p><i class="fas fa-paint-brush"></i> Colour: @car.Color</p>
+                    <p><i class="fas fa-id-badge"></i> Plate number: @car.Registration</p>
+                    <p><i class="fas fa-user-tag"></i> Can smoke: @(car.CanSmoke ? "Yes" : "No")</p>
                 </div>
-            }
-        </div>
-        <br>
-
+            </div>
+        }
+    </div>
+    <br>
+    <hr>
     @foreach (var feedback in Model.Feedbacks)
     {
         <div class="feedback-container">
-            <div class="feedback-details">
-                <p class="feedback-comment">@feedback.Driver.UserName - feedback based on realised travel:</p>
-
+            <div class="feedback-comment">
+                @feedback.Passenger.UserName - feedback based on realised ride:  
+                <div class="feedback-rating">
+                    <p class="feedback-rating-value">
+                        @for (int i = 0; i < 5; i++)
+                        {
+                            <i class="@(i < feedback.Rating ? "fas" : "far") fa-star"></i>
+                        }
+                    </p>
+                </div>
             </div>
             <p>@feedback.Comment</p>
             <p class="feedback-date">@feedback.CreatedOn.ToString("dd. MMM. yyyy.")</p>
         </div>
-        <hr /> 
+        <hr />
     }
 
-
-        <br>
-       @* <a asp-controller="Home" asp-action="Index" class="nav">Go back</a>*@
+    <br>
     <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Go Back</a>
 
-    </div>
+</div>

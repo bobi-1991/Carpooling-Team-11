@@ -23,14 +23,16 @@ namespace Carpooling.BusinessLayer.Services
         private readonly ITripRequestRepository tripRequestRepository;
         private readonly IUserRepository userRepository;
         private readonly ITripRequestValidator tripRequestValidator;
+        private readonly IFeedbackRepository feedbackRepository;
 
-        public TripRequestService(ITripRequestRepository tripRequestRepository, IUserValidation userValidation, ITravelRepository travelRepository, IUserRepository userRepository, ITripRequestValidator tripRequestValidator)
+        public TripRequestService(ITripRequestRepository tripRequestRepository, IUserValidation userValidation, ITravelRepository travelRepository, IUserRepository userRepository, ITripRequestValidator tripRequestValidator, IFeedbackRepository feedbackRepository)
         {
             this.tripRequestRepository = tripRequestRepository;
             this.userValidation = userValidation;
             this.travelRepository = travelRepository;
             this.userRepository = userRepository;
             this.tripRequestValidator = tripRequestValidator;
+            this.feedbackRepository = feedbackRepository;
         }
 
         public async Task<IEnumerable<TripRequestResponse>> GetAllAsync()
@@ -202,18 +204,26 @@ namespace Carpooling.BusinessLayer.Services
 
             var passengerViewModel = new List<PassengersListViewModel>();
 
-            foreach (var trip in tripRequests.Where(x=> x.Status == TripRequestEnum.Approved))
+            foreach (var trip in tripRequests.Where(x => x.Status == TripRequestEnum.Approved))
             {
+                var passengerId = trip.PassengerId;
+                var passenger = await this.userRepository.GetByIdAsync(passengerId);
+                //NEW
+                var feedbacks = await this.feedbackRepository.GetAllAsync();
+                var currentFeedbacks = feedbacks.Where(x => x.PassengerId == trip.DriverId);
+
                 passengerViewModel.Add(new PassengersListViewModel
                 {
+                    Id = trip.PassengerId,
                     DepartureTime = (DateTime)trip.Travel.DepartureTime,
                     DepartureCity = trip.Travel.StartLocation.City,
                     DepartureAddress = trip.Travel.StartLocation.Details,
                     ArrivalCity = trip.Travel.EndLocation.City,
                     ArrivalAddress = trip.Travel.EndLocation.Details,
                     Username = trip.Passenger.UserName,
-                    AverageRating = trip.Passenger.AverageRating
-                });             
+                    AverageRating = trip.Passenger.AverageRating,
+                    Feedbacks = currentFeedbacks.Count()
+                });
             }
 
             return passengerViewModel;
@@ -228,6 +238,7 @@ namespace Carpooling.BusinessLayer.Services
 
             return tripRequests.Select(x => new TripRequestViewResponseModel(
                x.Id,
+               x.PassengerId,
                x.Passenger.UserName,
                x.Driver.UserName,
                x.Travel.StartLocation.Details,
@@ -260,6 +271,7 @@ namespace Carpooling.BusinessLayer.Services
 
             return tripRequests.Select(x => new TripRequestViewResponseModel(
                x.Id,
+               x.PassengerId,
                x.Passenger.UserName,
                x.Driver.UserName,
                x.Travel.StartLocation.Details,

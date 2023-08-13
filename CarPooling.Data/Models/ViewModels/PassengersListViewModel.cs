@@ -8,6 +8,7 @@ namespace CarPooling.Data.Models.ViewModels
 {
     public class PassengersListViewModel
     {
+        public string Id { get; set; }
         public DateTime DepartureTime { get; set; }
         public string DepartureCity { get; set; }
         public string DepartureAddress { get; set; }
@@ -15,8 +16,10 @@ namespace CarPooling.Data.Models.ViewModels
         public string ArrivalAddress { get; set; }
         public string Username { get; set; }
         public decimal AverageRating { get; set; }
+        public int Feedbacks { get; set; }
 
-       
+
+
 
     }
 }
