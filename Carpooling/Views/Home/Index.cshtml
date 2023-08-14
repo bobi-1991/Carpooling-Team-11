@@ -11,9 +11,12 @@
 
     <div class="info-container">
         <div class="info-box">
+           @* <a  href="@Url.Action("Index", "Travels")">@Model.TotalTravelCount*@
             <i class="fas fa-route"></i>
             <h1>@Model.TotalTravelCount</h1>
+         
             <p>Total Travels</p>
+         @*   </a>*@
         </div>
         <div class="info-box">
             <i class="fas fa-users"></i>
@@ -38,14 +41,7 @@
             {
                 <tr>
                     <td>
-                      @*  @if (User.Identity?.IsAuthenticated == true)
-                        {*@
                             <a href="@Url.Action("DriverInfo", "Personal" , new { id = @user.Id })">@user.UserName</a>
-                      @*  }
-                        else
-                        {
-                            <a href="/Identity/Account/Login">@user.UserName</a>
-                        }*@
                     </td>
                     <td>@user.AverageRating</td>
                 </tr>
@@ -67,14 +63,7 @@
             {
                 <tr>
                     <td>
-                   @*     @if (User.Identity?.IsAuthenticated == true)
-                        {*@
                             <a href="@Url.Action("PassengerInfo", "Personal" , new { id = @user.Id })">@user.UserName</a>
-                    @*    }
-                        else
-                        {
-                            <a href="/Identity/Account/Login">@user.UserName</a>
-                        }*@
                     </td>
                     <td>@user.AverageRating</td>
                 </tr>
