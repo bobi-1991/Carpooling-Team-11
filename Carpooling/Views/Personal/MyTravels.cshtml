@@ -21,6 +21,7 @@
 {
     
     <h3> You currently have no trips yet.  </h3>
+
 }
 else
 {
@@ -100,17 +101,59 @@ else
                     <div class="participants-container">
                         <h5>Participant(s):</h5>
                         <br>
-                        @foreach (var participant in travel.Participants)
+                        @if (travel.DriverId.Equals(loggedUser.Id))
                         {
+ 
+                            @foreach (var participant in travel.Participants)
+                            {
+                                var isLeftFeedbackForPassengerFeedbacks = false;
+                                
+                                <div class="participant">
+                                    <p><i class="fas fa-user"></i> <span class="property">Participant:</span> @participant.UserName</p>
+                                    @foreach (var feedback in participant.PassengerFeedbacks)
+                                    {
+                                        if (feedback.TravelId == travel.Id)
+                                        {
+                                            isLeftFeedbackForPassengerFeedbacks = true;
+                                            break;
+                                        }
+                                    }
+                                    
+                                    @if (!isLeftFeedbackForPassengerFeedbacks)
+                                    {
+                                        <form asp-controller="Feedback" asp-action="Create" method="get">
+                                            <input type="hidden" name="ParticipantId" value="@participant.Id">
+                                            <input type="hidden" name="TravelId" value="@travel.Id">
+                                            <button type="submit" class="submit-button">Leave Feedback</button>
+                                        </form>
+                                    }
+                                </div>
+                                <br>
+                            }
+                        }
+                        else
+                        {
+                            var isFeedbackLeftForDriverFeedbacks = false;
+                            var userDriver = await UserManager.FindByIdAsync(travel.DriverId);
+                            foreach (var feedback in userDriver.DriverFeedbacks)
+                            {
+                                if (feedback.TravelId == travel.Id)
+                                {
+                                    isFeedbackLeftForDriverFeedbacks = true;
+                                    break;
+                                }
+                            }
                             <div class="participant">
-                                <p><i class="fas fa-user"></i> <span class="property">Participant:</span> @participant.UserName</p>
-                                <form asp-controller="Feedback" asp-action="Create" method="get">
-                                    <input type="hidden" name="ParticipantId" value="@participant.Id">
-                                    <input type="hidden" name="TravelId" value="@travel.Id">
-                                    <button type="submit" class="submit-button">Leave Feedback</button>
-                                </form>
+                                <p><i class="fas fa-user"></i> <span class="property">Participant:</span> @userDriver.UserName (Driver)</p>
+                                @if (!isFeedbackLeftForDriverFeedbacks)
+                                {
+                                    <form asp-controller="Feedback" asp-action="Create" method="get">
+                                        <input type="hidden" name="ParticipantId" value="@userDriver.Id">
+                                        <input type="hidden" name="TravelId" value="@travel.Id">
+                                        <button type="submit" class="submit-button">Leave Feedback</button>
+                                    </form>
+                                }
                             </div>
-                            <br>
                         }
                     </div>
                 </div>

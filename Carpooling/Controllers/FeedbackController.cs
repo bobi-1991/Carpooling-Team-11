@@ -20,15 +20,17 @@ namespace Carpooling.Controllers
         private readonly IFeedbackService feedbackService;
         //private readonly ITravelService travelService;
         private readonly UserManager<User> userManager;
+        private readonly ITravelService travelService;
         //private readonly IMapper mapper;
         //private readonly CarPoolingDbContext dbContext;
         //private readonly IMapService mapService;
 
-        public FeedbackController(UserManager<User> userManager, IFeedbackService feedbackService, IUserService userService)
+        public FeedbackController(UserManager<User> userManager, IFeedbackService feedbackService, IUserService userService, ITravelService travelService)
         {
             this.userManager = userManager;
             this.feedbackService = feedbackService;
             this.userService = userService;
+            this.travelService = travelService;
         }
 
 
@@ -70,20 +72,33 @@ namespace Carpooling.Controllers
                 var user = await userManager.Users.Include(c => c.Cars)
                   .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
 
-   
+                var travel = await travelService.GetTravelAsync(travelId);
                 var participant = await this.userService.GetUserByIdAsync(participantId);
-
-                var feedback = new Feedback
+                if (travel.DriverId.Equals(user.Id))
                 {
-                    Rating = feedbackModel.Rating,
-                    Comment = feedbackModel.Comment,
-                    DriverId = participant.Id,
-                    PassengerId = user.Id,
-                    TravelId = travelId
-                };
-
-                _ = await this.feedbackService.CreateMVCAsync(feedback);
-
+                    var feedback = new Feedback
+                    {
+                        Rating = feedbackModel.Rating,
+                        Comment = feedbackModel.Comment,
+                        DriverId = user.Id,
+                        PassengerId = participant.Id,
+                        TravelId = travelId
+                    };
+                    _ = await this.feedbackService.CreateMVCAsync(feedback);
+                }
+                else
+                {
+                    var feedback = new Feedback
+                    {
+                        Rating = feedbackModel.Rating,
+                        Comment = feedbackModel.Comment,
+                        DriverId = participant.Id,
+                        PassengerId = user.Id,
+                        TravelId = travelId
+                    };
+                    _ = await this.feedbackService.CreateMVCAsync(feedback);
+                }
+    
                 return RedirectToAction("MyTravels", "Personal");
             }
             catch (UnauthorizedOperationException ex)

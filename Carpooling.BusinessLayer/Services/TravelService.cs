@@ -46,6 +46,10 @@ namespace Carpooling.BusinessLayer.Services
         {
             return this.mapper.Map<TravelResponse>(await this.travelRepository.GetByIdAsync(travelId));
         }
+        public async Task<Travel> GetTravelAsync(int travelId)
+        {
+            return await this.travelRepository.GetByIdAsync(travelId);
+        }
         public async Task<Travel> CreateTravelForMVCAsync(User loggedUser, Travel travel)
         {
             //mapService.GetDirection();

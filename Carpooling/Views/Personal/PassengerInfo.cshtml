@@ -1,14 +1,18 @@
-﻿@using Carpooling.Models;
-
+﻿@using CarPooling.Data.Models;
+@using Carpooling.Models;
+@using Microsoft.AspNetCore.Identity;
+@inject UserManager<User> UserManager
 @model PassengerViewInfoModel
 
 @{
     ViewData["Title"] = "Passenger Info";
     decimal? rating = 0;
     int count = 0;
+    var user = await UserManager.GetUserAsync(User);
+    
 }
 
-@foreach (var item in Model.Feedbacks)
+@foreach (var item in user.PassengerFeedbacks)
 {
     count = count + 1;
     rating = rating + item.Rating;
@@ -25,16 +29,17 @@
     }
     else
     {
+        rating = rating / user.PassengerFeedbacks.Count();
         <p><i class="fas fa-star"></i> Rating: @string.Format("{0:0.00}", rating)</p>
     }
-    <p><i class="fas fa-comments"></i> Feedbacks: @Model.Feedbacks.Count()</p>
+    <p><i class="fas fa-comments"></i> Feedbacks: @user.PassengerFeedbacks.Count()</p>
     <br>
     <hr>
-    @foreach (var feedback in Model.Feedbacks)
+    @foreach (var feedback in user.PassengerFeedbacks)
     {
         <div class="feedback-container">
             <div class="feedback-comment">
-                <span class="feedback-username">@feedback.Passenger.UserName</span>
+                <span class="feedback-username">From Driver: @feedback.Driver.UserName</span>
                 <span class="feedback-label">feedback based on realised ride:</span>
                 <div class="feedback-rating">
                     <p class="feedback-rating-value">

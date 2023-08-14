@@ -57,7 +57,7 @@ namespace Carpooling.Controllers
             var cars = await carService.GetAllAsync();
             var feedbacks = await feedbackService.GetAllAsync();
             var driverFeedbacks = feedbacks.Where(x => x.DriverId == id);
-
+            var feedbacksAsPassenger = feedbacks.Where(x=>x.PassengerId == id);
 
             var user = await userManager.Users.Include(c => c.Cars)
                    .SingleAsync(x => x.Id.Equals(id));
@@ -69,7 +69,8 @@ namespace Carpooling.Controllers
             {
                 Username = user.UserName,
                 AverageRating = user.AverageRating,
-                Feedbacks = driverFeedbacks,
+                DriverFeedbacks = driverFeedbacks,
+                FeedbacksAsPessanger = feedbacksAsPassenger,
                 Cars = driverCars
             };
 
@@ -259,6 +260,8 @@ namespace Carpooling.Controllers
                 }
                 var user = await userManager.Users.Include(x => x.TravelHistory).ThenInclude(x => x.Passengers)
                     .Include(x => x.PassengersTravelHistory)
+                    .Include(x=>x.DriverFeedbacks)
+                    .Include(x=>x.PassengerFeedbacks)
                        .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
 
                 var trips = new List<TravelViewResponseWithId>();
@@ -279,6 +282,7 @@ namespace Carpooling.Controllers
                         trips.Add(new TravelViewResponseWithId
                         {
                             Id = travel.Id,
+                            DriverId = travel.DriverId,
                             StartLocationName = trip.StartLocationName,
                             DestinationName = trip.DestinationName,
                             DepartureTime = trip.DepartureTime,
@@ -287,7 +291,7 @@ namespace Carpooling.Controllers
                             IsCompleted = (bool)isCompleted,
                             CarRegistration = trip.CarRegistration,
                             Participants = passengers
-                        });
+                        }) ;
                     }
                 }
                 else if (passengerHistory.Count() != 0)
@@ -306,6 +310,7 @@ namespace Carpooling.Controllers
                         trips.Add(new TravelViewResponseWithId
                         {
                             Id = travel.Id,
+                            DriverId = travel.DriverId,
                             StartLocationName = trip.StartLocationName,
                             DestinationName = trip.DestinationName,
                             DepartureTime = trip.DepartureTime,

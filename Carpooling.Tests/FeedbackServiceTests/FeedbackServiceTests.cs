@@ -1,6 +1,7 @@
 ﻿using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services;
 using CarPooling.Data.Models;
+using CarPooling.Data.Repositories;
 using CarPooling.Data.Repositories.Contracts;
 using Microsoft.AspNetCore.Identity;
 using Moq;
@@ -38,8 +39,8 @@ namespace Carpooling.Tests.FeedbackServiceTests
                 .Setup(x => x.GetAllAsync())
                 .Returns(Task.FromResult(new List<Feedback>()));
 
-            sut = new FeedbackService(feedbackRepositoryMock.Object, 
-                userManagerMock.Object, 
+            sut = new FeedbackService(feedbackRepositoryMock.Object,
+                userManagerMock.Object,
                 travelRepositoryMock.Object);
         }
 
@@ -56,7 +57,7 @@ namespace Carpooling.Tests.FeedbackServiceTests
                 .Returns(Task.FromResult(new Travel() { IsCompleted = true }));
 
             //Act
-            var result = await sut.CreateAsync(feedback, new User{ IsBlocked = false});
+            var result = await sut.CreateAsync(feedback, new User { IsBlocked = false });
 
             //verify
             travelRepositoryMock.Verify(x => x.GetByIdAsync(It.IsAny<int>()), Times.Once);
@@ -141,7 +142,7 @@ namespace Carpooling.Tests.FeedbackServiceTests
             userManagerMock
                 .Setup(x => x.GetRolesAsync(It.IsAny<User>()))
                 .ReturnsAsync(new List<string>());
-            
+
             var user = new User { IsBlocked = false, Id = "123" };
 
             //Act
@@ -362,6 +363,17 @@ namespace Carpooling.Tests.FeedbackServiceTests
             userManagerMock.Verify(x => x.GetRolesAsync(It.IsAny<User>()), Times.Once);
 
             feedbackRepositoryMock.Verify(x => x.UpdateAsync(It.IsAny<int>(), It.IsAny<Feedback>()), Times.Once);
+        }
+
+        [TestMethod]
+
+        public async Task CreateMVCAsync_ShouldInvoke()
+        {
+            //Act
+            var result = sut.CreateMVCAsync(It.IsAny<Feedback>());
+
+            //Verify
+            feedbackRepositoryMock.Verify(x => x.CreateAsync(It.IsAny<Feedback>()), Times.Once);
         }
     }
 }

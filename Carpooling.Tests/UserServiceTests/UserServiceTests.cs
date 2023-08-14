@@ -73,7 +73,7 @@ namespace Carpooling.Tests.UserServiceTests
             userRepositoryMock
                 .Setup(x => x.GetByIdAsync(It.IsAny<string>()))
                 .Returns(Task.FromResult(new User()));
-           
+
             userRepositoryMock
                 .Setup(x => x.UnBanUser(It.IsAny<User>()))
                 .Returns(Task.FromResult("User successfully UnBanned"));
@@ -85,7 +85,7 @@ namespace Carpooling.Tests.UserServiceTests
             userRepositoryMock
                 .Setup(x => x.TravelHistoryAsync(It.IsAny<string>()))
                 .ReturnsAsync(new List<Travel>());
-            
+
             userRepositoryMock
                 .Setup(x => x.GetAllAsync())
                 .ReturnsAsync(new List<User>());
@@ -97,7 +97,7 @@ namespace Carpooling.Tests.UserServiceTests
 
             userValidatorMock
                 .Setup(x => x.ValidateLoggedUserIsAdmin(It.IsAny<User>()));
-            
+
             userValidatorMock
                 .Setup(x => x.ValidateIfUsernameExist(It.IsAny<string>()));
 
@@ -118,7 +118,7 @@ namespace Carpooling.Tests.UserServiceTests
             //Verify
             userRepositoryMock.Verify(x => x.GetByUsernameAsync("Gosho"), Times.Once);
         }
-        
+
         [TestMethod]
 
         public async Task DeleteAsync_ShouldInvoke()
@@ -295,7 +295,7 @@ namespace Carpooling.Tests.UserServiceTests
 
             var result2 = new IdentityResult();
             //Act
-            var result = await sut.RegisterAsync(new UserRequest() { Password = "Password2@", Email = "abv@abv.bg"});
+            var result = await sut.RegisterAsync(new UserRequest() { Password = "Password2@", Email = "abv@abv.bg" });
 
             //Verify
             userManagerMock.Verify(x => x.CreateAsync(user, password), Times.Once);
@@ -317,7 +317,7 @@ namespace Carpooling.Tests.UserServiceTests
             userManagerMock
                 .Setup(x => x.CreateAsync(user, password))
                 .ReturnsAsync(new IdentityResult());
-            
+
             //Verify
             var exception = await Assert.ThrowsExceptionAsync<NullReferenceException>(
                 () => sut.RegisterAsync(new UserRequest() { Password = "Password2@", Email = "abv@abv.bg" }));
@@ -355,7 +355,7 @@ namespace Carpooling.Tests.UserServiceTests
             userRepositoryMock
                 .Setup(x => x.UpdateAsync(It.IsAny<string>(), It.IsAny<User>()))
                 .Returns(Task.FromResult(new User()));
-                
+
             //Act
             var result = await sut.UpdateAsync(new User(), "123", new UserUpdateDto());
 
@@ -381,7 +381,7 @@ namespace Carpooling.Tests.UserServiceTests
 
             userManagerMock.Verify(x => x.DeleteAsync(It.IsAny<User>()), Times.Once);
         }
-       
+
         [TestMethod]
 
         public async Task GetAllUsersAsync_ShouldInvoke()
@@ -440,7 +440,7 @@ namespace Carpooling.Tests.UserServiceTests
 
             //Act
             await sut.ConvertToAdministrator(It.IsAny<string>());
-                
+
             //Verify
             userRepositoryMock.Verify(x => x.ConvertToAdministrator(It.IsAny<string>()), Times.Once);
         }
@@ -467,30 +467,7 @@ namespace Carpooling.Tests.UserServiceTests
 
             userRepositoryMock.Verify(x => x.GetTopPassengers(It.IsAny<List<User>>(), It.IsAny<int>()), Times.Once);
         }
-
-        //public async Task<IEnumerable<User>> TopTravelOrganizers(int count)
-        //{
-        //    var users = await this.userRepository.GetAllAsync();
-        //    var result = new List<User>();
-
-        //    foreach (var user in users)
-        //    {
-        //        var role = await this.identityHelper.GetRole(user);
-
-        //        if (role == "Driver")
-        //        {
-        //            result.Add(user);
-        //        }
-
-        //        if (result.Count() == 10)
-        //        {
-        //            break;
-        //        }
-
-        //    }
-
-        //    return await this.userRepository.GetTopTravelOrganizers(result, count);
-        //}
+        
 
         [TestMethod]
 
@@ -503,6 +480,56 @@ namespace Carpooling.Tests.UserServiceTests
 
             identityHelperMock
                 .Setup(x => x.GetRole(It.IsAny<User>()));
+
+            //Act
+            var result = await sut.TopTravelOrganizers(2);
+
+            //Verify
+            userRepositoryMock.Verify(x => x.GetAllAsync(), Times.Once);
+
+            //identityHelperMock.Verify(x => x.GetRole(It.IsAny<User>()), Times.Exactly(2));
+
+            userRepositoryMock.Verify(x => x.GetTopTravelOrganizers(It.IsAny<List<User>>(), It.IsAny<int>()), Times.Once);
+        }
+
+        [TestMethod]
+
+        public async Task TopTravelOrganizers_ShouldInvoke2()
+        {
+            //Arrange
+            userManagerMock
+                .Setup(x => x.AddToRolesAsync(It.IsAny<User>(), It.IsAny<List<string>>()));
+
+            //var user1 = new User()
+            //{
+            //    Id = Guid.NewGuid().ToString(),
+            //    UserName = "Gosho892",
+            //    FirstName = "Gosho2",
+            //    LastName = "Goshev2",
+            //    Email = "gosho2@gmail.com",
+            //    AverageRating = 4.5m,
+            //    IsBlocked = false
+            //};
+
+            //var user2 = new User()
+            //{
+            //    Id = Guid.NewGuid().ToString(),
+            //    UserName = "Gosho89",
+            //    FirstName = "Gosho",
+            //    LastName = "Goshev",
+            //    Email = "gosho@gmail.com",
+            //    AverageRating = 4.5m,
+            //    IsBlocked = false
+            //};
+
+            userRepositoryMock
+                .Setup(x => x.GetTopTravelOrganizers(It.IsAny<List<User>>(), 2))
+                .ReturnsAsync(new List<User>());
+                
+
+            identityHelperMock
+                .Setup(x => x.GetRole(It.IsAny<User>()))
+                .ReturnsAsync(It.IsAny<string>());
 
             //Act
             var result = await sut.TopTravelOrganizers(2);
