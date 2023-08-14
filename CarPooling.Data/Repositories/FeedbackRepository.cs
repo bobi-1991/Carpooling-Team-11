@@ -2,6 +2,7 @@
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
 using CarPooling.Data.Repositories.Contracts;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -13,16 +14,23 @@ namespace CarPooling.Data.Repositories
     public class FeedbackRepository : IFeedbackRepository
     {
         private readonly CarPoolingDbContext _context;
-
-        public FeedbackRepository(CarPoolingDbContext context)
+        private readonly IUserRepository _userRepository;
+        private readonly UserManager<User> _userManager;
+        public FeedbackRepository(CarPoolingDbContext context, IUserRepository userRepository, UserManager<User> userManager)
         {
             _context = context;
+            _userRepository = userRepository;
+            _userManager = userManager;
         }
 
         public async Task<Feedback> CreateAsync(Feedback feedback)
         {
             feedback.CreatedOn = DateTime.Now;
-
+            var passengerToGetFeedback = await _userRepository.GetByIdAsync(feedback.PassengerId);
+            var driverToMakeFeedback = await _userRepository.GetByIdAsync(feedback.DriverId);
+            
+            passengerToGetFeedback.PassengerFeedbacks.Add(feedback);
+            driverToMakeFeedback.DriverFeedbacks.Add(feedback);
             await _context.Feedbacks.AddAsync(feedback);
             await _context.SaveChangesAsync();
 
@@ -45,8 +53,8 @@ namespace CarPooling.Data.Repositories
         {
             return await _context.Feedbacks
                 .Where(c => c.IsDeleted == false)
-                .Include(x=>x.Driver)
-                .Include(x=>x.Passenger)
+                .Include(x => x.Driver)
+                .Include(x => x.Passenger)
                 .ToListAsync();
         }
 

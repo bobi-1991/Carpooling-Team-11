@@ -74,7 +74,7 @@ namespace CarPooling.Data.Repositories
             {
                 throw new EntityNotFoundException($"User with id:{id} not found.");
             }
-
+            
             return user;
         }
 
