@@ -13,17 +13,20 @@
 
     <div class="info-container">
         <div class="info-box">
-           @* <a  href="@Url.Action("Index", "Travels")">@Model.TotalTravelCount*@
+            
             <i class="fas fa-route"></i>
+            <a href="@Url.Action("Index", "Travels")">
             <h1>@Model.TotalTravelCount</h1>
          
             <p>Total Travels</p>
-         @*   </a>*@
+            </a>
         </div>
         <div class="info-box">
+           @* <a href="@Url.Action("ListUsers", "Admin")">*@
             <i class="fas fa-users"></i>
             <h1>@Model.TotalUsersCount</h1>
             <p>Total Users</p>
+           @* </a>*@
         </div>
     </div>
 

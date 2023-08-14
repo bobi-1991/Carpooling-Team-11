@@ -57,8 +57,8 @@ body {
 
 }
 
+
 .nav-background {
-    /* background-color: #0077b6; /* Заменете с желания цвят */
     background-color: #0096c7; /* Заменете с желания цвят */
     /* padding: 10px 0;*/ /* Променете според дизайна */
 }
@@ -70,8 +70,8 @@ body {
 }
 
     .navbar-nav .nav-link:hover {
-        background-color: #005f8d; /* Променете цвета според вашите предпочитания */
-        color: white; /* Променете цвета според вашите предпочитания */
+        background-color: #005f8d; 
+        color: white; 
     }
 
 
