@@ -209,7 +209,7 @@ namespace Carpooling.BusinessLayer.Services
                 var passenger = await this.userRepository.GetByIdAsync(passengerId);
                 //NEW
                 var feedbacks = await this.feedbackRepository.GetAllAsync();
-                var currentFeedbacks = feedbacks.Where(x => x.PassengerId == trip.DriverId);
+                var currentFeedbacks = feedbacks.Where(x => x.GiverId == trip.DriverId);
 
                 passengerViewModel.Add(new PassengersListViewModel
                 {

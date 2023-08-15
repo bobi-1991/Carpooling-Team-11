@@ -47,8 +47,8 @@ namespace Carpooling.Controllers
             }
             var cars = await carService.GetAllAsync();
             var feedbacks = await feedbackService.GetAllAsync();
-            var driverFeedbacks = feedbacks.Where(x => x.DriverId == id);
-            var feedbacksAsPassenger = feedbacks.Where(x=>x.PassengerId == id);
+            var driverFeedbacks = feedbacks.Where(x => x.ReceiverId == id);
+            var feedbacksAsPassenger = feedbacks.Where(x=>x.GiverId == id);
 
             var user = await userManager.Users.Include(c => c.Cars)
                    .SingleAsync(x => x.Id.Equals(id));
@@ -60,8 +60,8 @@ namespace Carpooling.Controllers
             {
                 Username = user.UserName,
                 AverageRating = user.AverageRating,
-                DriverFeedbacks = driverFeedbacks,
-                FeedbacksAsPessanger = feedbacksAsPassenger,
+                ReceivedFeedbacks = driverFeedbacks,
+                GivenFeedbacks = feedbacksAsPassenger,
                 Cars = driverCars
             };
 
@@ -82,7 +82,7 @@ namespace Carpooling.Controllers
             }
             var user = await userService.GetByIdAsync(id);
             var feedbacks = await feedbackService.GetAllAsync();
-            var passengerFeedbacks = feedbacks.Where(x => x.DriverId == id);
+            var passengerFeedbacks = feedbacks.Where(x => x.ReceiverId == id);
             
           //  var currentUser = new User();
 

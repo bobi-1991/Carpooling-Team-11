@@ -4,10 +4,9 @@
 
 @{
     ViewData["Title"] = "Driver Info";
-    decimal? driverRating = 0;
-    int countForDriverRating = 0;
-    decimal? passengerRating = 0;
-    int countForPassengerRating = 0;
+    decimal? receivedFeedbacksRating = 0;
+    int countForReceivedFeedbacks = 0;
+
 }
 
 <style>
@@ -27,40 +26,27 @@
         color: yellow;
     }
 </style>
-@foreach(var item in Model.DriverFeedbacks)
+@foreach(var item in Model.ReceivedFeedbacks)
 {
-    countForDriverRating=countForDriverRating+1;
-    driverRating = driverRating + item.Rating;
-}
-@foreach(var item in Model.FeedbacksAsPessanger)
-{
-    countForPassengerRating = countForPassengerRating + 1;
-    passengerRating = passengerRating + item.Rating;
+    countForReceivedFeedbacks=countForReceivedFeedbacks+1;
+    receivedFeedbacksRating = receivedFeedbacksRating + item.Rating;
 }
 <div>
     <h2>User, @Model.Username!</h2>
     <h5>Profile Details:</h5>
     <br>
-    @if(driverRating == 0)
+    @if(receivedFeedbacksRating == 0)
     {
         <p><i class="fas fa-star"></i> Driver Rating: No rating yet</p>
     }
     else
     {
-        driverRating = driverRating / countForDriverRating;
-        <p><i class="fas fa-star"></i> Driver Rating: @string.Format("{0:0.00}", driverRating)</p>
+        receivedFeedbacksRating = receivedFeedbacksRating / countForReceivedFeedbacks;
+        <p><i class="fas fa-star"></i> Driver Rating: @string.Format("{0:0.00}", receivedFeedbacksRating)</p>
     }
-    @if (passengerRating == 0)
-    {
-        <p><i class="fas fa-star"></i> Passenger Rating: No rating yet</p>
-    }
-    else
-    {
-        passengerRating = passengerRating / countForPassengerRating;
-        <p><i class="fas fa-star"></i> Passenger Rating: @string.Format("{0:0.00}", passengerRating)</p>
-    }
-    <p><i class="fas fa-comments"></i> Driver Feedbacks: @Model.DriverFeedbacks.Count()</p>
-    <p><i class="fas fa-comments"></i> Passenger Feedbacks: @Model.FeedbacksAsPessanger.Count()</p>
+
+    <p><i class="fas fa-comments"></i> Driver Feedbacks: @Model.ReceivedFeedbacks.Count()</p>
+    <p><i class="fas fa-comments"></i> Passenger Feedbacks: @Model.GivenFeedbacks.Count()</p>
 
     <div class="car-container">
         @foreach (var car in Model.Cars)
@@ -78,30 +64,11 @@
     </div>
     <br>
     <hr>
-    @foreach (var feedback in Model.DriverFeedbacks)
+    @foreach (var feedback in Model.ReceivedFeedbacks)
     {
         <div class="feedback-container">
             <div class="feedback-comment">
-                From Passenger: @feedback.Passenger.UserName - feedback based on realised ride:
-                <div class="feedback-rating">
-                    <p class="feedback-rating-value">
-                        @for (int i = 0; i < 5; i++)
-                        {
-                            <i class="@(i < feedback.Rating ? "fas" : "far") fa-star"></i>
-                        }
-                    </p>
-                </div>
-            </div>
-            <p>@feedback.Comment</p>
-            <p class="feedback-date">@feedback.CreatedOn.ToString("dd. MMM. yyyy.")</p>
-        </div>
-        <hr />
-    }
-    @foreach (var feedback in Model.FeedbacksAsPessanger)
-    {
-        <div class="feedback-container">
-            <div class="feedback-comment">
-                From Driver: @feedback.Driver.UserName - feedback based on realised ride:
+                From Passenger: @feedback.Giver.UserName - feedback based on realised ride:
                 <div class="feedback-rating">
                     <p class="feedback-rating-value">
                         @for (int i = 0; i < 5; i++)

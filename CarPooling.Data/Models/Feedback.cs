@@ -11,19 +11,19 @@ namespace CarPooling.Data.Models
 
         // Foreign key for Passenger
         [JsonIgnore]
-        public string PassengerId { get; set; }
+        public string GiverId { get; set; }
 
         // Navigation property for Passenger
         [JsonIgnore]
-        public User Passenger { get; set; }
+        public User Giver { get; set; }
 
         // Foreign key for Driver
         [JsonIgnore]
-        public string DriverId { get; set; }
+        public string ReceiverId { get; set; }
 
         // Navigation property for Driver
         [JsonIgnore]
-        public User Driver { get; set; }
+        public User Receiver { get; set; }
 
         // Navigation property for TravelId
         [JsonIgnore]

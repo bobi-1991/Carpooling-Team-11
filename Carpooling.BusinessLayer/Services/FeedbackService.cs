@@ -34,17 +34,21 @@ namespace Carpooling.BusinessLayer.Services
                 throw new UnauthorizedOperationException("Feedback can only be left on completed trips!");
             }
 
-            feedback.Passenger = user;
-            feedback.PassengerId = user.Id;
+            feedback.Giver = user;
+            feedback.GiverId = user.Id;
 
             return await _feedbackRepository.CreateAsync(feedback);
         }
 
-        public async Task<Feedback> CreateMVCAsync(Feedback feedback)
+        public async Task<Feedback> CreateMVCAsync(Feedback feedback, User user)
         {
+            if (user.IsBlocked)
+            {
+                throw new UnauthorizedOperationException("Only non-blocked user can make feedbacks!");
+            }
             return await _feedbackRepository.CreateAsync(feedback);
         }
-
+        
         public async Task<Feedback> DeleteAsync(int id, User user)
         {
             Feedback feedbackToDelete = await GetByIdAsync(id);
@@ -55,7 +59,7 @@ namespace Carpooling.BusinessLayer.Services
                 throw new UnauthorizedOperationException("You do not have permission to delete this feedback!");
             }
 
-            if (feedbackToDelete.PassengerId != user.Id && !roles.Contains("Administrator"))
+            if (feedbackToDelete.GiverId != user.Id && !roles.Contains("Administrator"))
             {
                 throw new UnauthorizedOperationException("You do not have permission to delete this feedback!");
             }
@@ -84,7 +88,7 @@ namespace Carpooling.BusinessLayer.Services
                 throw new UnauthorizedOperationException("You do not have permission to delete this feedback!");
             }
 
-            if (feedbackToUpdate.PassengerId != user.Id && !roles.Contains("Administrator"))
+            if (feedbackToUpdate.GiverId != user.Id && !roles.Contains("Administrator"))
             {
                 throw new UnauthorizedOperationException("You do not have permission to delete this feedback!");
             }

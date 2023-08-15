@@ -16,14 +16,14 @@ namespace CarPooling.Data.Configurations
             //builder.Property(f => f.Comment).HasMaxLength(200);
 
             //Relations
-            builder.HasOne(f => f.Passenger)
-                .WithMany(passenger => passenger.PassengerFeedbacks)
-                .HasForeignKey(f => f.PassengerId)
+            builder.HasOne(f => f.Giver)
+                .WithMany(passenger => passenger.ReceivedFeedbacks)
+                .HasForeignKey(f => f.GiverId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(f => f.Driver)
-                .WithMany(driver => driver.DriverFeedbacks)
-                .HasForeignKey(f => f.DriverId)
+            builder.HasOne(f => f.Receiver)
+                .WithMany(driver => driver.GivenFeedbacks)
+                .HasForeignKey(f => f.ReceiverId)
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(f => f.Travel)

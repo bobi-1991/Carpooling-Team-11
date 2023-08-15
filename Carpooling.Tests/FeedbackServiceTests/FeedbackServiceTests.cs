@@ -50,7 +50,7 @@ namespace Carpooling.Tests.FeedbackServiceTests
         {
 
             //Arrange
-            var feedback = new Feedback { Passenger = new User { Id = "123" } };
+            var feedback = new Feedback { Giver = new User { Id = "123" } };
 
             travelRepositoryMock
                 .Setup(x => x.GetByIdAsync(It.IsAny<int>()))
@@ -70,7 +70,7 @@ namespace Carpooling.Tests.FeedbackServiceTests
         public async Task CreateAsync_WhenTravelNotCompleted_ShouldThrow()
         {
             //Arrange
-            var feedback = new Feedback { Passenger = new User { Id = "123" } };
+            var feedback = new Feedback { Giver = new User { Id = "123" } };
 
             travelRepositoryMock
                 .Setup(x => x.GetByIdAsync(It.IsAny<int>()))
@@ -91,7 +91,7 @@ namespace Carpooling.Tests.FeedbackServiceTests
         {
 
             //Arrange
-            var feedback = new Feedback { Passenger = new User { Id = "123" } };
+            var feedback = new Feedback { Giver = new User { Id = "123" } };
 
             //Act
             var exception = await Assert.ThrowsExceptionAsync<UnauthorizedOperationException>(
@@ -133,7 +133,7 @@ namespace Carpooling.Tests.FeedbackServiceTests
             //Arrange
             feedbackRepositoryMock
                 .Setup(x => x.GetByIdAsync(It.IsAny<int>()))
-                .Returns(Task.FromResult(new Feedback { Passenger = new User { Id = "123" }, PassengerId = "123" }));
+                .Returns(Task.FromResult(new Feedback { Giver = new User { Id = "123" }, GiverId = "123" }));
 
             feedbackRepositoryMock
                 .Setup(x => x.DeleteAsync(It.IsAny<int>()))
@@ -164,7 +164,7 @@ namespace Carpooling.Tests.FeedbackServiceTests
             //Arrange
             feedbackRepositoryMock
                 .Setup(x => x.GetByIdAsync(It.IsAny<int>()))
-                .Returns(Task.FromResult(new Feedback { Passenger = new User { Id = "123" }, PassengerId = "123" }));
+                .Returns(Task.FromResult(new Feedback { Giver = new User { Id = "123" }, GiverId = "123" }));
 
             feedbackRepositoryMock
                 .Setup(x => x.DeleteAsync(It.IsAny<int>()))
@@ -192,7 +192,7 @@ namespace Carpooling.Tests.FeedbackServiceTests
             //Arrange
             feedbackRepositoryMock
                 .Setup(x => x.GetByIdAsync(It.IsAny<int>()))
-                .Returns(Task.FromResult(new Feedback { Passenger = new User { Id = "12" }, PassengerId = "12" }));
+                .Returns(Task.FromResult(new Feedback { Giver = new User { Id = "12" }, GiverId = "12" }));
 
             feedbackRepositoryMock
                 .Setup(x => x.DeleteAsync(It.IsAny<int>()))
@@ -220,7 +220,7 @@ namespace Carpooling.Tests.FeedbackServiceTests
             //Arrange
             feedbackRepositoryMock
                 .Setup(x => x.GetByIdAsync(It.IsAny<int>()))
-                .Returns(Task.FromResult(new Feedback { Passenger = new User { Id = "12" }, PassengerId = "12" }));
+                .Returns(Task.FromResult(new Feedback { Giver = new User { Id = "12" }, GiverId = "12" }));
 
             feedbackRepositoryMock
                 .Setup(x => x.DeleteAsync(It.IsAny<int>()))
@@ -251,7 +251,7 @@ namespace Carpooling.Tests.FeedbackServiceTests
             //Arrange
             feedbackRepositoryMock
                 .Setup(x => x.GetByIdAsync(It.IsAny<int>()))
-                .Returns(Task.FromResult(new Feedback { Passenger = new User { Id = "123" }, PassengerId = "123" }));
+                .Returns(Task.FromResult(new Feedback { Giver = new User { Id = "123" }, GiverId = "123" }));
 
             feedbackRepositoryMock
                 .Setup(x => x.UpdateAsync(It.IsAny<int>(), It.IsAny<Feedback>()))
@@ -283,7 +283,7 @@ namespace Carpooling.Tests.FeedbackServiceTests
             //Arrange
             feedbackRepositoryMock
                 .Setup(x => x.GetByIdAsync(It.IsAny<int>()))
-                .Returns(Task.FromResult(new Feedback { Passenger = new User { Id = "123" }, PassengerId = "123" }));
+                .Returns(Task.FromResult(new Feedback { Giver = new User { Id = "123" }, GiverId = "123" }));
 
             feedbackRepositoryMock
                 .Setup(x => x.UpdateAsync(It.IsAny<int>(), It.IsAny<Feedback>()))
@@ -312,7 +312,7 @@ namespace Carpooling.Tests.FeedbackServiceTests
             //Arrange
             feedbackRepositoryMock
                 .Setup(x => x.GetByIdAsync(It.IsAny<int>()))
-                .Returns(Task.FromResult(new Feedback { Passenger = new User { Id = "12" }, PassengerId = "12" }));
+                .Returns(Task.FromResult(new Feedback { Giver = new User { Id = "12" }, GiverId = "12" }));
 
             feedbackRepositoryMock
                 .Setup(x => x.UpdateAsync(It.IsAny<int>(), It.IsAny<Feedback>()))
@@ -341,7 +341,7 @@ namespace Carpooling.Tests.FeedbackServiceTests
             //Arrange
             feedbackRepositoryMock
                 .Setup(x => x.GetByIdAsync(It.IsAny<int>()))
-                .Returns(Task.FromResult(new Feedback { Passenger = new User { Id = "12" }, PassengerId = "12" }));
+                .Returns(Task.FromResult(new Feedback { Giver = new User { Id = "12" }, GiverId = "12" }));
 
             feedbackRepositoryMock
                 .Setup(x => x.UpdateAsync(It.IsAny<int>(), It.IsAny<Feedback>()))
@@ -370,7 +370,7 @@ namespace Carpooling.Tests.FeedbackServiceTests
         public async Task CreateMVCAsync_ShouldInvoke()
         {
             //Act
-            var result = sut.CreateMVCAsync(It.IsAny<Feedback>());
+            var result = sut.CreateMVCAsync(It.IsAny<Feedback>(), It.IsAny<User>());
 
             //Verify
             feedbackRepositoryMock.Verify(x => x.CreateAsync(It.IsAny<Feedback>()), Times.Once);

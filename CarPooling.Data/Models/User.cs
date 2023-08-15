@@ -25,8 +25,8 @@ namespace CarPooling.Data.Models
         public int? AddressId { get; set; }
         public Address? Address { get; set; }
         
-        public ICollection<Feedback>? PassengerFeedbacks { get; set; } = new List<Feedback>();
-        public ICollection<Feedback>? DriverFeedbacks { get; set; } = new List<Feedback>();
+        public ICollection<Feedback>? ReceivedFeedbacks { get; set; } = new List<Feedback>();
+        public ICollection<Feedback>? GivenFeedbacks { get; set; } = new List<Feedback>();
         public ICollection<TripRequest>? PassengerTripRequests { get; set; } = new List<TripRequest>();
         public ICollection<TripRequest>? DriverTripRequests { get; set; } = new List<TripRequest>();
         public ICollection<Travel>? TravelHistory { get; set; } = new List<Travel>();

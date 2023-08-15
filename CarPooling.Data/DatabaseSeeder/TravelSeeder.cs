@@ -217,7 +217,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     AvailableSeats = 2,
                     Passengers = new List<User> { passenger1, passenger2 },
                     IsCompleted = false,
-                    Feedbacks = new List<Feedback> { new Feedback { PassengerId = passenger1.Id, Passenger = passenger2, DriverId = driver.Id, Rating = 5, Comment = "It was fine." } }
+                    Feedbacks = new List<Feedback> { new Feedback { GiverId = passenger1.Id, Giver = passenger2, ReceiverId = driver.Id, Rating = 5, Comment = "It was fine." } }
                 };
 
                 var travel2 = new Travel
@@ -234,7 +234,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     AvailableSeats = 2,
                     Passengers = new List<User> { passenger3, passenger4 },
                     IsCompleted = false,
-                    Feedbacks = new List<Feedback> { new Feedback { PassengerId = passenger3.Id, Passenger = passenger4, DriverId = driver2.Id, Rating = 5, Comment = "It was fine." } }
+                    Feedbacks = new List<Feedback> { new Feedback { GiverId = passenger3.Id, Giver = passenger4, ReceiverId = driver2.Id, Rating = 5, Comment = "It was fine." } }
                 };
 
                 var travel3 = new Travel
@@ -251,7 +251,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     AvailableSeats = 2,
                     Passengers = new List<User> { passenger5, passenger6 },
                     IsCompleted = false,
-                    Feedbacks = new List<Feedback> { new Feedback { PassengerId = passenger5.Id, Passenger = passenger6, DriverId = driver3.Id, Rating = 5, Comment = "It was fine." } }
+                    Feedbacks = new List<Feedback> { new Feedback { GiverId = passenger5.Id, Giver = passenger6, ReceiverId = driver3.Id, Rating = 5, Comment = "It was fine." } }
                 };
 
                 var travel4 = new Travel
@@ -268,7 +268,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     AvailableSeats = 2,
                     Passengers = new List<User> { passenger7, passenger8 },
                     IsCompleted = false,
-                    Feedbacks = new List<Feedback> { new Feedback { PassengerId = passenger7.Id, Passenger = passenger8, DriverId = driver4.Id, Rating = 5, Comment = "It was fine." } }
+                    Feedbacks = new List<Feedback> { new Feedback { GiverId = passenger7.Id, Giver = passenger8, ReceiverId = driver4.Id, Rating = 5, Comment = "It was fine." } }
                 };
 
                 var travel5 = new Travel
@@ -285,7 +285,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     AvailableSeats = 2,
                     Passengers = new List<User> { passenger9, passenger10 },
                     IsCompleted = false,
-                    Feedbacks = new List<Feedback> { new Feedback { PassengerId = passenger9.Id, Passenger = passenger10, DriverId = driver5.Id, Rating = 5, Comment = "It was fine." } }
+                    Feedbacks = new List<Feedback> { new Feedback { GiverId = passenger9.Id, Giver = passenger10, ReceiverId = driver5.Id, Rating = 5, Comment = "It was fine." } }
                 };
 
                 var travel6 = new Travel
@@ -302,7 +302,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     AvailableSeats = 3,
                     Passengers = new List<User> { passenger11},
                     IsCompleted = false,
-                    Feedbacks = new List<Feedback> { new Feedback { PassengerId = passenger11.Id,  DriverId = driver6.Id, Rating = 5, Comment = "It was fine." } }
+                    Feedbacks = new List<Feedback> { new Feedback { GiverId = passenger11.Id,  ReceiverId = driver6.Id, Rating = 5, Comment = "It was fine." } }
                 };
 
                 var travel7 = new Travel
@@ -319,7 +319,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     AvailableSeats = 2,
                     Passengers = new List<User> { passenger1, passenger2 },
                     IsCompleted = false,
-                    Feedbacks = new List<Feedback> { new Feedback { PassengerId = passenger1.Id, Passenger = passenger2, DriverId = driver6.Id, Rating = 5, Comment = "It was fine." } }
+                    Feedbacks = new List<Feedback> { new Feedback { GiverId = passenger1.Id, Giver = passenger2, ReceiverId = driver6.Id, Rating = 5, Comment = "It was fine." } }
                 };
 
                 var travel8 = new Travel
@@ -336,7 +336,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     AvailableSeats = 4,
                     Passengers = new List<User>(),
                     IsCompleted = false,
-                    Feedbacks = new List<Feedback> { new Feedback { PassengerId = passenger1.Id, Passenger = passenger1, DriverId = driver.Id, Rating = 5, Comment = "It was fine." } }
+                    Feedbacks = new List<Feedback> { new Feedback { GiverId = passenger1.Id, Giver = passenger1, ReceiverId = driver.Id, Rating = 5, Comment = "It was fine." } }
                 };
 
                 var travel9 = new Travel
@@ -353,7 +353,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     AvailableSeats = 2,
                     Passengers = new List<User> { passenger1, passenger2 },
                     IsCompleted = false,
-                    Feedbacks = new List<Feedback> { new Feedback { PassengerId = passenger1.Id, Passenger = passenger1, DriverId = driver.Id, Rating = 5, Comment = "It was fine." } }
+                    Feedbacks = new List<Feedback> { new Feedback { GiverId = passenger1.Id, Giver = passenger1, ReceiverId = driver.Id, Rating = 5, Comment = "It was fine." } }
                 };
 
                 var travel10 = new Travel
@@ -370,7 +370,7 @@ namespace CarPooling.Data.DatabaseSeeder
                     AvailableSeats = 2,
                     Passengers = new List<User> { passenger1, passenger2 },
                     IsCompleted = false,
-                    Feedbacks = new List<Feedback> { new Feedback { PassengerId = passenger1.Id, Passenger = passenger2, DriverId = driver.Id, Rating = 5, Comment = "It was fine." } }
+                    Feedbacks = new List<Feedback> { new Feedback { GiverId = passenger1.Id, Giver = passenger2, ReceiverId = driver.Id, Rating = 5, Comment = "It was fine." } }
                 };
 
                 if (_context.Travels.Count() == 0)

@@ -12,7 +12,7 @@ namespace Carpooling.BusinessLayer.Services.Contracts
         Task<List<Feedback>> GetAllAsync();
         Task<Feedback> GetByIdAsync(int id);
         Task<Feedback> CreateAsync(Feedback feedback, User user);
-        Task<Feedback> CreateMVCAsync(Feedback feedback);
+        Task<Feedback> CreateMVCAsync(Feedback feedback, User user);
         Task<Feedback> UpdateAsync(int id, User user, Feedback feedback);
         Task<Feedback> DeleteAsync(int id, User user);
     }

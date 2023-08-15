@@ -15,28 +15,46 @@ namespace CarPooling.Data.Repositories
     {
         private readonly CarPoolingDbContext _context;
         private readonly IUserRepository _userRepository;
-        private readonly UserManager<User> _userManager;
-        public FeedbackRepository(CarPoolingDbContext context, IUserRepository userRepository, UserManager<User> userManager)
+        public FeedbackRepository(CarPoolingDbContext context, IUserRepository userRepository)
         {
             _context = context;
             _userRepository = userRepository;
-            _userManager = userManager;
         }
 
         public async Task<Feedback> CreateAsync(Feedback feedback)
         {
             feedback.CreatedOn = DateTime.Now;
-            var passengerToGetFeedback = await _userRepository.GetByIdAsync(feedback.PassengerId);
-            var driverToMakeFeedback = await _userRepository.GetByIdAsync(feedback.DriverId);
+            var userToMakeFeedback = await _userRepository.GetByIdAsync(feedback.GiverId);
+            var userToReceiveFeedback = await _userRepository.GetByIdAsync(feedback.ReceiverId);
             
-            passengerToGetFeedback.PassengerFeedbacks.Add(feedback);
-            driverToMakeFeedback.DriverFeedbacks.Add(feedback);
+            userToMakeFeedback.GivenFeedbacks.Add(feedback);
+            userToReceiveFeedback.ReceivedFeedbacks.Add(feedback);
+
             await _context.Feedbacks.AddAsync(feedback);
             await _context.SaveChangesAsync();
 
             return feedback;
         }
 
+        public async Task<Feedback> CreateFeedbackForDriverAsync(Feedback feedback)
+        {
+            feedback.CreatedOn = DateTime.Now;
+
+            var passengerGivingFeedback = await _userRepository.GetByIdAsync(feedback.GiverId);
+            var driverToGetFeedback = await _userRepository.GetByIdAsync(feedback.ReceiverId);
+
+            driverToGetFeedback.GivenFeedbacks.Add(feedback);
+
+            await _context.Feedbacks.AddAsync(feedback);
+
+            if (passengerGivingFeedback.ReceivedFeedbacks.Contains(feedback))
+            {
+                passengerGivingFeedback.ReceivedFeedbacks.Remove(feedback);
+            }
+
+            await _context.SaveChangesAsync();
+            return feedback;
+        }
         public async Task<Feedback> DeleteAsync(int id)
         {
             Feedback feedbackToDelete = await GetByIdAsync(id);
@@ -53,8 +71,8 @@ namespace CarPooling.Data.Repositories
         {
             return await _context.Feedbacks
                 .Where(c => c.IsDeleted == false)
-                .Include(x => x.Driver)
-                .Include(x => x.Passenger)
+                .Include(x => x.Receiver)
+                .Include(x => x.Giver)
                 .ToListAsync();
         }
 

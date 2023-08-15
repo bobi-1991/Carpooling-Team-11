@@ -57,31 +57,19 @@ namespace Carpooling.Controllers
 
                 var travel = await travelService.GetTravelAsync(travelId);
                 var participant = await this.userService.GetUserByIdAsync(participantId);
-                if (travel.DriverId.Equals(user.Id))
+
+                var feedback = new Feedback
                 {
-                    var feedback = new Feedback
-                    {
-                        Rating = feedbackModel.Rating,
-                        Comment = feedbackModel.Comment,
-                        DriverId = user.Id,
-                        PassengerId = participant.Id,
-                        TravelId = travelId
-                    };
-                    _ = await this.feedbackService.CreateMVCAsync(feedback);
-                }
-                else
-                {
-                    var feedback = new Feedback
-                    {
-                        Rating = feedbackModel.Rating,
-                        Comment = feedbackModel.Comment,
-                        DriverId = participant.Id,
-                        PassengerId = user.Id,
-                        TravelId = travelId
-                    };
-                    _ = await this.feedbackService.CreateMVCAsync(feedback);
-                }
-    
+                    Rating = feedbackModel.Rating,
+                    Comment = feedbackModel.Comment,
+                    ReceiverId = participant.Id,
+                    GiverId = user.Id,
+                    TravelId = travelId
+                };
+
+                var feedbackGiver = await userManager.FindByIdAsync(user.Id);
+                _ = await this.feedbackService.CreateMVCAsync(feedback, feedbackGiver);
+
                 return RedirectToAction("MyTravels", "Travels");
             }
             catch (UnauthorizedOperationException ex)

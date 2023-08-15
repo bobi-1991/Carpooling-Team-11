@@ -301,8 +301,8 @@ namespace Carpooling.Controllers
                 }
                 var user = await userManager.Users.Include(x => x.TravelHistory).ThenInclude(x => x.Passengers)
                     .Include(x => x.PassengersTravelHistory)
-                    .Include(x => x.DriverFeedbacks)
-                    .Include(x => x.PassengerFeedbacks)
+                    .Include(x => x.GivenFeedbacks)
+                    .Include(x => x.ReceivedFeedbacks)
                        .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
 
                 var trips = new List<TravelViewResponseWithId>();

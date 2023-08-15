@@ -19,7 +19,7 @@
 <br>
 @if (Model is null || Model.Count() == 0)
 {
-    
+
     <h3> You currently have no trips yet.  </h3>
 
 }
@@ -103,23 +103,23 @@ else
                         <br>
                         @if (travel.DriverId.Equals(loggedUser.Id))
                         {
- 
+
                             @foreach (var participant in travel.Participants)
                             {
-                                var isLeftFeedbackForPassengerFeedbacks = false;
-                                
+                                var isLeftFeedbackForUserFeedbacks = false;
+
                                 <div class="participant">
                                     <p><i class="fas fa-user"></i> <span class="property">Participant:</span> @participant.UserName</p>
-                                    @foreach (var feedback in participant.PassengerFeedbacks)
+                                    @foreach (var feedback in participant.ReceivedFeedbacks)
                                     {
                                         if (feedback.TravelId == travel.Id)
                                         {
-                                            isLeftFeedbackForPassengerFeedbacks = true;
+                                            isLeftFeedbackForUserFeedbacks = true;
                                             break;
                                         }
                                     }
-                                    
-                                    @if (!isLeftFeedbackForPassengerFeedbacks)
+
+                                    @if (!isLeftFeedbackForUserFeedbacks)
                                     {
                                         <form asp-controller="Feedback" asp-action="Create" method="get">
                                             <input type="hidden" name="ParticipantId" value="@participant.Id">
@@ -133,22 +133,22 @@ else
                         }
                         else
                         {
-                            var isFeedbackLeftForDriverFeedbacks = false;
-                            var userDriver = await UserManager.FindByIdAsync(travel.DriverId);
-                            foreach (var feedback in userDriver.DriverFeedbacks)
-                            {
-                                if (feedback.TravelId == travel.Id)
-                                {
-                                    isFeedbackLeftForDriverFeedbacks = true;
-                                    break;
-                                }
-                            }
+                            var isLeftFeedbackForUser = false;
+                            var driver = await UserManager.FindByIdAsync(travel.DriverId);
                             <div class="participant">
-                                <p><i class="fas fa-user"></i> <span class="property">Participant:</span> @userDriver.UserName (Driver)</p>
-                                @if (!isFeedbackLeftForDriverFeedbacks)
+                                <p><i class="fas fa-user"></i> <span class="property">Driver:</span> @driver.UserName</p>
+                                @foreach (var feedback in driver.ReceivedFeedbacks)
+                                {
+                                    if (feedback.TravelId == travel.Id)
+                                    {
+                                        isLeftFeedbackForUser = true;
+                                        break;
+                                    }
+                                }
+                                @if (!isLeftFeedbackForUser)
                                 {
                                     <form asp-controller="Feedback" asp-action="Create" method="get">
-                                        <input type="hidden" name="ParticipantId" value="@userDriver.Id">
+                                        <input type="hidden" name="ParticipantId" value="@driver.Id">
                                         <input type="hidden" name="TravelId" value="@travel.Id">
                                         <button type="submit" class="submit-button">Leave Feedback</button>
                                     </form>
@@ -158,8 +158,6 @@ else
                     </div>
                 </div>
                 <br>
-
-
             }
         </div>
     }
