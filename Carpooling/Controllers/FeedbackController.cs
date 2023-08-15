@@ -16,15 +16,9 @@ namespace Carpooling.Controllers
     public class FeedbackController : Controller
     {
         private readonly IUserService userService;
-        //private readonly ICarService carService;
         private readonly IFeedbackService feedbackService;
-        //private readonly ITravelService travelService;
         private readonly UserManager<User> userManager;
         private readonly ITravelService travelService;
-        //private readonly IMapper mapper;
-        //private readonly CarPoolingDbContext dbContext;
-        //private readonly IMapService mapService;
-
         public FeedbackController(UserManager<User> userManager, IFeedbackService feedbackService, IUserService userService, ITravelService travelService)
         {
             this.userManager = userManager;
@@ -34,20 +28,9 @@ namespace Carpooling.Controllers
         }
 
 
-        //public string AuthorUsername { get; set; }
-        //public string DriverUsername { get; set; }
-        //public string Comment { get; set; }
-        //public int Rating { get; set; }
-        //public int TravelID { get; set; }
-
-
         [HttpGet]
         public async Task<IActionResult> Create(string participantId, int travelId)
         {
-            //var user = await userManager.Users.Include(c => c.Cars)
-            //    .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
-            //var participant = await this.userService.GetUserByIdAsync(participantId);
-
             var feedbackModel = new FeedbackViewModel();
             feedbackModel.ParticipantId = participantId;
             feedbackModel.TravelId = travelId;
@@ -99,7 +82,7 @@ namespace Carpooling.Controllers
                     _ = await this.feedbackService.CreateMVCAsync(feedback);
                 }
     
-                return RedirectToAction("MyTravels", "Personal");
+                return RedirectToAction("MyTravels", "Travels");
             }
             catch (UnauthorizedOperationException ex)
             {
@@ -122,49 +105,5 @@ namespace Carpooling.Controllers
 
         }
     }
-
-    //[HttpPost]
-    //public async Task<IActionResult> CreateFeedback(int travelId, string participantId)
-    //{
-    //    if (!User.Identity.IsAuthenticated)
-    //    {
-    //        return Challenge();
-    //    }
-
-    //    if (!this.ModelState.IsValid)
-    //    {
-    //        return this.RedirectToAction("MyTravels", "Personal");
-    //    }
-    //    try
-    //    {
-    //        var user = await userManager.Users.Include(c => c.Cars)
-    //            .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
-
-    //      //  this.feedbackService.CreateAsync();
-
-
-    //        return RedirectToAction("MyTravels", "Personal");
-
-    //    }
-    //    catch (UnauthorizedOperationException ex)
-    //    {
-    //        HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
-    //        this.ViewData["ErrorMessage"] = ex.Message;
-    //        return View("Error");
-    //    }
-    //    catch (EntityUnauthorizatedException ex)
-    //    {
-    //        HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
-    //        this.ViewData["ErrorMessage"] = ex.Message;
-    //        return View("Error");
-    //    }
-    //    catch (EntityNotFoundException ex)
-    //    {
-    //        HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-    //        this.ViewData["ErrorMessage"] = ex.Message;
-    //        return View("Error");
-    //    }
-    //}
-
 }
 

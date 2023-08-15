@@ -221,7 +221,7 @@ namespace Carpooling.Controllers
 
                 await this.travelService.SetTravelToIsCompleteMVCAsync(user, travelId);
 
-                return RedirectToAction("MyTravels", "Personal", new { id = user.Id });
+                return RedirectToAction("MyTravels", "Travels", new { id = user.Id });
             }
             catch (EntityUnauthorizatedException ex)
             {
@@ -264,7 +264,7 @@ namespace Carpooling.Controllers
 
                 await this.travelService.DeleteMVCAsync(user, travelId);
 
-                return RedirectToAction("MyTravels", "Personal");
+                return RedirectToAction("MyTravels", "Travels");
             }
             catch (EntityUnauthorizatedException ex)
             {
@@ -285,7 +285,99 @@ namespace Carpooling.Controllers
                 return View("Error");
             }
 
+        }
+        [HttpGet]
+        public async Task<IActionResult> MyTravels()
+        {
+            if (!User.Identity.IsAuthenticated)
+            {
+                return Challenge();
+            }
+            try
+            {
+                if (!User.Identity.IsAuthenticated)
+                {
+                    return Challenge();
+                }
+                var user = await userManager.Users.Include(x => x.TravelHistory).ThenInclude(x => x.Passengers)
+                    .Include(x => x.PassengersTravelHistory)
+                    .Include(x => x.DriverFeedbacks)
+                    .Include(x => x.PassengerFeedbacks)
+                       .SingleAsync(x => x.UserName.Equals(User.Identity.Name));
 
+                var trips = new List<TravelViewResponseWithId>();
+                var history = new List<Travel>();
+                var driverHistory = user.TravelHistory.ToList();
+                var passengerHistory = user.PassengersTravelHistory.ToList();
+
+                if (driverHistory.Count() != 0)
+                {
+                    history = user.TravelHistory.ToList();
+
+                    foreach (var travel in history)
+                    {
+                        var isCompleted = travel.IsCompleted;
+                        var trip = await this.travelService.GetByIdAsync(travel.Id);
+                        var passengers = travel.Passengers;
+
+                        trips.Add(new TravelViewResponseWithId
+                        {
+                            Id = travel.Id,
+                            DriverId = travel.DriverId,
+                            StartLocationName = trip.StartLocationName,
+                            DestinationName = trip.DestinationName,
+                            DepartureTime = trip.DepartureTime,
+                            ArrivalTime = trip.ArrivalTime,
+                            AvailableSeats = trip.AvailableSeats,
+                            IsCompleted = (bool)isCompleted,
+                            CarRegistration = trip.CarRegistration,
+                            Participants = passengers
+                        });
+                    }
+                }
+                if (passengerHistory.Count() != 0)
+                {
+                    history = user.PassengersTravelHistory.ToList();
+
+                    foreach (var travel in history)
+                    {
+                        var isCompleted = travel.IsCompleted;
+                        var trip = await this.travelService.GetByIdAsync(travel.Id);
+
+                        var drivers = new List<User>();
+                        var driver = await this.userService.GetUserByIdAsync(travel.DriverId);
+                        drivers.Add(driver);
+
+                        trips.Add(new TravelViewResponseWithId
+                        {
+                            Id = travel.Id,
+                            DriverId = travel.DriverId,
+                            StartLocationName = trip.StartLocationName,
+                            DestinationName = trip.DestinationName,
+                            DepartureTime = trip.DepartureTime,
+                            ArrivalTime = trip.ArrivalTime,
+                            AvailableSeats = trip.AvailableSeats,
+                            IsCompleted = (bool)isCompleted,
+                            CarRegistration = trip.CarRegistration,
+                            Participants = drivers
+                        });
+                    }
+                }
+
+                return this.View(trips);
+            }
+            catch (UnauthorizedOperationException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status403Forbidden;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
+            catch (EntityNotFoundException ex)
+            {
+                HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                this.ViewData["ErrorMessage"] = ex.Message;
+                return View("Error");
+            }
         }
     }
 }

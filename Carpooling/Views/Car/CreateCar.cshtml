@@ -39,7 +39,7 @@
     </div>
 }
 
-<form asp-action="CreateCar" method="post">
+<form asp-controller="Car" asp-action="CreateCar" method="post">
     <div class="form-group">
         <label asp-for="Registration" class="control-label"></label>
         <input asp-for="Registration" class="form-control" />

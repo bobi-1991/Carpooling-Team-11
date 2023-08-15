@@ -35,13 +35,13 @@ else
                 <p><i class="fas fa-info-circle"></i> <span class="property">Status :</span> @request.Status.ToString()</p>
             </div>
             <div>
-                <form asp-controller="Personal" asp-action="EditTripRequest" method="post">
+                <form asp-controller="TripRequest" asp-action="EditTripRequest" method="post">
                     <input type="hidden" name="tripRequestId" value="@request.Id">
                     <button type="submit" name="response" value="approve">Approve</button>
                 </form>
             </div>
             <div>
-                <form asp-controller="Personal" asp-action="EditTripRequest" method="post">
+                <form asp-controller="TripRequest" asp-action="EditTripRequest" method="post">
                     <input type="hidden" name="tripRequestId" value="@request.Id">
                     <button type="submit" name="response" value="decline">Decline</button>
                 </form>

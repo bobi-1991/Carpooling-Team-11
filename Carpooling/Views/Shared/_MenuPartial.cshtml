@@ -39,18 +39,18 @@
 
 <div class="user-menu">
     <ul>
-        <li><a asp-controller="Personal" asp-action="MyTravels">My Travels</a></li>
-        <li><a asp-controller="Personal" asp-action="MyBookings">My Bookings</a></li>
+        <li><a asp-controller="Travels" asp-action="MyTravels">My Travels</a></li>
+        <li><a asp-controller="TripRequest" asp-action="MyBookings">My Bookings</a></li>
         @if (User.IsInRole("Driver") || User.IsInRole("Administrator"))
         {
-            <li><a asp-controller="Personal" asp-action="MyRequests">My Requests</a></li>
+            <li><a asp-controller="TripRequest" asp-action="MyRequests">My Requests</a></li>
         }
         @if (User.IsInRole("Driver") || User.IsInRole("Administrator"))
         {
-            <li><a asp-controller="Personal" asp-action="MyPassengers">My Passengers</a></li>
+            <li><a asp-controller="TripRequest" asp-action="MyPassengers">My Passengers</a></li>
         }
-        <li><a asp-controller="Personal" asp-action="MyCars">My Vehicles</a></li>
+        <li><a asp-controller="Car" asp-action="MyCars">My Vehicles</a></li>
         <li><a asp-controller="Travels" asp-action="Create">Create Travel</a></li>
-        <li><a asp-controller="Personal" asp-action="CreateCar">Create a Car</a></li>
+        <li><a asp-controller="Car" asp-action="CreateCar">Create a Car</a></li>
     </ul>
 </div>

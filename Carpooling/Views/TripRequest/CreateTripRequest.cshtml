@@ -14,7 +14,7 @@
     <p>Are you sure you want to make this request?</p>
 
 
-    <form asp-controller="Personal" asp-action="CreateTripRequest" method="post">
+    <form asp-controller="TripRequest" asp-action="CreateTripRequest" method="post">
         @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.TravelId)
         @Html.HiddenFor(model => model.Status)

@@ -40,7 +40,7 @@
             {
                 @if (this.Model.AvailableSeats > 0)
                 {
-                    <a asp-controller="Personal" asp-action="CreateTripRequest" asp-route-id="@this.ViewBag.id" class="btn btn-success">Create Trip Request</a>
+                    <a asp-controller="TripRequest" asp-action="CreateTripRequest" asp-route-id="@this.ViewBag.id" class="btn btn-success">Create Trip Request</a>
                 }
                 else
                 {
