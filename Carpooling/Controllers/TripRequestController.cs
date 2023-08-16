@@ -128,10 +128,7 @@ namespace Carpooling.Controllers
 
                 IEnumerable<TripRequestViewResponseModel> result = await this.tripRequestService.SeeAllHisDriverRequestsMVCAsync(user, user.Id);
 
-
                 return this.View(result);
-
-
             }
             catch (UnauthorizedOperationException ex)
             {

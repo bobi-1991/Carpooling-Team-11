@@ -73,6 +73,10 @@ namespace Carpooling.Controllers.ApiControllers
                 return Ok(await tripRequestService.CreateAsync(loggedUser, tripRequest));
 
             }
+            catch(UnauthorizedOperationException e)
+            {
+                return Unauthorized(e.Message);
+            }
             catch (EntityUnauthorizatedException e)
             {
                 return Unauthorized(e.Message);
@@ -121,6 +125,10 @@ namespace Carpooling.Controllers.ApiControllers
                 var loggedUser = await authValidator.ValidateCredentialAsync(credentials);
                 return Ok(await tripRequestService.EditRequestAsync(loggedUser, id, answer));
 
+            }
+            catch(UnauthorizedOperationException e)
+            {
+                return Unauthorized(e.Message);
             }
             catch (EntityUnauthorizatedException e)
             {
