@@ -46,17 +46,11 @@ namespace Carpooling.BusinessLayer.Validation
 
         public async Task<bool> ValidateIsNewTravelPossible(string driveId, DateTime currentDeparture, DateTime currentArrival)
         {
-            var travels = await this.travelRepository.GetAllAsync();
 
-            //   var travelsHistoryOfTheDriver = travels.Where(x => x.DriverId == driveId);
             var activeTravels = await this.dbContext.Travels
-                  //.Include(x => x.DepartureTime)
-                  //.Include(x => x.ArrivalTime)
-                  .Include(x => x.Car)
-                  .Where(x => x.DriverId == driveId && !x.IsDeleted && x.IsCompleted == false)
-                  .ToListAsync();
-
-            //var activeTravels = travels.Where(x => x.DriverId == driveId).Where(x => !x.IsDeleted && x.IsCompleted == false);
+                        .Include(x => x.Car)
+                        .Where(x => x.DriverId == driveId && !x.IsDeleted && x.IsCompleted == false)
+                        .ToListAsync();
 
             if (activeTravels.Any(t => t.DepartureTime <= currentArrival && t.ArrivalTime >= currentDeparture))
             {
