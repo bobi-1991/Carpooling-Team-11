@@ -20,8 +20,6 @@ namespace Carpooling.BusinessLayer.Services
 
         public async Task<(double travelDistance, double travelDuration)> GetDirection(string originCity, string destinationCity, string country, DateTime departureTime)
         {
-            //var startLocaionUrl = GetLocationUrl("Bulgaria", "Sofia");
-            //var endLocationUrl = GetLocationUrl("Bulgaria", "Varna");
             var startLocaionUrl = GetLocationUrl(country, originCity);
             var endLocationUrl = GetLocationUrl(country, destinationCity);
 

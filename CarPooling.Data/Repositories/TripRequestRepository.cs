@@ -23,10 +23,6 @@ namespace CarPooling.Data.Repositories
 
         public async Task<IEnumerable<TripRequest>> GetAllAsync()
         {
-            //if (dbContext.TripRequests.Count() == 0)
-            //{
-            //    throw new EmptyListException("No requests yet!");
-            //}
             var tripRequests = await dbContext.TripRequests
                 .Where(x => !x.IsDeleted)
                 .Include(x => x.Travel)
@@ -37,16 +33,6 @@ namespace CarPooling.Data.Repositories
 
             return tripRequests;
         }
-
-        public async Task<IEnumerable<TripRequest>> GetAllDriverRequestsAsync()
-        {
-            throw new NotImplementedException();
-        }
-        public async Task<IEnumerable<TripRequest>> GetAllPassengerRequestsAsync()
-        {
-            throw new NotImplementedException();
-        }
-
 
         public async Task<TripRequest> GetByIdAsync(int id)
         {
@@ -80,19 +66,6 @@ namespace CarPooling.Data.Repositories
             await dbContext.SaveChangesAsync();
 
             return (tripRequest);
-
-            //var tripRequest = new TripRequest(passengerId, travelId);
-
-            //var driver = this.dbContext.Users.FirstOrDefault(x => x.Id == driverId);
-            //var passenger = this.dbContext.Users.FirstOrDefault(x => x.Id == passengerId);
-
-            //passenger.PassengerTripRequests.Add(tripRequest);
-            //driver.DriverTripRequests.Add(tripRequest);
-
-            //await this.dbContext.TripRequests.AddAsync(tripRequest);
-            //await dbContext.SaveChangesAsync();
-
-            //return (tripRequest);
         }
         public async Task<string> EditRequestAsync(TripRequest tripRequestToUpdate, string answer)
         {
@@ -159,11 +132,7 @@ namespace CarPooling.Data.Repositories
                           .ThenInclude(x => x.StartLocation)
                      .Include(x => x.Passenger)
                           .ThenInclude(x => x.Address)
-
-                          //NEW
                      .Include(x => x.Passenger)
-              //            .ThenInclude(x => x.Id)
-
                      .Where(x => x.DriverId == userId)
                      .ToListAsync() ?? Enumerable.Empty<TripRequest>();
 
@@ -206,33 +175,7 @@ namespace CarPooling.Data.Repositories
                      .ThenInclude(x => x.Address)
              .Where(x => x.PassengerId == passengerId)
              .ToListAsync() ?? Enumerable.Empty<TripRequest>();
-
-
-
-
-
-
-
-
-
-
-            //var tripRequests = await dbContext.TripRequests
-            //     .Where(x => !x.IsDeleted)
-            //     .Include(x => x.Travel)
-            //          .ThenInclude (x => x.EndLocation)
-
-
-
-            //     .Include(x => x.Driver)
-            //     .Include(x => x.Travel)
-            //          .ThenInclude(x => x.StartLocation)
-            //     .Include(x => x.Passenger)
-            //          .ThenInclude(x => x.Address)
-            //     .Where(x => x.PassengerId == passengerId)
-            //     .ToListAsync() ?? Enumerable.Empty<TripRequest>();
-
             return tripRequests;
-            //return tripRequests.Where(x => !(x.Status.ToString().ToLower() == "declined"));
         }
     }
 }

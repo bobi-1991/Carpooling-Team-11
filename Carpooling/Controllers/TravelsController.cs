@@ -1,18 +1,14 @@
 ﻿using AutoMapper;
 using Carpooling.BusinessLayer.Exceptions;
-using Carpooling.BusinessLayer.Services;
 using Carpooling.BusinessLayer.Services.Contracts;
-using Carpooling.BusinessLayer.Validation;
 using Carpooling.Models;
 using Carpooling.PaginationHelper;
 using CarPooling.Data.Data;
 using CarPooling.Data.Exceptions;
 using CarPooling.Data.Models;
-using CarPooling.Data.Models.Pagination;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Cryptography.X509Certificates;
 
 namespace Carpooling.Controllers
 {
@@ -39,7 +35,6 @@ namespace Carpooling.Controllers
             this.mapService = mapService;
         }
 
-        
         [HttpGet]
         public async Task<IActionResult> Index(int? pg, string searchQuery, string sortBy)
         {

@@ -22,28 +22,14 @@ namespace CarPooling.Data.Repositories
 
         public async Task<IEnumerable<Travel>> GetAllAsync()
         {
-            //var result = await this.dbContext.Travels
-            //        .Include(x => x.Car)
-            //        .Include(x => x.Driver)
-            //        .Include(x => x.StartLocation)
-            //        .Include(x => x.EndLocation)
-            //        .Where(x => x.IsCompleted == false && !x.IsDeleted)
-            //        .ToListAsync();
-
-
                        var result = await this.dbContext.Travels
                .Include(x => x.Car)
                .Include(x => x.Driver)
                .Include(x => x.StartLocation)
                .Include(x => x.EndLocation)
-               .Include(x => x.Passengers) // Добавете този ред
+               .Include(x => x.Passengers) 
                .Where(x => x.IsCompleted == false && !x.IsDeleted)
                .ToListAsync();
-
-
-
-
-
 
             if (result.Count() == 0)
             {
@@ -60,7 +46,6 @@ namespace CarPooling.Data.Repositories
                   .ThenInclude(x => x.Country)
                .Include(x => x.EndLocation)
                     .ThenInclude(x => x.Country)
-               //  .Where(x => x.IsCompleted == false)
                .Where(x => !x.IsDeleted)
                .FirstOrDefaultAsync(x => x.Id == travelId);
 
@@ -78,9 +63,6 @@ namespace CarPooling.Data.Repositories
             travel.CreatedOn = DateTime.Now;
             travel.UpdatedOn = DateTime.Now;
 
-            // await this.dbContext.SaveChangesAsync();
-
-
             var driver = await this.userRepository.GetByIdAsync(travel.DriverId);
             driver.TravelHistory.Add(travel);
             dbContext.Update(driver);
@@ -94,7 +76,6 @@ namespace CarPooling.Data.Repositories
             var travelToDelete = await this.GetByIdAsync(travelId);
             var driver = await this.userRepository.GetByIdAsync(travelToDelete.DriverId);
 
-
             driver.TravelHistory.Remove(travelToDelete);
 
             this.dbContext.Update(driver);
@@ -102,11 +83,8 @@ namespace CarPooling.Data.Repositories
             travelToDelete.IsDeleted = true;
             travelToDelete.DeletedOn = DateTime.Now;
 
-            //NEW
             var tripRequests = await this.tripRequestRepository.GetAllAsync();
             var tripRequestsForDelete = tripRequests.Where(x => x.Travel.IsDeleted);
-
-
 
             foreach (var trip in tripRequestsForDelete)
             {
@@ -164,14 +142,10 @@ namespace CarPooling.Data.Repositories
               .FirstOrDefaultAsync(x => x.Id == passengerId);
 
             travel.Passengers.Add(passenger);
-            //NEW
             this.dbContext.Update(travel);
           await  this.dbContext.SaveChangesAsync();
 
             travel.AvailableSeats--;
-            //NEW
-            //May be wrong
-          //  passenger.PassengersTravelHistory.Add(travel);
             this.dbContext.Users.Update(passenger);
 
 
@@ -185,7 +159,6 @@ namespace CarPooling.Data.Repositories
              .Include(x => x.Car)
              .Include(x => x.StartLocation)
              .Include(x => x.EndLocation)
-             //      .Include(x => x.Passengers)
              .FirstOrDefaultAsync(x => x.Id == travelId);
 
             var passenger = await this.dbContext.Users
@@ -247,8 +220,6 @@ namespace CarPooling.Data.Repositories
 
         }
 
-        // FilterBy logic:
-
         public async Task<IQueryable<Travel>> GetAllToQueriable()
         {
             IQueryable<Travel> result = this.dbContext.Travels
@@ -273,10 +244,7 @@ namespace CarPooling.Data.Repositories
             {
                 travels = FilterByAvailableSeats(travels, (int)filter.AvailableSeats.Value);
             }
-            //            travels = FilterByAvailableSeats(travels, (int)filter.AvailableSeats);
             travels = SortBy(travels, filter.SortBy);
-
-
 
             int totalPages = (travels.Count() + 1) / filter.PageSize;
             var result = Paginate(travels, filter.PageNumber, filter.PageSize);
@@ -342,8 +310,5 @@ namespace CarPooling.Data.Repositories
                     return travels;
             }
         }
-
-
-
     }
 }
