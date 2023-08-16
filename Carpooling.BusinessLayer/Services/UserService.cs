@@ -60,7 +60,6 @@ namespace Carpooling.BusinessLayer.Services
                 0);
 
             return userResponse;
-            // return mapper.Map<UserResponse>(result);
         }
 
         public async Task<string> DeleteAsync(User loggedUser, string id)
@@ -91,8 +90,6 @@ namespace Carpooling.BusinessLayer.Services
                 x.Email,
                 x.AverageRating
                 ));
-
-            //return result.Select(x => mapper.Map<UserResponse>(x));
         }
         public async Task<IEnumerable<User>> GetAllUsersAsync()
         {
@@ -114,8 +111,6 @@ namespace Carpooling.BusinessLayer.Services
              user.UserName,
              user.Email,
              user.AverageRating);
-
-            // return this.mapper.Map<UserResponse>(await this.userRepository.GetByIdAsync(id));
         }
 
         public async Task<UserResponse> GetByUsernameAsync(string username)
@@ -128,8 +123,6 @@ namespace Carpooling.BusinessLayer.Services
                user.UserName,
                user.Email,
                user.AverageRating);
-
-            // return this.mapper.Map<UserResponse>(await this.userRepository.GetByUsernameAsync(username));
         }
 
         public async Task<IEnumerable<TravelResponse>> TravelHistoryAsync(User loggeduser, string userId)
@@ -172,9 +165,6 @@ namespace Carpooling.BusinessLayer.Services
             updatedUser.UserName,
             updatedUser.Email,
             updatedUser.AverageRating);
-
-            //await this._userManager.UpdateAsync(this.mapper.Map<User>(userUpdateDto));
-            //return this.mapper.Map<UserResponse>(this.userRepository.GetByIdAsync(id));
         }
         public async Task<string> BanUserById(string id)
         {

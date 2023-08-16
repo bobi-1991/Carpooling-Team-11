@@ -66,7 +66,6 @@ namespace CarPooling.Data.Repositories
         public async Task<User> GetByIdAsync(string id)
         {
             var user = dbContext.Users
-           //  .Include(x=>x.TravelHistory)
              .Where(x => !x.IsDeleted)
              .FirstOrDefault(x => x.Id == id);
 
@@ -169,36 +168,10 @@ namespace CarPooling.Data.Repositories
         }
         public async Task<IEnumerable<User>> GetTopTravelOrganizers(IEnumerable<User> users, int count)
         {
-
-
-            //var roles = dbContext.UserRoles
-            //          .Where(x => x.RoleId == "33638f41-f9ee-4617-870b-7ca60a7aaad0")
-            //          .Take(count)
-            //          .ToList();
-
-            //var users = new List<User>();
-
-            //foreach (var role in roles)
-            //{
-            //    users.Add(await GetByIdAsync(role.UserId));
-            //}
-
             return users.OrderByDescending(x => x.AverageRating);
         }
         public async Task<IEnumerable<User>> GetTopPassengers(IEnumerable<User> users, int count)
         {
-            //var roles = dbContext.UserRoles
-            //               .Where(x => x.RoleId == "270feac8-1029-4ec2-8332-a795a6e3b43e")
-            //               .Take(count)
-            //               .ToList();
-
-            //var users = new List<User>();
-
-            //foreach (var role in roles)
-            //{
-            //    users.Add(await GetByIdAsync(role.UserId));
-            //}
-
             return users.OrderByDescending(x => x.AverageRating);
         }
         public async Task ConvertToAdministrator(string id) 
@@ -210,8 +183,6 @@ namespace CarPooling.Data.Repositories
             await userManager.AddToRoleAsync(user, "Administrator");
 
             await dbContext.SaveChangesAsync();
-        }
-
-        
+        }      
     }
 }

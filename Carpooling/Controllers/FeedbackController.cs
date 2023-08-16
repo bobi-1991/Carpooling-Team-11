@@ -68,7 +68,7 @@ namespace Carpooling.Controllers
                 };
 
                 var feedbackGiver = await userManager.FindByIdAsync(user.Id);
-                _ = await this.feedbackService.CreateMVCAsync(feedback, feedbackGiver);
+                _ = await this.feedbackService.CreateAsync(feedback, feedbackGiver);
 
                 return RedirectToAction("MyTravels", "Travels");
             }

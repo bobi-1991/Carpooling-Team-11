@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
 using Carpooling.Service.Dto_s.Requests;
@@ -15,10 +16,6 @@ namespace Carpooling.BusinessLayer.Services
     public class TripRequestService : ITripRequestService
     {
         private readonly ITravelRepository travelRepository;
-        private readonly IMapper mapper;
-        //  private readonly IAddressRepository addressRepository;
-        //  private readonly ICarRepository carRepository;
-        //  private readonly ITravelValidator travelValidator;
         private readonly IUserValidation userValidation;
         private readonly ITripRequestRepository tripRequestRepository;
         private readonly IUserRepository userRepository;
@@ -68,7 +65,10 @@ namespace Carpooling.BusinessLayer.Services
             await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, loggedUser.Id);
 
             var trips = await this.tripRequestRepository.GetAllAsync();
-
+            if (loggedUser.IsBlocked == true)
+            {
+                throw new UnauthorizedOperationException("You are blocked!");
+            }
             if (trips.Any(x => x.PassengerId.Equals(loggedUser.Id) && x.TravelId.Equals(request.TravelId)))
             {
                 throw new DublicateEntityException("You already has request for this travel.");
@@ -89,7 +89,10 @@ namespace Carpooling.BusinessLayer.Services
             var driverId = travel.DriverId;
 
             await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, passenger.Id);
-
+            if (loggedUser.IsBlocked == true)
+            {
+                throw new UnauthorizedOperationException("You are blocked!");
+            }
             if (await this.tripRequestValidator.ValidateIfPassengerAlreadyCreateTripRequest(tripRequest))
             {
                 throw new DublicateEntityException("You already has request for this travel.");
@@ -129,7 +132,10 @@ namespace Carpooling.BusinessLayer.Services
             await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, driverId);
 
             var currentAnswer = await this.tripRequestValidator.ValidateStatusOfTripRequest(tripRequestToUpdate, answer);
-
+            if (loggedUser.IsBlocked == true)
+            {
+                throw new UnauthorizedAccessException("You are blocked!");
+            }
             if (currentAnswer.Equals("approve") && travel.AvailableSeats > 0)
             {
                 await this.travelRepository.AddUserToTravelAsync(travel.Id, tripRequestToUpdate.PassengerId);
@@ -157,7 +163,10 @@ namespace Carpooling.BusinessLayer.Services
             await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, driverId);
 
             var currentAnswer = await this.tripRequestValidator.ValidateStatusOfTripRequest(tripRequestToUpdate, answer);
-
+            if (loggedUser.IsBlocked == true)
+            {
+                throw new UnauthorizedAccessException("You are blocked!");
+            }
             if (currentAnswer.Equals("approve") && travel.AvailableSeats > 0)
             {
                 await this.travelRepository.AddUserToTravelAsync(travel.Id, tripRequestToUpdate.PassengerId);

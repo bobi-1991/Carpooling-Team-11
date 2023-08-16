@@ -365,15 +365,5 @@ namespace Carpooling.Tests.FeedbackServiceTests
             feedbackRepositoryMock.Verify(x => x.UpdateAsync(It.IsAny<int>(), It.IsAny<Feedback>()), Times.Once);
         }
 
-        [TestMethod]
-
-        public async Task CreateMVCAsync_ShouldInvoke()
-        {
-            //Act
-            var result = sut.CreateMVCAsync(It.IsAny<Feedback>(), It.IsAny<User>());
-
-            //Verify
-            feedbackRepositoryMock.Verify(x => x.CreateAsync(It.IsAny<Feedback>()), Times.Once);
-        }
     }
 }

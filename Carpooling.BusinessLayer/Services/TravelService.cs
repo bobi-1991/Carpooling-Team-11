@@ -52,9 +52,6 @@ namespace Carpooling.BusinessLayer.Services
         }
         public async Task<Travel> CreateTravelForMVCAsync(User loggedUser, Travel travel)
         {
-            //mapService.GetDirection();
-            //Add Duration/Trip to travel ? or smth else
-
             await this.travelValidator.ValidateIsLoggedUserAreDriver(loggedUser);
             if (loggedUser.IsBlocked)
             {
@@ -79,7 +76,6 @@ namespace Carpooling.BusinessLayer.Services
         public async Task<TravelResponse> CreateTravelAsync(User loggedUser, TravelRequest travelRequest)
         {
             await this.travelValidator.ValidateIsLoggedUserAreDriver(loggedUser);
-            //  var driverCar = loggedUser.Cars.FirstOrDefault();
 
             var car = await this.carRepository.GetByIdAsync(travelRequest.CarId);
 

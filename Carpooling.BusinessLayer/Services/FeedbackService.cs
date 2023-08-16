@@ -24,7 +24,6 @@ namespace Carpooling.BusinessLayer.Services
         public async Task<Feedback> CreateAsync(Feedback feedback, User user)
         {
             var currentTravel = await this.travelRepository.GetByIdAsync(feedback.TravelId);
-            
             if (user.IsBlocked)
             {
                 throw new UnauthorizedOperationException("Only non-blocked user can make feedbacks!");
@@ -33,19 +32,8 @@ namespace Carpooling.BusinessLayer.Services
             {
                 throw new UnauthorizedOperationException("Feedback can only be left on completed trips!");
             }
-
             feedback.Giver = user;
             feedback.GiverId = user.Id;
-
-            return await _feedbackRepository.CreateAsync(feedback);
-        }
-
-        public async Task<Feedback> CreateMVCAsync(Feedback feedback, User user)
-        {
-            if (user.IsBlocked)
-            {
-                throw new UnauthorizedOperationException("Only non-blocked user can make feedbacks!");
-            }
             return await _feedbackRepository.CreateAsync(feedback);
         }
         

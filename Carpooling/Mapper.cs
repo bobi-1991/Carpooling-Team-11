@@ -39,7 +39,6 @@ namespace Carpooling
                 .ForMember(dest => dest.DestinationName, opt => opt.MapFrom(src => src.EndLocation.City))
                 .ForMember(dest => dest.AvailableSeats, opt => opt.MapFrom(src => src.AvailableSeats))
                 .ForMember(dest=> dest.DistanceBetweenDestinations, opt=>opt.MapFrom(src=>src.TravelDistance))
-                //.ForMember(dest => dest.IsComplete, opt => opt.MapFrom(src => src.IsCompleted.HasValue ? src.IsCompleted.Value : false))
                 .ForMember(dest => dest.CarRegistration, opt => opt.MapFrom(src => src.Car != null ? src.Car.Registration : string.Empty))
                 .ReverseMap();
 

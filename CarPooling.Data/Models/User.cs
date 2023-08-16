@@ -17,7 +17,6 @@ namespace CarPooling.Data.Models
         public string? ImageURL { get; set; }
         public bool IsBlocked { get; set; }
 
-        // IdentityUser ??
         public bool IsAdmin { get; set; }
 
 

@@ -29,10 +29,7 @@ namespace CarPooling.Data.Models
         public DateTime? ArrivalTime { get; set; }
         public int TravelDistance { get; set; }
 
-        //  public bool? IsCompleted { get; set; }
         public bool? IsCompleted { get; set; }
-
-       
 
         //public int? CarId { get; set; }
         public Car? Car { get; set; }
