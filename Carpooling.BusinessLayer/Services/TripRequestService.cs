@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Carpooling.BusinessLayer.Exceptions;
 using Carpooling.BusinessLayer.Services.Contracts;
 using Carpooling.BusinessLayer.Validation.Contracts;
 using Carpooling.Service.Dto_s.Requests;
@@ -64,7 +65,10 @@ namespace Carpooling.BusinessLayer.Services
             await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, loggedUser.Id);
 
             var trips = await this.tripRequestRepository.GetAllAsync();
-
+            if (loggedUser.IsBlocked == true)
+            {
+                throw new UnauthorizedOperationException("You are blocked!");
+            }
             if (trips.Any(x => x.PassengerId.Equals(loggedUser.Id) && x.TravelId.Equals(request.TravelId)))
             {
                 throw new DublicateEntityException("You already has request for this travel.");
@@ -85,7 +89,10 @@ namespace Carpooling.BusinessLayer.Services
             var driverId = travel.DriverId;
 
             await this.userValidation.ValidateUserLoggedAndAdmin(loggedUser, passenger.Id);
-
+            if (loggedUser.IsBlocked == true)
+            {
+                throw new UnauthorizedOperationException("You are blocked!");
+            }
             if (await this.tripRequestValidator.ValidateIfPassengerAlreadyCreateTripRequest(tripRequest))
             {
                 throw new DublicateEntityException("You already has request for this travel.");
