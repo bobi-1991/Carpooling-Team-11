@@ -197,7 +197,7 @@ namespace Carpooling.Controllers
             catch(ArgumentException ex)
             {
                 HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-                this.ViewData["ErrorMessage"] = ex.Message;
+                this.ViewData["ErrorMessage2"] = ex.Message;
                 return View("Error");
             }
         }

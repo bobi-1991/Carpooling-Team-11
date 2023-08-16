@@ -61,7 +61,7 @@ namespace Carpooling.BusinessLayer.Services
             {
                 throw new EntityUnauthorizatedException("The driver cannot operate a car that is not owned by them.");
             }
-            if (!await this.travelValidator.ValidateIsNewTravelPossible(travel.DriverId, (DateTime)travel.DepartureTime, (DateTime)travel.ArrivalTime))
+            if (!await this.travelValidator.ValidateIsNewTravelPossible(loggedUser.Id, (DateTime)travel.DepartureTime, (DateTime)travel.ArrivalTime))
             {
                 throw new ArgumentException("This trip cannot be made because the driver has another trip at the time.");
             }
